@@ -3,7 +3,7 @@
  
 ## Introdução
 Este projeto foi criado no ambito da unidade curricular de Programação Avançada, na Licenciatura de Engenharia Informática (Curso Europeu), no ISEC. <br>
-Esta aplicação permite fazer a gestão de projetos ou estagios da unidade curricular de PoE (projeto ou estagio), e foi criada com recurso a Java. <br> <br>
+Esta aplicação permite fazer a gestão de projetos ou estagios da unidade curricular de PoE (projeto ou estagio), e foi criada com recurso a Java. <br> Aqui esta descrito o diagrama de estados desta aplicação: [Link](https://app.diagrams.net/#G1vjCpOiSQMJzLJY61rhW5LTc7vZ_1A2Gd "Diagrama de Estados") <br> <br> <br>
  
  
 ## Interface Grafica
