@@ -15,7 +15,6 @@ abstract class PhaseStateAdapter implements IPhaseState {
         context.changeState(newState);
     }
 
-    //Estao aui para pode-los derivalos
     @Override
     public boolean nextPhase() { return false; }
 
