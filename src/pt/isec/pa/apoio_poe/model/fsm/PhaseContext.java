@@ -1,14 +1,17 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.Phase;
+import pt.isec.pa.apoio_poe.model.data.University;
 
 public class PhaseContext {
     IPhaseState state;
     Phase phase;
+    University university;
 
     public PhaseContext(){
         phase = new Phase(1);
         state = new FirstPhaseState(this, phase);
+        university = new University();
     }
 
     //package private (by default) --> sendo assim é so usado pelos estados (FSM)

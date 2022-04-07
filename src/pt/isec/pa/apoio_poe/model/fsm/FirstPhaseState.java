@@ -5,7 +5,7 @@ import pt.isec.pa.apoio_poe.model.data.Phase;
 public class FirstPhaseState extends PhaseStateAdapter {
     FirstPhaseState(PhaseContext context, Phase phase){
         super(context,phase);
-        phase.setCurrentPhase(0);
+        phase.setCurrentPhase(1);
     }
 
     @Override

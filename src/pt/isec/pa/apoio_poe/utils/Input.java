@@ -72,7 +72,7 @@ public final class Input {
             if (title != null)
                 System.out.println(System.lineSeparator()+title);
 
-            System.out.println();
+            //System.out.println();
 
             for(int i = 0; i < options.length; i++)
                 System.out.printf("%3d - %s\n",i+1,options[i]);
