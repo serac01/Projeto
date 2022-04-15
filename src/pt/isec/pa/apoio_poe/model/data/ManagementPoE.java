@@ -29,4 +29,12 @@ public class ManagementPoE {
 
         students.forEach((n) -> System.out.println(n.toString()));
     }
+    
+    public void checkStudents(){
+        
+        students.forEach((n) -> System.out.println(n.toString()));
+        
+    }
+    
+    
 }
