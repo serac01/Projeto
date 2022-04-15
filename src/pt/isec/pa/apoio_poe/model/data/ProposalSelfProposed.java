@@ -1,5 +1,23 @@
 package pt.isec.pa.apoio_poe.model.data;
 
 public class ProposalSelfProposed extends Proposal{
-    public ProposalSelfProposed(String identification, String title) { super(identification, title); }
+    int studentNumber;
+    public ProposalSelfProposed(String identification, String title, int studentNumber,) { 
+        super(identification, title); 
+        this.studentNumber= studentNumber;
+    
+    }
+    
+    
+            @Override
+    public String toString() {
+        return "Proposal{" +
+                "identification=" + identification +
+                ", title='" + title + '\'' +
+                ", studentNumber='" + studentNumber + '\'' +
+                '}';
+    }
+    
+    
+    
 }
