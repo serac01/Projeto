@@ -17,7 +17,7 @@ public class Teacher {
     @Override
     public String toString() {
         return "Teacher{" +
-                " name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", email='" + email + '\''+
                 '}';
     }
