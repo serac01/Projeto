@@ -14,4 +14,14 @@ public class ProposalIntership extends Proposal{
 
     public String getHostEntity() { return hostEntity; }
     public void setHostEntity(String hostEntity) { this.hostEntity = hostEntity; }
+    
+        @Override
+    public String toString() {
+        return "Proposal{" +
+                "identification=" + identification +
+                ", title='" + title + '\'' +
+                ", area='" + area + '\'' +
+                ", hostEntity'" + hostEntity + '\'' +
+                '}';
+    }
 }
