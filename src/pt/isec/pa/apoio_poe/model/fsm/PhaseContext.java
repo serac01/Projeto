@@ -27,6 +27,8 @@ public class PhaseContext {
 
     public void newStudents(){ management.newStudents(); }
 
+    public void checkStudents(){ management.checkStudents(); }
+    
     //Get data
     public int getCurrentPhase(){return phase.getCurrentPhase();}
 }
