@@ -1,17 +1,18 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
+import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.data.Phase;
-import pt.isec.pa.apoio_poe.model.data.University;
+import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 
 public class PhaseContext {
     IPhaseState state;
     Phase phase;
-    University university;
+    ManagementPoE management;
 
     public PhaseContext(){
         phase = new Phase(1);
         state = new FirstPhaseState(this, phase);
-        university = new University();
+        management = new ManagementPoE();
     }
 
     //package private (by default) --> sendo assim é so usado pelos estados (FSM)
@@ -23,6 +24,8 @@ public class PhaseContext {
     public boolean nextPhase(){ return state.nextPhase(); }
 
     public boolean previousPhase(){ return state.previousPhase(); }
+
+    public void newStudents(){ management.newStudents(); }
 
     //Get data
     public int getCurrentPhase(){return phase.getCurrentPhase();}
