@@ -2,6 +2,7 @@ package pt.isec.pa.apoio_poe.model.data;
 
 public class Phase {
     private int currentPhase;
+    private ManagementPoE management;
 
     public Phase(int currentPhase){this.currentPhase=currentPhase;}
 
