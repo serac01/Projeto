@@ -10,4 +10,12 @@ public class ProposalProject extends Proposal{
 
     public String getArea() { return area; }
     public void setArea(String area) { this.area = area; }
+    @Override
+    public String toString() {
+        return "Proposal{" +
+                "identification=" + identification +
+                ", title='" + title + '\'' +
+                ", area='" + area + '\'' +
+                '}';
+    }
 }
