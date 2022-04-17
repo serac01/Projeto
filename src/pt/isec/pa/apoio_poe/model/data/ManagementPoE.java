@@ -30,6 +30,25 @@ public class ManagementPoE {
         students.forEach((n) -> System.out.println(n.toString()));
     }
     
+        public void newTeachers(){
+        try {
+            FileReader fr = new FileReader(new File("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\teachers.csv"));
+            BufferedReader br = new BufferedReader(fr);
+            String delimiter = ",", line = "";
+            String[] tempArr;
+            while((line = br.readLine()) != null) {
+                tempArr = line.split(delimiter);
+                Teacher teacher = new Teacher(tempArr[0],tempArr[1]);
+                teachers.add(teacher);
+            }
+            br.close();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        teacher.forEach((n) -> System.out.println(n.toString()));
+    }
+    
     public void checkStudents(){
         
         students.forEach((n) -> System.out.println(n.toString()));
