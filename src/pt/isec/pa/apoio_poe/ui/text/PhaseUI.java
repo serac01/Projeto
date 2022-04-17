@@ -33,8 +33,8 @@ public class PhaseUI {
         System.out.print("\n1st Phase");
         switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
                 "Management proposals for internships or projects","Close phase","Next phase","Quit")){
-            case 1 -> fsm.newStudents();
-            case 2 -> fsm.checkStudents();
+            case 1 -> fsm.newStudents();// checkStudents adicionado
+            case 2 -> fsm.newTeachers();
             case 3, 4 -> System.out.println("\tTo be implemented!\n");
             case 5 -> fsm.nextPhase();
             default -> finish = true;
