@@ -30,6 +30,44 @@ public class ManagementPoE {
         students.forEach((n) -> System.out.println(n.toString()));
     }
     
+    public void deleteStudent(){
+        Int number,j=-1;
+        String studentName;
+        Scanner sc = new Scanner(System.in);
+        switch (Input.chooseOption("Choose deletion filter:","By name", "By student number")){
+        case 1 ->
+            System.out.println("Type student name...");
+            studentName = sc.nextLine();
+            for(int i=0; i<students.lenght; i++){
+            if(students[i].name==studentName){
+                j=i;
+            }
+            if(j!=-1){
+                for(int i=j; i<students.lenght;i++){
+                    students[i-1]=students[i];
+                }
+                students[students.length=NULL];
+            }
+            
+        case 2 ->
+            System.out.println("Type student number...");
+            studentName = sc.nextInt();
+            for(int i=0; i<students.lenght; i++){
+            if(students[i].studentNumber==number){
+                j=i;
+            }
+            if(j!=-1){
+                for(int i=j; i<students.lenght;i++){
+                    students[i-1]=students[i];
+                }
+                students[students.length=NULL];
+            }
+                
+        }
+        
+        
+    }
+    
         public void newTeachers(){
         try {
             FileReader fr = new FileReader(new File("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\teachers.csv"));
