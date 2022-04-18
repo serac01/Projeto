@@ -10,6 +10,7 @@ public class ManagementPoE {
     private final ArrayList<Student> students = new ArrayList<>();
     private final ArrayList<Teacher> teachers = new ArrayList<>();
     private final ArrayList<Proposal> proposals = new ArrayList<>();
+    private final ArrayList<Application> applications = new ArrayList<>();
 
     public void newStudents(){
         try {
