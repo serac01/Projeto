@@ -32,11 +32,12 @@ public class ManagementPoE {
     }
     
     public void deleteStudent(){
-        Int number,j=-1;
+        int j=-1;
+        long number;
         String studentName;
         Scanner sc = new Scanner(System.in);
 
-            System.out.println("Type student number...");
+            System.out.print("Type student number...");
             studentName = sc.nextInt();
             for(int i=0; i<students.lenght; i++){
             if(students[i].studentNumber==number){
@@ -46,11 +47,49 @@ public class ManagementPoE {
                 for(int i=j; i<students.lenght;i++){
                     students[i-1]=students[i];
                 }
-                students[students.length=NULL];
+                students[students.length]=NULL;
             }
-                
+    }
         
-        
+    public void addStudent(){
+    long sNumber;
+    String name,email,courseAcronym,industryAcronym;
+    double classification;
+    boolean accessInternship;
+    Scanner sc = new Scanner(System.in);
+    System.out.print("Type student number...");
+    sNumber = sc.nextLong();
+    for(int i=0; i<students.lenght; i++){
+       if(students[i].studentNumber==sNumber){
+       System.out.println("Number already exists... Returning to menu");
+       return;
+       }
+    }
+    /*Automatic number association
+    int highest=0;
+    for(int i=0;i<students.lenght;i++){
+    if(students[i].studentNumber>= highest)
+        highest = students[i].studentNumber;
+    }
+    sNumber = highest+1;
+    System.out.print("Student number :")
+    System.out.println(Snumber);
+    */
+    System.out.print("Type student's name...");
+    name = sc.nextString();
+    System.out.print("Type student's email...");
+    email = sc.nextString();
+    System.out.print("Type course acronym...");
+    courseAcronym = sc.nextString();
+    System.out.print("Type industry acronym...");
+    industryAcronym = sc.nextString();
+    System.out.print("Type classification...");
+    classification = sc.nextDouble();
+    System.out.print("Type true/false according to student's access to internship...");
+    accessInternship = sc.nextBoolean();
+    Student newStudent= new Student(sNumber, name, email, courseAcronym, industryAcronym, classification, accessInternships);
+    students.add(newStudent);
+    
     }
     
         public void newTeachers(){
