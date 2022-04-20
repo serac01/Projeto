@@ -55,7 +55,7 @@ public class ManagementPoE {
             for(int i=0; i<students.lenght; i++){
             if(students[i].studentNumber==number){
                 j=i;
-            }
+            }}
             if(j!=-1){
                 for(int i=j; i<students.lenght;i++){
                     students[i-1]=students[i];
