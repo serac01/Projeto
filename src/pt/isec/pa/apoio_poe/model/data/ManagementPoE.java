@@ -14,16 +14,17 @@ public class ManagementPoE {
     public void addStudents() throws IOException {
         try {
             //Abertura de ficheiro para leitura com FileReader
-            FileReader fr = new FileReader("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\students.csv");
+            FileReader fr = new FileReader("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\model\\data\\csvFiles\\eStudents.csv");
             //Adiciona funcionalidades de buffering ao Reader (tem métodos como: readline, read, close)
             br = new BufferedReader(fr);
             String line;
             while((line = br.readLine()) != null) {
                 String[] tempArr = line.split(",");
                 Student student = new Student(Long.parseLong(tempArr[0]), tempArr[1], tempArr[2], tempArr[3], tempArr[4],Double.parseDouble(tempArr[5]), Boolean.valueOf(tempArr[6]));
-                if(isExistentStudent(Long.parseLong(tempArr[0])))
-                    System.out.println("Student already exists");
-                students.add(student);
+                if(isExistentStudent(student.getStudentNumber()) || !isACourseAcronym(student.getCourseAcronym()) || !isAIndustryAcronym(student.getIndustryAcronym()) || isAValidClassification(student.getClassification()))
+                    System.out.println("The student with code " + student.getStudentNumber() + ", has invalid data");
+                else
+                    students.add(student);
             }
         } catch(IOException ioe) {
             ioe.printStackTrace();
@@ -38,14 +39,15 @@ public class ManagementPoE {
 
     public void editStudent(long number)  {
         if(!isExistentStudent(number))
-            System.out.println("This student dont exist");
+            System.out.println("This student doesn't exist");
 
         else{
             for(Student s : students)
                 if(s.getStudentNumber()==number)
                     System.out.println(s.toString());
 
-            System.out.println("What do you want to edit??");
+            System.out.println("What do you want to edit? ");
+            System.out.println("To implement...");
         }
     }
 
@@ -118,8 +120,20 @@ public class ManagementPoE {
     public boolean isExistentStudent(long number){
         for(Student s : students)
             if(s.getStudentNumber()==number)
-                return false;
+                return true;
         return false;
+    }
+
+    public boolean isACourseAcronym(String courseAcronym){
+        return courseAcronym.equalsIgnoreCase("LEI-PL") || courseAcronym.equalsIgnoreCase("LEI");
+    }
+
+    public boolean isAIndustryAcronym(String industryAcronym){
+        return industryAcronym.equalsIgnoreCase("SI") || industryAcronym.equalsIgnoreCase("DA") || industryAcronym.equalsIgnoreCase("RAS");
+    }
+
+    public boolean isAValidClassification(double classification){
+        return classification<0 || classification>1;
     }
     
 }
