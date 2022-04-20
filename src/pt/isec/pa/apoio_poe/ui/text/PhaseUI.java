@@ -3,6 +3,9 @@ package pt.isec.pa.apoio_poe.ui.text;
 import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
 
+import java.io.IOException;
+import java.util.Scanner;
+
 public class PhaseUI {
     PhaseContext fsm;       //Tem uma maquina de estados
     boolean finish;         //Flag para saber quando acaba o jogo
@@ -12,7 +15,7 @@ public class PhaseUI {
         this.finish = false;
     }
 
-    public void start(){
+    public void start() throws IOException {
         while (!finish)                     //Enquanto não acabar
             switch (fsm.getState()){        //Recebe a fase atual
                 case PHASE_1 -> firstPhaseUI();
@@ -23,20 +26,43 @@ public class PhaseUI {
             }
     }
 
-    public void firstPhaseUI(){
+    public void firstPhaseUI() throws IOException {
         /** A primeira fase permite alternar entre os modos de gestão de alunos, docentes e propostas de estágios ou projetos.
-            * Inserção, consulta, edição e eliminação dos dados referentes a alunos (modo de gestão de alunos)
-            * Inserção, consulta, edição e eliminação dos dados referentes a docentes (modo de gestão de docentes)
-            * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
-            * Fechar a fase
-            * Avançar para a fase seguinte*/
+         * Inserção, consulta, edição e eliminação dos dados referentes a alunos (modo de gestão de alunos)
+         * Inserção, consulta, edição e eliminação dos dados referentes a docentes (modo de gestão de docentes)
+         * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
+         * Fechar a fase
+         * Avançar para a fase seguinte*/
         System.out.print("\n1st Phase");
         switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
                 "Management proposals for internships or projects","Close phase","Next phase","Quit")){
-            case 1 -> fsm.newStudents();// checkStudents adicionado
-            case 2 -> fsm.newTeachers();
-            case 3, 4 -> System.out.println("\tTo be implemented!\n");
+            case 1 -> management("student");
+            case 2 -> management("teacher");
+            case 3 -> management("proposals for internships or projects");
+            case 4 -> System.out.println("\tTo be implemented!\n");
             case 5 -> fsm.nextPhase();
+            default -> finish = true;
+        }
+    }
+
+    public void management(String name) throws IOException {
+        /** A primeira fase permite alternar entre os modos de gestão de alunos, docentes e propostas de estágios ou projetos.
+         * Inserção, consulta, edição e eliminação dos dados referentes a alunos (modo de gestão de alunos)
+         * Inserção, consulta, edição e eliminação dos dados referentes a docentes (modo de gestão de docentes)
+         * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
+         * Fechar a fase
+         * Avançar para a fase seguinte*/
+        System.out.print("\n\tManagement "+name);
+        switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
+                "Edit "+name,"Delete "+name,"Quit")){
+            case 1 -> fsm.addStudents();
+            case 2, 4 -> System.out.println("\tTo be implemented!\n");
+            case 3 -> {
+                Scanner input = new Scanner(System.in);
+                System.out.print("Enter the student number: ");
+                fsm.editStudent(input.nextLong());
+            }
+            case 5 -> firstPhaseUI();
             default -> finish = true;
         }
     }

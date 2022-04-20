@@ -14,8 +14,8 @@ public class ProposalIntership extends Proposal{
 
     public String getHostEntity() { return hostEntity; }
     public void setHostEntity(String hostEntity) { this.hostEntity = hostEntity; }
-    
-        @Override
+
+    /*@Override
     public String toString() {
         return "Proposal{" +
                 "identification=" + identification +
@@ -23,5 +23,5 @@ public class ProposalIntership extends Proposal{
                 ", area='" + area + '\'' +
                 ", hostEntity'" + hostEntity + '\'' +
                 '}';
-    }
+    }*/
 }

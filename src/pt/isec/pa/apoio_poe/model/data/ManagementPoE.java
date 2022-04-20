@@ -1,7 +1,6 @@
 package pt.isec.pa.apoio_poe.model.data;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,28 +9,48 @@ public class ManagementPoE {
     private final ArrayList<Student> students = new ArrayList<>();
     private final ArrayList<Teacher> teachers = new ArrayList<>();
     private final ArrayList<Proposal> proposals = new ArrayList<>();
-    private final ArrayList<Application> applications = new ArrayList<>();
+    private BufferedReader br = null;
 
-    public void newStudents(){
+    public void addStudents() throws IOException {
         try {
-            FileReader fr = new FileReader(new File("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\students.csv"));
-            BufferedReader br = new BufferedReader(fr);
-            String delimiter = ",", line = "";
-            String[] tempArr;
+            //Abertura de ficheiro para leitura com FileReader
+            FileReader fr = new FileReader("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\students.csv");
+            //Adiciona funcionalidades de buffering ao Reader (tem métodos como: readline, read, close)
+            br = new BufferedReader(fr);
+            String line;
             while((line = br.readLine()) != null) {
-                tempArr = line.split(delimiter);
-                Student student = new Student(Long.parseLong(tempArr[0]),tempArr[1],tempArr[2],tempArr[3],tempArr[4],Double.parseDouble(tempArr[5]), Boolean.valueOf(tempArr[6]));
+                String[] tempArr = line.split(",");
+                Student student = new Student(Long.parseLong(tempArr[0]), tempArr[1], tempArr[2], tempArr[3], tempArr[4],Double.parseDouble(tempArr[5]), Boolean.valueOf(tempArr[6]));
+                if(isExistentStudent(Long.parseLong(tempArr[0])))
+                    System.out.println("Student already exists");
                 students.add(student);
             }
-            br.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
+        }finally {
+            if (br != null)
+                br.close();
         }
 
+        //Imprimir os alunos (so para debug)
         students.forEach((n) -> System.out.println(n.toString()));
     }
-    
-    public void deleteStudent(){
+
+    public void editStudent(long number)  {
+        if(!isExistentStudent(number))
+            System.out.println("This student dont exist");
+
+        else{
+            for(Student s : students)
+                if(s.getStudentNumber()==number)
+                    System.out.println(s.toString());
+
+            System.out.println("What do you want to edit??");
+        }
+    }
+
+    /******* A corrigir *******/
+    /*public void deleteStudent(){
         int j=-1;
         long number;
         String studentName;
@@ -49,9 +68,10 @@ public class ManagementPoE {
                 }
                 students[students.length]=NULL;
             }
-    }
-        
-    public void addStudent(){
+    }*/
+
+    /******* Desnecessario *******/
+    /*public void addStudent(){
     long sNumber;
     String name,email,courseAcronym,industryAcronym;
     double classification;
@@ -75,7 +95,7 @@ public class ManagementPoE {
     System.out.print("Student number :")
     System.out.println(Snumber);
     */
-    System.out.print("Type student's name...");
+    /*System.out.print("Type student's name...");
     name = sc.nextString();
     System.out.print("Type student's email...");
     email = sc.nextString();
@@ -90,32 +110,16 @@ public class ManagementPoE {
     Student newStudent= new Student(sNumber, name, email, courseAcronym, industryAcronym, classification, accessInternships);
     students.add(newStudent);
     
-    }
-    
-        public void newTeachers(){
-        try {
-            FileReader fr = new FileReader(new File("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\csvFiles\\teachers.csv"));
-            BufferedReader br = new BufferedReader(fr);
-            String delimiter = ",", line = "";
-            String[] tempArr;
-            while((line = br.readLine()) != null) {
-                tempArr = line.split(delimiter);
-                Teacher teacher = new Teacher(tempArr[0],tempArr[1]);
-                teachers.add(teacher);
-            }
-            br.close();
-        } catch(IOException ioe) {
-            ioe.printStackTrace();
-        }
+    }*/
 
-        teacher.forEach((n) -> System.out.println(n.toString()));
+    /******* Para que??? (se for para mostrar muda o nome) *******/
+    //public void checkStudents(){ students.forEach((n) -> System.out.println(n.toString())); }
+
+    public boolean isExistentStudent(long number){
+        for(Student s : students)
+            if(s.getStudentNumber()==number)
+                return false;
+        return false;
     }
-    
-    public void checkStudents(){
-        
-        students.forEach((n) -> System.out.println(n.toString()));
-        
-    }
-    
     
 }
