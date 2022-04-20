@@ -4,6 +4,8 @@ import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.data.Phase;
 import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 
+import java.io.IOException;
+
 public class PhaseContext {
     IPhaseState state;
     Phase phase;
@@ -25,9 +27,11 @@ public class PhaseContext {
 
     public boolean previousPhase(){ return state.previousPhase(); }
 
-    public void newStudents(){ management.newStudents(); }
+    public void addStudents() throws IOException { management.addStudents(); }
 
-    public void checkStudents(){ management.checkStudents(); }
+    public void editStudent(long number) { management.editStudent(number); }
+
+    //public void checkStudents(){ management.checkStudents(); }
     
     //Get data
     public int getCurrentPhase(){return phase.getCurrentPhase();}
