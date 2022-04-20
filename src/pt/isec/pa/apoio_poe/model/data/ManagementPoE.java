@@ -112,7 +112,7 @@ public class ManagementPoE {
     public boolean isExistentStudent(long number){
         for(Student s : students)
             if(s.getStudentNumber()==number)
-                return false;
+                return true;
         return false;
     }
     
