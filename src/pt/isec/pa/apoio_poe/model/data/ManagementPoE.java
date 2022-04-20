@@ -49,15 +49,9 @@ public class ManagementPoE {
         }
     }
 
-    /******* A corrigir *******/
-    /*public void deleteStudent(){
+    public void deleteStudent(long number){
         int j=-1;
-        long number;
-        String studentName;
-        Scanner sc = new Scanner(System.in);
-
-            System.out.print("Type student number...");
-            studentName = sc.nextInt();
+        
             for(int i=0; i<students.lenght; i++){
             if(students[i].studentNumber==number){
                 j=i;
@@ -68,7 +62,7 @@ public class ManagementPoE {
                 }
                 students[students.length]=NULL;
             }
-    }*/
+    }
 
     /******* Desnecessario *******/
     /*public void addStudent(){
