@@ -1,5 +1,6 @@
 package pt.isec.pa.apoio_poe.ui.text;
 
+import pt.isec.pa.apoio_poe.model.data.Student;
 import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
 
 public class PhaseUI {
     PhaseContext fsm;       //Tem uma maquina de estados
-    boolean finish;         //Flag para saber quando acaba o jogo
+    boolean finish,finishManagement;         //Flag para saber quando acaba o jogo
 
     public PhaseUI(PhaseContext fsm){
         this.fsm = fsm;
@@ -33,6 +34,7 @@ public class PhaseUI {
          * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
          * Fechar a fase
          * Avançar para a fase seguinte*/
+        finishManagement=false;
         System.out.print("\n1st Phase");
         switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
                 "Management proposals for internships or projects","Close phase","Next phase","Quit")){
@@ -46,25 +48,26 @@ public class PhaseUI {
     }
 
     public void management(String name) throws IOException {
-        /** A primeira fase permite alternar entre os modos de gestão de alunos, docentes e propostas de estágios ou projetos.
-         * Inserção, consulta, edição e eliminação dos dados referentes a alunos (modo de gestão de alunos)
-         * Inserção, consulta, edição e eliminação dos dados referentes a docentes (modo de gestão de docentes)
-         * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
-         * Fechar a fase
-         * Avançar para a fase seguinte*/
         System.out.print("\n\tManagement "+name);
-        switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
-                "Edit "+name,"Delete "+name,"Quit")){
-            case 1 -> fsm.addStudents();
-            case 2, 4 -> System.out.println("\tTo be implemented!\n");
-            case 3 -> {
-                Scanner input = new Scanner(System.in);
-                System.out.print("Enter the student number: ");
-                fsm.editStudent(input.nextLong());
+        while(!finishManagement)
+            switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
+                    "Edit "+name,"Delete "+name,"Quit")){
+                case 1 -> fsm.addStudents();
+                case 2, 4 -> System.out.println("\tTo be implemented!\n");
+                case 3 -> {
+                    Scanner input = new Scanner(System.in);
+                    System.out.print("Enter the student number: ");
+                    fsm.editStudent(input.nextLong());
+                    boolean everythingEdited=false;
+                    while(!everythingEdited)
+                        switch (Input.chooseOption("Choose the option:"," ","Quit")){
+                            case 1 -> fsm.addStudents();
+                            case 2, 4 -> System.out.println("\tTo be implemented!\n");
+                            default -> everythingEdited=true;
+                        }
+                }
+                default -> finishManagement=true;
             }
-            case 5 -> firstPhaseUI();
-            default -> finish = true;
-        }
     }
 
     public void secondPhaseUI(){
