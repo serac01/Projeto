@@ -106,8 +106,7 @@ public class ManagementPoE {
     
     }*/
 
-    /******* Para que??? (se for para mostrar muda o nome) *******/
-    //public void checkStudents(){ students.forEach((n) -> System.out.println(n.toString())); }
+    public void showStudents(){ students.forEach((n) -> System.out.println(n.toString())); }
 
     public boolean isExistentStudent(long number){
         for(Student s : students)
