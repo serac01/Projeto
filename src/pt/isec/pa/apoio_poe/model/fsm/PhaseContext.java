@@ -28,7 +28,7 @@ public class PhaseContext {
     public boolean previousPhase(){ return state.previousPhase(); }
 
     //Get data
-    public void addStudents() throws IOException { management.addStudents(); }
+    public void addStudents(String filename) throws IOException { management.addStudents(filename); }
 
     public void editStudent(long number, String toUpdate, int option) { management.editStudent(number,toUpdate,option); }
 
