@@ -49,23 +49,29 @@ public class PhaseUI {
 
     public void management(String name) throws IOException {
         System.out.print("\n\tManagement "+name);
+        long studentNumber;
         while(!finishManagement)
             switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
                     "Edit "+name,"Delete "+name,"Quit")){
                 case 1 -> fsm.addStudents();
-                case 2, 4 -> System.out.println("\tTo be implemented!\n");
+                case 2 -> fsm.showStudents();
                 case 3 -> {
                     Scanner input = new Scanner(System.in);
                     System.out.print("Enter the student number: ");
-                    fsm.editStudent(input.nextLong());
+                    studentNumber = input.nextLong();
                     boolean everythingEdited=false;
                     while(!everythingEdited)
-                        switch (Input.chooseOption("Choose the option:"," ","Quit")){
-                            case 1 -> fsm.addStudents();
-                            case 2, 4 -> System.out.println("\tTo be implemented!\n");
+                        switch (Input.chooseOption("Choose the option:","name", "courseAcronym",
+                                "industryAcronym", "classification", "accessInternships", "Quit")){
+                            case 1 -> fsm.editStudent(studentNumber,"Sergio",1);
+                            case 2 -> fsm.editStudent(studentNumber,"LEI-PL",2);
+                            case 3 -> fsm.editStudent(studentNumber,"SI",3);
+                            case 4 -> fsm.editStudent(studentNumber,"0.59",4);
+                            case 5 -> fsm.editStudent(studentNumber,"true",5);
                             default -> everythingEdited=true;
                         }
                 }
+                case 4 -> System.out.println("\tTo be implemented!\n");
                 default -> finishManagement=true;
             }
     }
