@@ -11,9 +11,10 @@ public class ManagementPoE {
     private final ArrayList<Proposal> proposals = new ArrayList<>();
     private BufferedReader br = null;
 
-    public void addStudents() throws IOException {
+    public void addStudents(String filename) throws IOException {
+        /*"C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\model\\data\\csvFiles\\eStudents.csv"*/
         try {
-            FileReader fr = new FileReader("C:\\Users\\serco\\Desktop\\A Minha Universidade\\PA\\Projeto\\src\\pt\\isec\\pa\\apoio_poe\\model\\data\\csvFiles\\eStudents.csv");
+            FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String line;
 

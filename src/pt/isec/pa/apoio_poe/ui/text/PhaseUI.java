@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class PhaseUI {
     PhaseContext fsm;       //Tem uma maquina de estados
-    boolean finish,finishManagement;         //Flag para saber quando acaba o jogo
+    boolean finish,finishManagement;         //Flag para saber quando acaba o jogo ou parte dele
 
     public PhaseUI(PhaseContext fsm){
         this.fsm = fsm;
@@ -53,7 +53,7 @@ public class PhaseUI {
         while(!finishManagement)
             switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
                     "Edit "+name,"Delete "+name,"Quit")){
-                case 1 -> fsm.addStudents();
+                case 1 -> fsm.addStudents(Input.readString("Filename",false));
                 case 2 -> fsm.showStudents();
                 case 3 -> {
                     Scanner input = new Scanner(System.in);
