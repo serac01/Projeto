@@ -27,12 +27,12 @@ public class PhaseContext {
 
     public boolean previousPhase(){ return state.previousPhase(); }
 
+    //Get data
     public void addStudents() throws IOException { management.addStudents(); }
 
-    public void editStudent(long number) { management.editStudent(number); }
+    public void editStudent(long number, String toUpdate, int option) { management.editStudent(number,toUpdate,option); }
 
-    //public void checkStudents(){ management.checkStudents(); }
-    
-    //Get data
+    public void showStudents(){ management.showStudents(); }
+
     public int getCurrentPhase(){return phase.getCurrentPhase();}
 }
