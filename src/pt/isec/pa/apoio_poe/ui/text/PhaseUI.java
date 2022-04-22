@@ -53,8 +53,19 @@ public class PhaseUI {
                 case 1 -> {
                     if(name.equalsIgnoreCase("student"))
                         fsm.addStudents(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.addTeachers(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.addProposals(Input.readString("Filename ",false));
                 }
-                case 2 -> fsm.showStudents();
+                case 2 ->  {
+                    if(name.equalsIgnoreCase("student"))
+                        fsm.showStudents();
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.showTeachers();
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.showProposals();
+                }
                 case 3 -> editMenu(name);
                 case 4 -> System.out.println("\tTo be implemented!\n");
                 default -> finishManagement=true;
@@ -74,6 +85,26 @@ public class PhaseUI {
                     case 3 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New industry acronym ",true),3));
                     case 4 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New classification",true),4));
                     case 5 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("Access internships [true/false] ",true),5));
+                    default -> everythingEdited=true;
+                }
+        }
+        else if(name.equalsIgnoreCase("teacher")){
+            System.out.println("Enter teacher email");
+            String email = Input.readString("Email ",true);
+            boolean everythingEdited=false;
+            while(!everythingEdited)
+                switch (Input.chooseOption("Choose the option:","Edit name",  "Quit")){
+                    case 1 -> System.out.print(fsm.editTeacher(email,Input.readString("New name ",false)));
+                    default -> everythingEdited=true;
+                }
+        }
+        else if(name.equalsIgnoreCase("proposals for internships or projects")){
+            System.out.println("Enter proposal id");
+            String id = Input.readString("Proposal id ",true);
+            boolean everythingEdited=false;
+            while(!everythingEdited)
+                switch (Input.chooseOption("Choose the option:","Edit title",  "Quit")){
+                    case 1 -> System.out.print(fsm.editProposals(id,Input.readString("New title ",false),1));
                     default -> everythingEdited=true;
                 }
         }

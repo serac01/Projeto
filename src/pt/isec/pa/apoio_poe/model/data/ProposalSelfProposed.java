@@ -1,8 +1,9 @@
 package pt.isec.pa.apoio_poe.model.data;
 
 public class ProposalSelfProposed extends Proposal{
-    int studentNumber;
-    public ProposalSelfProposed(String identification, String title, int studentNumber) {
+    private long studentNumber;
+
+    public ProposalSelfProposed(String identification, String title, long studentNumber) {
         super(identification, title); 
         this.studentNumber= studentNumber;
     

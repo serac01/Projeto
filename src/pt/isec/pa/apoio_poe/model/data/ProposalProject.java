@@ -1,15 +1,23 @@
 package pt.isec.pa.apoio_poe.model.data;
 
-public class ProposalProject extends Proposal{
-    private String area;
+import java.util.List;
 
-    public ProposalProject(String identification, String title, String area) {
+public class ProposalProject extends Proposal{
+    private List<String> area;
+    private String teacherEmail;
+    private long studentNumber;
+
+
+    public ProposalProject(String identification, String title, List<String> area, String teacherEmail, long studentNumber) {
         super(identification, title);
         this.area = area;
+        this.teacherEmail=teacherEmail;
+        this.studentNumber=studentNumber;
     }
 
-    public String getArea() { return area; }
-    public void setArea(String area) { this.area = area; }
+    public List<String> getArea() { return area; }
+    public void setArea(List<String> area) { this.area = area; }
+
     /*@Override
     public String toString() {
         return "Proposal{" +
