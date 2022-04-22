@@ -1,15 +1,12 @@
 package pt.isec.pa.apoio_poe.ui.text;
 
-import pt.isec.pa.apoio_poe.model.data.Student;
 import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
-
 import java.io.IOException;
-import java.util.Scanner;
 
 public class PhaseUI {
-    PhaseContext fsm;       //Tem uma maquina de estados
-    boolean finish,finishManagement;         //Flag para saber quando acaba o jogo ou parte dele
+    PhaseContext fsm;                   //Tem uma maquina de estados
+    boolean finish,finishManagement;    //Flag para saber quando acaba o jogo ou parte dele
 
     public PhaseUI(PhaseContext fsm){
         this.fsm = fsm;
@@ -53,27 +50,33 @@ public class PhaseUI {
         while(!finishManagement)
             switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
                     "Edit "+name,"Delete "+name,"Quit")){
-                case 1 -> fsm.addStudents(Input.readString("Filename",false));
-                case 2 -> fsm.showStudents();
-                case 3 -> {
-                    Scanner input = new Scanner(System.in);
-                    System.out.print("Enter the student number: ");
-                    studentNumber = input.nextLong();
-                    boolean everythingEdited=false;
-                    while(!everythingEdited)
-                        switch (Input.chooseOption("Choose the option:","name", "courseAcronym",
-                                "industryAcronym", "classification", "accessInternships", "Quit")){
-                            case 1 -> fsm.editStudent(studentNumber,"Sergio",1);
-                            case 2 -> fsm.editStudent(studentNumber,"LEI-PL",2);
-                            case 3 -> fsm.editStudent(studentNumber,"SI",3);
-                            case 4 -> fsm.editStudent(studentNumber,"0.59",4);
-                            case 5 -> fsm.editStudent(studentNumber,"true",5);
-                            default -> everythingEdited=true;
-                        }
+                case 1 -> {
+                    if(name.equalsIgnoreCase("student"))
+                        fsm.addStudents(Input.readString("Filename ",false));
                 }
+                case 2 -> fsm.showStudents();
+                case 3 -> editMenu(name);
                 case 4 -> System.out.println("\tTo be implemented!\n");
                 default -> finishManagement=true;
             }
+    }
+
+    public void editMenu(String name) {
+        if(name.equalsIgnoreCase("student")){
+            System.out.println("Enter student number");
+            long studentNumber = (long) Input.readNumber(" ");
+            boolean everythingEdited=false;
+            while(!everythingEdited)
+                switch (Input.chooseOption("Choose the option:","Edit name", "Edit course acronym",
+                        "Edit industry acronym", "Edit classification", "Edit access internships", "Quit")){
+                    case 1 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New name ",false),1));
+                    case 2 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New course acronym ",true),2));
+                    case 3 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New industry acronym ",true),3));
+                    case 4 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New classification",true),4));
+                    case 5 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("Access internships [true/false] ",true),5));
+                    default -> everythingEdited=true;
+                }
+        }
     }
 
     public void secondPhaseUI(){
