@@ -5,8 +5,8 @@ import pt.isec.pa.apoio_poe.utils.Input;
 import java.io.IOException;
 
 public class PhaseUI {
-    PhaseContext fsm;                   //Tem uma maquina de estados
-    boolean finish,finishManagement;    //Flag para saber quando acaba o jogo ou parte dele
+    PhaseContext fsm;
+    boolean finish;
 
     public PhaseUI(PhaseContext fsm){
         this.fsm = fsm;
@@ -14,8 +14,8 @@ public class PhaseUI {
     }
 
     public void start() throws IOException {
-        while (!finish)                     //Enquanto não acabar
-            switch (fsm.getState()){        //Recebe a fase atual
+        while (!finish)
+            switch (fsm.getState()){
                 case PHASE_1 -> firstPhaseUI();
                 case PHASE_2 -> secondPhaseUI();
                 case PHASE_3 -> thirdPhaseUI();
@@ -25,20 +25,16 @@ public class PhaseUI {
     }
 
     public void firstPhaseUI() throws IOException {
-        /** A primeira fase permite alternar entre os modos de gestão de alunos, docentes e propostas de estágios ou projetos.
-         * Inserção, consulta, edição e eliminação dos dados referentes a alunos (modo de gestão de alunos)
-         * Inserção, consulta, edição e eliminação dos dados referentes a docentes (modo de gestão de docentes)
-         * Inserção, consulta, edição e eliminação dos dados referentes a propostas (modo de gestão de propostas)
-         * Fechar a fase
-         * Avançar para a fase seguinte*/
-        finishManagement=false;
         System.out.print("\n1st Phase");
         switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
                 "Management proposals for internships or projects","Close phase","Next phase","Quit")){
             case 1 -> management("student");
             case 2 -> management("teacher");
             case 3 -> management("proposals for internships or projects");
-            case 4 -> System.out.println("\tTo be implemented!\n");
+            case 4 -> {
+                if (fsm.closePhase())
+                    System.out.println("Clossed Phase");
+            }
             case 5 -> fsm.nextPhase();
             default -> finish = true;
         }
@@ -46,6 +42,7 @@ public class PhaseUI {
 
     public void management(String name) throws IOException {
         System.out.print("\n\tManagement "+name);
+        boolean finishManagement=false;
         long studentNumber;
         while(!finishManagement)
             switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
@@ -53,10 +50,29 @@ public class PhaseUI {
                 case 1 -> {
                     if(name.equalsIgnoreCase("student"))
                         fsm.addStudents(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.addTeachers(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.addProposals(Input.readString("Filename ",false));
                 }
-                case 2 -> fsm.showStudents();
+                case 2 ->  {
+                    if(name.equalsIgnoreCase("student"))
+                        fsm.showStudents();
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.showTeachers();
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.showProposals();
+                }
                 case 3 -> editMenu(name);
-                case 4 -> System.out.println("\tTo be implemented!\n");
+                case 4 -> {
+                    if(name.equalsIgnoreCase("student")){
+                        studentNumber = (long) Input.readNumber("Enter student number ");
+                        fsm.deleteStudents(studentNumber);}
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.deleteTeachers(Input.readString("Enter teacher email ",false));
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.deleteProposals(Input.readString("Enter proposal id ",false));
+                }
                 default -> finishManagement=true;
             }
     }
@@ -77,9 +93,29 @@ public class PhaseUI {
                     default -> everythingEdited=true;
                 }
         }
+        else if(name.equalsIgnoreCase("teacher")){
+            System.out.println("Enter teacher email");
+            String email = Input.readString("Email ",true);
+            boolean everythingEdited=false;
+            while(!everythingEdited)
+                switch (Input.chooseOption("Choose the option:","Edit name",  "Quit")){
+                    case 1 -> System.out.print(fsm.editTeacher(email,Input.readString("New name ",false)));
+                    default -> everythingEdited=true;
+                }
+        }
+        else if(name.equalsIgnoreCase("proposals for internships or projects")){
+            System.out.println("Enter proposal id");
+            String id = Input.readString("Proposal id ",true);
+            boolean everythingEdited=false;
+            while(!everythingEdited)
+                switch (Input.chooseOption("Choose the option:","Edit title",  "Quit")){
+                    case 1 -> System.out.print(fsm.editProposals(id,Input.readString("New title ",false),1));
+                    default -> everythingEdited=true;
+                }
+        }
     }
 
-    public void secondPhaseUI(){
+    public void secondPhaseUI() throws IOException {
         /** As funcionalidades disponíveis na fase de candidaturas são as seguintes:
          * Inserção, consulta, edição e eliminação de candidaturas
          * Obtenção de listas de alunos (Com autoproposta, Com candidatura já registada, Sem candidatura registada)
@@ -91,7 +127,9 @@ public class PhaseUI {
         switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
                 "Edit applications", "Delete applications", "Get the list of students","Get lists of project/internship proposals",
                 "Close phase","Return to previous phase","Next phase","Quit")){
-            case 1, 2, 3, 4, 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
+            case 1 -> fsm.addApplications(Input.readString("Filename ",false));
+            case 2 -> fsm.showApplications();
+            case 3, 4, 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
             case 8 -> fsm.previousPhase();
             case 9 -> fsm.nextPhase();
             default -> finish=true;

@@ -1,8 +1,6 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
-import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
-import pt.isec.pa.apoio_poe.model.data.Phase;
-import pt.isec.pa.apoio_poe.model.data.Student;
+import pt.isec.pa.apoio_poe.model.data.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +26,11 @@ public class PhaseContext {
 
     public boolean previousPhase(){ return state.previousPhase(); }
 
-    //Get data
+    public boolean closePhase(){ return state.closePhase(management.getProposals(), management.getStudent()); }
+
+    public int getCurrentPhase(){return phase.getCurrentPhase();}
+
+    /************************************************** Students **************************************************/
     public void addStudents(String filename) throws IOException {
         ArrayList<Student> aux;
         aux=FirstPhaseState.addStudents(filename,management.getStudent());
@@ -36,9 +38,19 @@ public class PhaseContext {
             management.setStudent(aux);
     }
 
-    public String editStudent(long number, String toUpdate, int option) {
+    public String editStudent(long number, String toUpdate,int option) {
         ArrayList<Student> aux;
-        aux=FirstPhaseState.editStudent(number,toUpdate,option,management.getStudent());
+        aux=FirstPhaseState.editStudent(number,toUpdate, option,management.getStudent());
+        if (aux!=null)
+            management.setStudent(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
+    public String deleteStudents(long number){
+        ArrayList<Student> aux;
+        aux=FirstPhaseState.deleteStudents(number,management.getStudent());
         if (aux!=null)
             management.setStudent(aux);
         else
@@ -48,5 +60,83 @@ public class PhaseContext {
 
     public void showStudents(){ FirstPhaseState.showStudents(management.getStudent()); }
 
-    public int getCurrentPhase(){return phase.getCurrentPhase();}
+    /************************************************** Teachers **************************************************/
+    public void addTeachers(String filename) throws IOException {
+        ArrayList<Teacher> aux;
+        aux=FirstPhaseState.addTeacher(filename,management.getTeachers());
+        if(aux!=null)
+            management.setTeachers(aux);
+    }
+
+    public String editTeacher(String email, String toUpdate) {
+        ArrayList<Teacher> aux;
+        aux=FirstPhaseState.editTeacher(email,toUpdate,management.getTeachers());
+        if (aux!=null)
+            management.setTeachers(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
+    public String deleteTeachers(String email){
+        ArrayList<Teacher> aux;
+        aux=FirstPhaseState.deleteTeacher(email,management.getTeachers());
+        if (aux!=null)
+            management.setTeachers(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
+    public void showTeachers(){ FirstPhaseState.showTeachers(management.getTeachers()); }
+
+    /************************************************** Proposals **************************************************/
+    public void addProposals(String filename) throws IOException {
+        ArrayList<Proposal> aux;
+        aux=FirstPhaseState.addProposals(filename,management.getProposals(),management.getStudent(),management.getTeachers());
+        if(aux!=null)
+            management.setProposals(aux);
+    }
+
+    public String editProposals(String id, String toUpdate,int option) {
+        ArrayList<Proposal> aux;
+        aux=FirstPhaseState.editProposals(id,toUpdate, option,management.getProposals());
+        if (aux!=null)
+            management.setProposals(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
+    public String deleteProposals(String id){
+        ArrayList<Proposal> aux;
+        aux=FirstPhaseState.deleteProposals(id,management.getProposals());
+        if (aux!=null)
+            management.setProposals(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
+    public void showProposals(){ FirstPhaseState.showProposals(management.getProposals()); }
+
+
+    /************************************************** Applications **************************************************/
+    public void addApplications(String filename) throws IOException {
+        addStudents("");
+        addTeachers("");
+        addProposals("");
+        ArrayList<Application> aux;
+        aux=SecondPhaseState.addApplication(filename,management.getApplications(), management.getProposals());
+        if(aux!=null)
+            management.setApplications(aux);
+    }
+
+    public void showApplications(){ SecondPhaseState.showApplication(management.getApplications()); }
 }
+
+
+
+
+
+
