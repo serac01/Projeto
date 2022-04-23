@@ -4,13 +4,15 @@ public class ProposalSelfProposed extends Proposal{
     private long studentNumber;
 
     public ProposalSelfProposed(String identification, String title, long studentNumber) {
-        super(identification, title); 
+        super(identification, title, "T3");
         this.studentNumber= studentNumber;
     
     }
-    
-    
-          /*  @Override
+
+    @Override
+    public long getStudentNumber() { return studentNumber; }
+
+    /*@Override
     public String toString() {
         return "Proposal{" +
                 "identification=" + identification +

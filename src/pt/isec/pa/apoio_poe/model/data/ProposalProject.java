@@ -9,12 +9,13 @@ public class ProposalProject extends Proposal{
 
 
     public ProposalProject(String identification, String title, List<String> area, String teacherEmail, long studentNumber) {
-        super(identification, title);
+        super(identification, title, "T2");
         this.area = area;
         this.teacherEmail=teacherEmail;
         this.studentNumber=studentNumber;
     }
 
+    @Override
     public List<String> getArea() { return area; }
     public void setArea(List<String> area) { this.area = area; }
 

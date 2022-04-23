@@ -7,16 +7,19 @@ public class ProposalIntership extends Proposal{
     private List<String> area;
 
     public ProposalIntership(String identification, String title, List<String> area, String hostEntity) {
-        super(identification, title);
+        super(identification, title, "T1");
         this.area = area;
         this.hostEntity = hostEntity;
     }
 
+    @Override
     public List<String> getArea() { return area; }
     public void setArea(List<String> area) { this.area = area; }
 
     public String getHostEntity() { return hostEntity; }
     public void setHostEntity(String hostEntity) { this.hostEntity = hostEntity; }
+
+
 
     /*@Override
     public String toString() {

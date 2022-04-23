@@ -1,6 +1,10 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.Phase;
+import pt.isec.pa.apoio_poe.model.data.Proposal;
+import pt.isec.pa.apoio_poe.model.data.Student;
+
+import java.util.ArrayList;
 
 abstract class PhaseStateAdapter implements IPhaseState {
     protected Phase phase;
@@ -20,4 +24,7 @@ abstract class PhaseStateAdapter implements IPhaseState {
 
     @Override
     public boolean previousPhase() { return false; }
+
+    @Override
+    public boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students){ return false; }
 }

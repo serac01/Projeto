@@ -23,6 +23,40 @@ public class FirstPhaseState extends PhaseStateAdapter {
     }
 
     @Override
+    public boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students) {
+        if(students.isEmpty() || proposals.isEmpty())
+            return false;
+
+        List<String> industryAcronym;
+        int countSI=0, countDA=0, countRAS=0, studentsSI=0,studentsDA=0,studentsRAS=0;
+        //Count the number of proposals
+        for(Proposal p : proposals) {
+            if(p.getType().equalsIgnoreCase("T1") || p.getType().equalsIgnoreCase("T2")){
+                industryAcronym = p.getArea();
+                for (String l : industryAcronym)
+                    if (l.equalsIgnoreCase("SI"))
+                        countSI++;
+                    else if (l.equalsIgnoreCase("DA"))
+                        countDA++;
+                    else if (l.equalsIgnoreCase("RAS"))
+                        countRAS++;
+            }
+        }
+
+        //Count the number os persons per area
+        for(Student s : students) {
+            if (s.getIndustryAcronym().equalsIgnoreCase("SI"))
+                studentsSI++;
+            else if (s.getIndustryAcronym().equalsIgnoreCase("DA"))
+                studentsDA++;
+            else if (s.getIndustryAcronym().equalsIgnoreCase("RAS"))
+                studentsRAS++;
+        }
+
+        return countSI >= studentsSI && countDA >= studentsDA && countRAS >= studentsRAS;
+    }
+
+    @Override
     public PhaseState getState() { return PhaseState.PHASE_1; }
 
     /************************************************** Students **************************************************/
@@ -91,22 +125,15 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return null;
     }
 
-    /*public void deleteStudent(long number){
-        int j=-1;
-
-            for(int i=0; i<students.lenght; i++){
-            if(students[i].studentNumber==number){
-                j=i;
-            }}
-            if(j!=-1){
-                for(int i=j; i<students.lenght;i++){
-                    students[i-1]=students[i];
-                }
-                students[students.length]=NULL;
-            }
-    }*/
+    public static ArrayList<Student> deleteStudents(long number, ArrayList<Student> students){
+        if(!isExistentStudent(number,students))
+            return null;
+        students.removeIf(s -> s.getStudentNumber() == number);
+        return students;
+    }
 
     public static void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
+
 
     /************************************************** Teachers **************************************************/
     public static ArrayList<Teacher> addTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
@@ -147,11 +174,19 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return null;
     }
 
+    public static ArrayList<Teacher> deleteTeacher(String email, ArrayList<Teacher> teachers){
+        if(!isExistentTeacher(email,teachers))
+            return null;
+        else
+            teachers.removeIf(t -> t.getEmail().equalsIgnoreCase(email));
+        return teachers;
+    }
+
     public static void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
 
 
     /************************************************** Proposals **************************************************/
-    public static ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+    public static ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/eProposals.csv";
         try {
@@ -174,7 +209,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
                     if(tempArr.size()==6)
                         number=Long.parseLong(tempArr.get(5));
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(!isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals))
+                    if(!isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals) || !isExistentTeacher(tempArr.get(4),teachers))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
                         ProposalProject proposalProject = new ProposalProject(tempArr.get(1), tempArr.get(3), area, tempArr.get(4), number);
@@ -182,7 +217,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
                     }
                 }
                 else if(tempArr.get(0).equalsIgnoreCase("T3")){
-                    if(isExistentProposal(tempArr.get(1),proposals))
+                    if(isExistentProposal(tempArr.get(1),proposals) || isARepeatSelfProposedStudent(Long.parseLong(tempArr.get(3)), proposals))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
                         ProposalSelfProposed proposalSelfProposed = new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), Long.parseLong(tempArr.get(3)));
@@ -212,6 +247,14 @@ public class FirstPhaseState extends PhaseStateAdapter {
                     }
                 }
         return null;
+    }
+
+    public static ArrayList<Proposal> deleteProposals(String id, ArrayList<Proposal> proposals){
+        if(!isExistentProposal(id,proposals))
+            return null;
+        else
+            proposals.removeIf(p -> p.getIdentification().equalsIgnoreCase(id));
+        return proposals;
     }
 
     public static void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
@@ -255,4 +298,12 @@ public class FirstPhaseState extends PhaseStateAdapter {
     private static boolean isAValidClassification(double classification){ return classification>=0 && classification<=1; }
 
     private static boolean isAValidBollean(String accessInternships){ return accessInternships.equalsIgnoreCase("true") || accessInternships.equalsIgnoreCase("false"); }
+
+    private static boolean isARepeatSelfProposedStudent(long number, ArrayList<Proposal> proposals){
+        for(Proposal p : proposals)
+            if(number == p.getStudentNumber())
+                return true;
+
+        return false;
+    }
 }

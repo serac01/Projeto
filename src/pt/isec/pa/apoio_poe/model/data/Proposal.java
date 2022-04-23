@@ -1,20 +1,28 @@
 package pt.isec.pa.apoio_poe.model.data;
 
-public class Proposal {
-    private String identification, title;
+import java.util.List;
 
-    public Proposal(String identification, String title) {
+public class Proposal {
+    private String identification, title, type;
+
+    public Proposal(String identification, String title, String type) {
         this.identification = identification;
         this.title = title;
+        this.type = type;
     }
 
     public String getIdentification() { return identification; }
-
     public void setIdentification(String identification) { this.identification = identification; }
 
     public String getTitle() { return title; }
-
     public void setTitle(String title) { this.title = title; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public long getStudentNumber() { return 0; }
+
+    public List<String> getArea() { return null; }
     
         @Override
     public String toString() {
