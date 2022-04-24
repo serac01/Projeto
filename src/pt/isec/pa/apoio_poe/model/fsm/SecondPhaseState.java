@@ -49,6 +49,8 @@ public class SecondPhaseState extends PhaseStateAdapter {
                 //Valida os parametros de entrada
                 if(tempArr.size()<2 || isAProposalSelfProposed(idApplications, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals))
                     System.out.println("The student with code " + tempArr.get(0) + ", entered wrong data");
+                else if(isExistentApplication(Long.parseLong(tempArr.get(0)),applications))
+                    System.out.println("The application of student with code " + tempArr.get(0) + ", has duplicated data or two or has two iterations");
                 else {
                     Application application = new Application(Long.parseLong(tempArr.get(0)), idApplications);
                     applications.add(application);
@@ -63,51 +65,52 @@ public class SecondPhaseState extends PhaseStateAdapter {
         return applications;
     }
 
-    /*public static ArrayList<Student> editApplication(long number, String toUpdate, int option, ArrayList<Student> students)  {
-        if(!isExistentStudent(number,students))
+    public static ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications)  {
+        if(!isExistentApplication(number,applications))
             return null;
 
-        for(Student s : students)
-            if(s.getStudentNumber()==number)
+        for(Application a : applications)
+            if(a.getStudentNumber()==number)
                 switch (option){
                     case 1 -> {
-                        s.setName(toUpdate);
-                        return students;
+                        System.out.println("Temporario -> Add Proposal to list");
+                        for(String s : a.getIdProposals())
+                            if(s.equalsIgnoreCase(id))
+                                return null;
+                        List<String> aux = a.getIdProposals();
+                        aux.add(id);
+                        a.setIdProposals(aux);
+                        return applications;
                     }
                     case 2 -> {
-                        if(isACourseAcronym(toUpdate)) {
-                            s.setCourseAcronym(toUpdate);
-                            return students;
-                        }
+                        System.out.println("Temporario -> Edit Proposal from list/Change Proposal ID");
+                        for(String s : a.getIdProposals())
+                            if(s.equalsIgnoreCase(id))
+                                s = id;
+                        return applications;
+
                     }
                     case 3 -> {
-                        if(isAIndustryAcronym(toUpdate)) {
-                            s.setIndustryAcronym(toUpdate);
-                            return students;
-                        }
-                    }
-                    case 4 -> {
-                        if(isAValidClassification(Double.parseDouble(toUpdate))) {
-                            s.setClassification(Double.parseDouble(toUpdate));
-                            return students;
-                        }
-                    }
-                    case 5 -> {
-                        if(isAValidBollean(toUpdate)) {
-                            s.setAccessInternships(Boolean.parseBoolean(toUpdate));
-                            return students;
-                        }
+                        System.out.println("Temporario -> Remove Proposal from list");
+                        for(String s : a.getIdProposals())
+                            if(s.equalsIgnoreCase(id)){
+                                List<String> aux = a.getIdProposals();
+                                aux.remove(s);
+                                a.setIdProposals(aux);
+                            }
+                        return applications;
+
                     }
                 }
         return null;
     }
 
-    public static ArrayList<Student> deleteApplication(long number, ArrayList<Student> students){
-        if(!isExistentStudent(number,students))
+    public static ArrayList<Application> deleteApplication(long number, ArrayList<Application> applications){
+        if(!isExistentApplication(number,applications))
             return null;
-        students.removeIf(s -> s.getStudentNumber() == number);
-        return students;
-    }*/
+        applications.removeIf(a -> a.getStudentNumber() == number);
+        return applications;
+    }
 
     public static void showApplication(ArrayList<Application> applications){ applications.forEach((n) -> System.out.println(n.toString())); }
 
@@ -127,6 +130,13 @@ public class SecondPhaseState extends PhaseStateAdapter {
                 if (s.equalsIgnoreCase(p.getIdentification()) && p.getType().equalsIgnoreCase("T3"))
                     return true;
 
+        return false;
+    }
+
+    private static boolean isExistentApplication(Long number, ArrayList<Application> applications){
+        for(Application a : applications)
+            if(number==a.getStudentNumber())
+                return true;
         return false;
     }
 

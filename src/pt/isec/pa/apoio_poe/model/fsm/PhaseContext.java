@@ -133,6 +133,17 @@ public class PhaseContext {
     }
 
     public void showApplications(){ SecondPhaseState.showApplication(management.getApplications()); }
+
+    public String deleteApplication(Long number){
+        ArrayList<Application> aux;
+        aux=SecondPhaseState.deleteApplication(number,management.getApplications());
+        if (aux!=null)
+            management.setApplications(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
+
 }
 
 

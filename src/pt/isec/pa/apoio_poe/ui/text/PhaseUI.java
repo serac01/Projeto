@@ -129,7 +129,11 @@ public class PhaseUI {
                 "Close phase","Return to previous phase","Next phase","Quit")){
             case 1 -> fsm.addApplications(Input.readString("Filename ",false));
             case 2 -> fsm.showApplications();
-            case 3, 4, 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
+            case 3 -> System.out.println("\tTo be implemented!\n");
+            case 4 -> {
+                    long studentNumber = (long) Input.readNumber("Enter student number ");
+                    fsm.deleteStudents(studentNumber);}
+            case 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
             case 8 -> fsm.previousPhase();
             case 9 -> fsm.nextPhase();
             default -> finish=true;
