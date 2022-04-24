@@ -308,4 +308,23 @@ public class FirstPhaseState extends PhaseStateAdapter {
     }
 
 
+    private static boolean isProposalIntership(Proposal p){
+        if(p.getType().equalsIgnoreCase("T1"))
+            return true;
+        return false;
+    }
+
+    private static boolean isProposalProject(Proposal p){
+        if(p.getType().equalsIgnoreCase("T2"))
+            return true;
+        return false;
+    }
+
+    private static boolean isProposalSelfProposed(Proposal p){
+        if(p.getType().equalsIgnoreCase("T3"))
+            return true;
+        return false;
+    }
+
+
 }
