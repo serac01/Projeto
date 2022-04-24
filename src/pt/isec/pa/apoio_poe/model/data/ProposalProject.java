@@ -19,6 +19,9 @@ public class ProposalProject extends Proposal{
     public List<String> getArea() { return area; }
     public void setArea(List<String> area) { this.area = area; }
 
+    @Override
+    public long getStudentNumber() { return studentNumber; }
+
     /*@Override
     public String toString() {
         return "Proposal{" +

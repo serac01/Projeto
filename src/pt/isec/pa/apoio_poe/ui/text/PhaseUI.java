@@ -129,10 +129,19 @@ public class PhaseUI {
                 "Close phase","Return to previous phase","Next phase","Quit")){
             case 1 -> fsm.addApplications(Input.readString("Filename ",false));
             case 2 -> fsm.showApplications();
-            case 3 -> System.out.println("\tTo be implemented!\n");
+            case 3 -> {
+                long studentNumber = (long) Input.readNumber("Enter student number ");
+                boolean everythingEdited=false;
+                while(!everythingEdited)
+                    switch (Input.chooseOption("Choose the option:","New proposal", "Delete proposal",  "Quit")){
+                        case 1 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),1));
+                        case 2 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),2));
+                        default -> everythingEdited=true;
+                    }
+            }
             case 4 -> {
                     long studentNumber = (long) Input.readNumber("Enter student number ");
-                    fsm.deleteStudents(studentNumber);}
+                    System.out.print(fsm.deleteApplication(studentNumber));}
             case 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
             case 8 -> fsm.previousPhase();
             case 9 -> fsm.nextPhase();

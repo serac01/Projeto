@@ -127,12 +127,22 @@ public class PhaseContext {
         addTeachers("");
         addProposals("");
         ArrayList<Application> aux;
-        aux=SecondPhaseState.addApplication(filename,management.getApplications(), management.getProposals());
+        aux=SecondPhaseState.addApplication(filename,management.getApplications(), management.getProposals(), management.getStudent());
         if(aux!=null)
             management.setApplications(aux);
     }
 
     public void showApplications(){ SecondPhaseState.showApplication(management.getApplications()); }
+
+    public String editApplication(long id, String toUpdate,int option) {
+        ArrayList<Application> aux;
+        aux=SecondPhaseState.editApplication(id,toUpdate, option,management.getApplications(), management.getProposals());
+        if (aux!=null)
+            management.setApplications(aux);
+        else
+            return "\nYou have entered wrong data, please confirm again\n";
+        return "";
+    }
 
     public String deleteApplication(Long number){
         ArrayList<Application> aux;

@@ -62,7 +62,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
     /************************************************** Students **************************************************/
     public static ArrayList<Student> addStudents(String filename, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/eStudents.csv";
+        filename="src/csvFiles/students.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
@@ -138,7 +138,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
     /************************************************** Teachers **************************************************/
     public static ArrayList<Teacher> addTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/eTeachers.csv";
+        filename="src/csvFiles/teachers.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
@@ -188,7 +188,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
     /************************************************** Proposals **************************************************/
     public static ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/eProposals.csv";
+        filename="src/csvFiles/proposals.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
@@ -304,27 +304,6 @@ public class FirstPhaseState extends PhaseStateAdapter {
             if(number == p.getStudentNumber())
                 return true;
 
-        return false;
-    }
-
-    private static boolean isProposalIntership(ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
-            if(p.getType().equalsIgnoreCase("T1"))
-                return true;
-        return false;
-    }
-
-    private static boolean isProposalProject(ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
-            if(p.getType().equalsIgnoreCase("T2"))
-                return true;
-        return false;
-    }
-
-    private static boolean isProposalSelfProposed(ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
-            if(p.getType().equalsIgnoreCase("T3"))
-                return true;
         return false;
     }
 
