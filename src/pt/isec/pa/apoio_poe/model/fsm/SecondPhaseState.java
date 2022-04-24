@@ -34,25 +34,25 @@ public class SecondPhaseState extends PhaseStateAdapter {
 
 
     /************************************************** Applications **************************************************/
-    public static ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals) throws IOException {
+    public static ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/eApplication.csv";
+        filename="src/csvFiles/application.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String line;
             while((line=br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
-                List<String> idApplications = new ArrayList<>();
+                List<String> idProposals = new ArrayList<>();
                 for (int i=1; i<tempArr.size(); i++)
-                    idApplications.add(tempArr.get(i));
+                    idProposals.add(tempArr.get(i));
                 //Valida os parametros de entrada
-                if(tempArr.size()<2 || isAProposalSelfProposed(idApplications, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals))
+                if(tempArr.size()<2 || hasProposalAlreadyAStudent(idProposals, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals) || !isExistentStudent(Long.parseLong(tempArr.get(0)), students))
                     System.out.println("The student with code " + tempArr.get(0) + ", entered wrong data");
                 else if(isExistentApplication(Long.parseLong(tempArr.get(0)),applications))
                     System.out.println("The application of student with code " + tempArr.get(0) + ", has duplicated data or two or has two iterations");
                 else {
-                    Application application = new Application(Long.parseLong(tempArr.get(0)), idApplications);
+                    Application application = new Application(Long.parseLong(tempArr.get(0)), idProposals);
                     applications.add(application);
                 }
             }
@@ -65,7 +65,7 @@ public class SecondPhaseState extends PhaseStateAdapter {
         return applications;
     }
 
-    public static ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications)  {
+    public static ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals)  {
         if(!isExistentApplication(number,applications))
             return null;
 
@@ -73,33 +73,24 @@ public class SecondPhaseState extends PhaseStateAdapter {
             if(a.getStudentNumber()==number)
                 switch (option){
                     case 1 -> {
-                        System.out.println("Temporario -> Add Proposal to list");
-                        for(String s : a.getIdProposals())
-                            if(s.equalsIgnoreCase(id))
-                                return null;
-                        List<String> aux = a.getIdProposals();
-                        aux.add(id);
-                        a.setIdProposals(aux);
-                        return applications;
+                        for(Proposal p : proposals) {
+                            List<String> aux = a.getIdProposals();
+                            if (p.getIdentification().equalsIgnoreCase(id) && !isADuplicateProposal(id,aux) && isAValidProposal(id,proposals) && !hasProposalAlreadyAStudent(aux,proposals)) {
+                                aux.add(id);
+                                a.setIdProposals(aux);
+                                return applications;
+                            }
+                        }
                     }
                     case 2 -> {
-                        System.out.println("Temporario -> Edit Proposal from list/Change Proposal ID");
-                        for(String s : a.getIdProposals())
-                            if(s.equalsIgnoreCase(id))
-                                s = id;
-                        return applications;
-
-                    }
-                    case 3 -> {
-                        System.out.println("Temporario -> Remove Proposal from list");
-                        for(String s : a.getIdProposals())
-                            if(s.equalsIgnoreCase(id)){
-                                List<String> aux = a.getIdProposals();
-                                aux.remove(s);
+                        for(Proposal p : proposals) {
+                            List<String> aux = a.getIdProposals();
+                            if (p.getIdentification().equalsIgnoreCase(id) && aux.size()>1) {
+                                aux.remove(id);
                                 a.setIdProposals(aux);
+                                return applications;
                             }
-                        return applications;
-
+                        }
                     }
                 }
         return null;
@@ -116,20 +107,10 @@ public class SecondPhaseState extends PhaseStateAdapter {
 
 
     /************************************************** Validations **************************************************/
-    private static boolean isAProposalAssigned(long number, ArrayList<Proposal> proposals){
+    private static boolean isAProposalAssigned(Long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if (number == p.getStudentNumber())
                 return true;
-
-        return false;
-    }
-
-    private static boolean isAProposalSelfProposed(List<String> selfProposed, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
-            for(String s : selfProposed)
-                if (s.equalsIgnoreCase(p.getIdentification()) && p.getType().equalsIgnoreCase("T3"))
-                    return true;
-
         return false;
     }
 
@@ -140,4 +121,32 @@ public class SecondPhaseState extends PhaseStateAdapter {
         return false;
     }
 
+    private static boolean hasProposalAlreadyAStudent(List<String> idProposals, ArrayList<Proposal> proposals){
+        for(Proposal p : proposals)
+            for(String s : idProposals)
+                if (s.equalsIgnoreCase(p.getIdentification()) && (p.getType().equalsIgnoreCase("T3") || p.getStudentNumber()!=0))
+                    return true;
+        return false;
+    }
+
+    private static boolean isExistentStudent(Long number, ArrayList<Student> students){
+        for(Student s : students)
+            if(number==s.getStudentNumber())
+                return true;
+        return false;
+    }
+
+    private static boolean isAValidProposal(String id, ArrayList<Proposal> proposals){
+        for(Proposal p : proposals)
+            if(id.equalsIgnoreCase(p.getIdentification()))
+                return true;
+        return false;
+    }
+
+    private static boolean isADuplicateProposal(String id, List<String> idProposals){
+        for(String s : idProposals)
+            if (s.equalsIgnoreCase(id))
+                return true;
+        return false;
+    }
 }
