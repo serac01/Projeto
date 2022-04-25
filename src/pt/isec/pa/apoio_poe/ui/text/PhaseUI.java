@@ -151,7 +151,18 @@ public class PhaseUI {
                     long studentNumber = (long) Input.readNumber("Enter student number ");
                     System.out.print(fsm.deleteApplication(studentNumber));}
             case 5 -> fsm.exportApplications(Input.readString("Filename ",false));
-            case 6, 7, 8 -> System.out.println("\tTo be implemented!\n");
+            case 6 -> {
+                boolean allChosen=false,selfProposed=false,alreadyRegistered=false,withoutRegistered=false;
+                while(!allChosen)
+                    switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Generate the list", "Quit")){
+                        case 1 -> selfProposed=true;
+                        case 2 -> alreadyRegistered=true;
+                        case 3 -> withoutRegistered=true;
+                        case 4 -> fsm.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered);
+                        default -> allChosen=true;
+                    }
+            }
+            case 7, 8 -> System.out.println("\tTo be implemented!\n");
             case 9 -> fsm.previousPhase();
             case 10 -> fsm.nextPhase();
             default -> finish=true;

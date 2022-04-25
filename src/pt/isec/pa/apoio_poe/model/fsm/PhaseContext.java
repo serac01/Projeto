@@ -162,6 +162,8 @@ public class PhaseContext {
 
     public void exportApplications(String filename) throws IOException { SecondPhaseState.exportApplications(filename,management.getApplications()); }
 
+    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered) throws IOException { SecondPhaseState.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered,management.getProposals(),management.getApplications(), management.getStudent()); }
+
 }
 
 
