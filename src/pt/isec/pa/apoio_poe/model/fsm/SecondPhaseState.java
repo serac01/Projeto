@@ -135,6 +135,36 @@ public class SecondPhaseState extends PhaseStateAdapter {
         }
     }
 
+    /************************************************** Obter lista de alunos **************************************************/
+    public static void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students){
+        ArrayList<Long> studentList = new ArrayList<Long>();
+        int count=0;
+
+        if(selfProposed)
+            for(Proposal p : proposals)
+                if(p.getType().equalsIgnoreCase("T3"))
+                    studentList.add(p.getStudentNumber());
+
+        if(alreadyRegistered)
+            for(Application a : applications)
+                studentList.add(a.getStudentNumber());
+
+        if(withoutRegistered)
+            for(Student s : students) {
+                count=0;
+                for (Application a : applications) {
+                    if (a.getStudentNumber() != s.getStudentNumber())
+                        count++;
+                    if (count == applications.size())
+                        studentList.add(s.getStudentNumber());
+                }
+            }
+
+        for(Long l : studentList)
+            System.out.print(l+" ");
+    }
+
+
 
     /************************************************** Validations **************************************************/
     private static boolean isAProposalAssigned(Long number, ArrayList<Proposal> proposals){
