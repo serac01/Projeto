@@ -23,6 +23,10 @@ public class Proposal {
     public long getStudentNumber() { return 0; }
 
     public List<String> getArea() { return null; }
+
+    public String getHostEntity() { return ""; }
+
+    public String getTeacherEmail() { return ""; }
     
         @Override
     public String toString() {

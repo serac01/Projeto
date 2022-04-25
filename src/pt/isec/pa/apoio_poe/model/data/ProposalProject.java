@@ -22,6 +22,9 @@ public class ProposalProject extends Proposal{
     @Override
     public long getStudentNumber() { return studentNumber; }
 
+    @Override
+    public String getTeacherEmail() { return teacherEmail; }
+
     /*@Override
     public String toString() {
         return "Proposal{" +

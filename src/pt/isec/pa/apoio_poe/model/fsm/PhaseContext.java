@@ -60,6 +60,8 @@ public class PhaseContext {
 
     public void showStudents(){ FirstPhaseState.showStudents(management.getStudent()); }
 
+    public void exportStudents(String filename) throws IOException { FirstPhaseState.exportStudents(filename,management.getStudent()); }
+
     /************************************************** Teachers **************************************************/
     public void addTeachers(String filename) throws IOException {
         ArrayList<Teacher> aux;
@@ -90,6 +92,8 @@ public class PhaseContext {
 
     public void showTeachers(){ FirstPhaseState.showTeachers(management.getTeachers()); }
 
+    public void exportTeachers(String filename) throws IOException { FirstPhaseState.exportTeacher(filename,management.getTeachers()); }
+
     /************************************************** Proposals **************************************************/
     public void addProposals(String filename) throws IOException {
         ArrayList<Proposal> aux;
@@ -119,6 +123,8 @@ public class PhaseContext {
     }
 
     public void showProposals(){ FirstPhaseState.showProposals(management.getProposals()); }
+
+    public void exportProposals(String filename) throws IOException { FirstPhaseState.exportProposals(filename,management.getProposals()); }
 
 
     /************************************************** Applications **************************************************/
@@ -153,6 +159,8 @@ public class PhaseContext {
             return "\nYou have entered wrong data, please confirm again\n";
         return "";
     }
+
+    public void exportApplications(String filename) throws IOException { SecondPhaseState.exportApplications(filename,management.getApplications()); }
 
 }
 

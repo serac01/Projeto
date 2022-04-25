@@ -2,9 +2,7 @@ package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,6 +132,43 @@ public class FirstPhaseState extends PhaseStateAdapter {
 
     public static void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
 
+    public static void exportStudents(String filename, ArrayList<Student> students) throws IOException {
+        filename = "src/csvFiles/exportStudent.csv";
+        FileWriter csvWriter = null;
+        try {
+            File file = new File(filename);
+            if(!file.exists()) {
+                csvWriter = new FileWriter(file);
+
+                int count = 0;
+
+                for (Student s : students) {
+                    csvWriter.append(String.valueOf(s.getStudentNumber()));
+                    csvWriter.append(",");
+                    csvWriter.append(s.getName());
+                    csvWriter.append(",");
+                    csvWriter.append(s.getEmail());
+                    csvWriter.append(",");
+                    csvWriter.append(s.getCourseAcronym());
+                    csvWriter.append(",");
+                    csvWriter.append(s.getIndustryAcronym());
+                    csvWriter.append(",");
+                    csvWriter.append(String.valueOf(s.getClassification()));
+                    csvWriter.append(",");
+                    csvWriter.append(String.valueOf(s.isAccessInternships()));
+                    count++;
+                    if (count < students.size())
+                        csvWriter.append("\n");
+                }
+            }
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }finally {
+            if (csvWriter != null)
+                csvWriter.close();
+        }
+    }
+
 
     /************************************************** Teachers **************************************************/
     public static ArrayList<Teacher> addTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
@@ -183,6 +218,31 @@ public class FirstPhaseState extends PhaseStateAdapter {
     }
 
     public static void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
+
+    public static void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
+        filename = "src/csvFiles/exportTeachers.csv";
+        FileWriter csvWriter = null;
+        try {
+            File file = new File(filename);
+            if(!file.exists()) {
+                csvWriter = new FileWriter(file);
+                int count = 0;
+                for (Teacher t : teachers) {
+                    csvWriter.append(t.getName());
+                    csvWriter.append(",");
+                    csvWriter.append(t.getEmail());
+                    count++;
+                    if (count < teachers.size())
+                        csvWriter.append("\n");
+                }
+            }
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }finally {
+            if (csvWriter != null)
+                csvWriter.close();
+        }
+    }
 
 
     /************************************************** Proposals **************************************************/
@@ -259,6 +319,78 @@ public class FirstPhaseState extends PhaseStateAdapter {
 
     public static void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
 
+    public static void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+        filename = "src/csvFiles/exportProposals.csv";
+        FileWriter csvWriter = null;
+        try {
+            File file = new File(filename);
+            if(!file.exists()) {
+                csvWriter = new FileWriter(file);
+
+                int count = 0;
+
+                for (Proposal p : proposals) {
+                    if(p.getType().equalsIgnoreCase("T1")){
+                        csvWriter.append(p.getType());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getIdentification());
+                        csvWriter.append(",");
+                        StringBuilder stringBuilder = new StringBuilder(5);
+                        int countAreaT1=0;
+                        for(String s : p.getArea()) {
+                            stringBuilder.append(s);
+                            countAreaT1++;
+                            if(countAreaT1 < p.getArea().size())
+                                stringBuilder.append("|");
+                        }
+                        csvWriter.append(stringBuilder);
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getHostEntity());
+                    }else if(p.getType().equalsIgnoreCase("T2")){
+                        csvWriter.append(p.getType());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getIdentification());
+                        csvWriter.append(",");
+                        StringBuilder stringBuilder = new StringBuilder(5);
+                        int countAreaT2=0;
+                        for(String s : p.getArea()) {
+                            stringBuilder.append(s);
+                            countAreaT2++;
+                            if(countAreaT2 < p.getArea().size())
+                                stringBuilder.append("|");
+                        }
+                        csvWriter.append(stringBuilder);
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTeacherEmail());
+                        if(p.getStudentNumber()!=0){
+                            csvWriter.append(",");
+                            csvWriter.append(String.valueOf(p.getStudentNumber()));
+                        }
+                    }else if(p.getType().equalsIgnoreCase("T3")){
+                        csvWriter.append(p.getType());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getIdentification());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(String.valueOf(p.getStudentNumber()));
+                    }
+                    count++;
+                    if (count < proposals.size())
+                        csvWriter.append("\n");
+                }
+            }
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }finally {
+            if (csvWriter != null)
+                csvWriter.close();
+        }
+    }
 
     /************************************************** Validations **************************************************/
     private static boolean isExistentStudent(long number, ArrayList<Student> students){
@@ -307,8 +439,7 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return false;
     }
 
-
-    private static boolean isProposalIntership(Proposal p){
+    /*private static boolean isProposalIntership(Proposal p){
         if(p.getType().equalsIgnoreCase("T1"))
             return true;
         return false;
@@ -324,7 +455,5 @@ public class FirstPhaseState extends PhaseStateAdapter {
         if(p.getType().equalsIgnoreCase("T3"))
             return true;
         return false;
-    }
-
-
+    }*/
 }

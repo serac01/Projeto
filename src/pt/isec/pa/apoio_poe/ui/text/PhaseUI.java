@@ -33,7 +33,7 @@ public class PhaseUI {
             case 3 -> management("proposals for internships or projects");
             case 4 -> {
                 if (fsm.closePhase())
-                    System.out.println("Clossed Phase");
+                    System.out.println("Closed Phase");
             }
             case 5 -> fsm.nextPhase();
             default -> finish = true;
@@ -46,7 +46,7 @@ public class PhaseUI {
         long studentNumber;
         while(!finishManagement)
             switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
-                    "Edit "+name,"Delete "+name,"Quit")){
+                    "Edit "+name,"Delete "+name,"Export "+name,"Quit")){
                 case 1 -> {
                     if(name.equalsIgnoreCase("student"))
                         fsm.addStudents(Input.readString("Filename ",false));
@@ -72,6 +72,14 @@ public class PhaseUI {
                         fsm.deleteTeachers(Input.readString("Enter teacher email ",false));
                     else if(name.equalsIgnoreCase("proposals for internships or projects"))
                         fsm.deleteProposals(Input.readString("Enter proposal id ",false));
+                }
+                case 5 -> {
+                    if(name.equalsIgnoreCase("student"))
+                        fsm.exportStudents(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("teacher"))
+                        fsm.exportTeachers(Input.readString("Filename ",false));
+                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                        fsm.exportProposals(Input.readString("Filename ",false));
                 }
                 default -> finishManagement=true;
             }
@@ -125,7 +133,7 @@ public class PhaseUI {
          * Avançar para a fase seguinte*/
         System.out.print("\n2nd Phase");
         switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
-                "Edit applications", "Delete applications", "Get the list of students","Get lists of project/internship proposals",
+                "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
                 "Close phase","Return to previous phase","Next phase","Quit")){
             case 1 -> fsm.addApplications(Input.readString("Filename ",false));
             case 2 -> fsm.showApplications();
@@ -142,9 +150,10 @@ public class PhaseUI {
             case 4 -> {
                     long studentNumber = (long) Input.readNumber("Enter student number ");
                     System.out.print(fsm.deleteApplication(studentNumber));}
-            case 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
-            case 8 -> fsm.previousPhase();
-            case 9 -> fsm.nextPhase();
+            case 5 -> fsm.exportApplications(Input.readString("Filename ",false));
+            case 6, 7, 8 -> System.out.println("\tTo be implemented!\n");
+            case 9 -> fsm.previousPhase();
+            case 10 -> fsm.nextPhase();
             default -> finish=true;
         }
     }
