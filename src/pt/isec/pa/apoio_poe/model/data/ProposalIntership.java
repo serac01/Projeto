@@ -16,6 +16,7 @@ public class ProposalIntership extends Proposal{
     public List<String> getArea() { return area; }
     public void setArea(List<String> area) { this.area = area; }
 
+    @Override
     public String getHostEntity() { return hostEntity; }
     public void setHostEntity(String hostEntity) { this.hostEntity = hostEntity; }
 

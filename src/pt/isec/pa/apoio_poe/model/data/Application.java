@@ -21,9 +21,7 @@ public class Application {
         this.studentNumber = studentNumber;
     }
 
-    public List<String> getIdProposals() {
-        return idProposals;
-    }
+    public List<String> getIdProposals() { return idProposals; }
 
     public void setIdProposals(List<String> idProposals) { this.idProposals = idProposals; }
 

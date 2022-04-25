@@ -2,9 +2,7 @@ package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -104,6 +102,38 @@ public class SecondPhaseState extends PhaseStateAdapter {
     }
 
     public static void showApplication(ArrayList<Application> applications){ applications.forEach((n) -> System.out.println(n.toString())); }
+
+    public static void exportApplications(String filename, ArrayList<Application> applications) throws IOException {
+        filename = "src/csvFiles/exportApplications.csv";
+        FileWriter csvWriter = null;
+        try {
+            File file = new File(filename);
+            if(!file.exists()) {
+                csvWriter = new FileWriter(file);
+                int count = 0;
+                for (Application a : applications) {
+                    csvWriter.append(String.valueOf(a.getStudentNumber()));
+                    csvWriter.append(",");
+                    StringBuilder stringBuilder = new StringBuilder(20);
+                    int countIdProposals=0;
+                    for(String s : a.getIdProposals()) {
+                        stringBuilder.append(s);
+                        countIdProposals++;
+                        if(countIdProposals < a.getIdProposals().size())
+                            stringBuilder.append(",");
+                    }
+                    csvWriter.append(stringBuilder);
+                    if (count < applications.size())
+                        csvWriter.append("\n");
+                }
+            }
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }finally {
+            if (csvWriter != null)
+                csvWriter.close();
+        }
+    }
 
 
     /************************************************** Validations **************************************************/
