@@ -1,8 +1,9 @@
 package pt.isec.pa.apoio_poe.model.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ProposalProject extends Proposal{
+public class ProposalProject extends Proposal  implements Serializable {
     private List<String> area;
     private String teacherEmail;
     private long studentNumber;

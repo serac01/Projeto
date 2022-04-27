@@ -1,8 +1,9 @@
 package pt.isec.pa.apoio_poe.model.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ProposalIntership extends Proposal{
+public class ProposalIntership extends Proposal implements Serializable {
     private String hostEntity;
     private List<String> area;
 

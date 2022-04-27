@@ -1,9 +1,10 @@
 package pt.isec.pa.apoio_poe.model.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Application {
+public class Application implements Serializable {
     private long studentNumber;
     private List<String> idProposals;
 

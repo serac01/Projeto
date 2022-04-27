@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FirstPhaseState extends PhaseStateAdapter {
+public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
 
     FirstPhaseState(PhaseContext context, Phase phase){
         super(context,phase);
@@ -58,7 +58,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
     public PhaseState getState() { return PhaseState.PHASE_1; }
 
     /************************************************** Students **************************************************/
-    public static ArrayList<Student> addStudents(String filename, ArrayList<Student> students) throws IOException {
+    @Override
+    public ArrayList<Student> addStudents(String filename, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/students.csv";
         try {
@@ -81,10 +82,12 @@ public class FirstPhaseState extends PhaseStateAdapter {
             if (br != null)
                 br.close();
         }
+        System.out.println("Here I am");
         return students;
     }
 
-    public static ArrayList<Student> editStudent(long number, String toUpdate, int option, ArrayList<Student> students)  {
+    @Override
+    public ArrayList<Student> editStudent(long number, String toUpdate, int option, ArrayList<Student> students)  {
         if(!isExistentStudent(number,students))
             return null;
 
@@ -123,16 +126,19 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return null;
     }
 
-    public static ArrayList<Student> deleteStudents(long number, ArrayList<Student> students){
+    @Override
+    public ArrayList<Student> deleteStudents(long number, ArrayList<Student> students){
         if(!isExistentStudent(number,students))
             return null;
         students.removeIf(s -> s.getStudentNumber() == number);
         return students;
     }
 
-    public static void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
+    @Override
+    public void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
 
-    public static void exportStudents(String filename, ArrayList<Student> students) throws IOException {
+    @Override
+    public void exportStudents(String filename, ArrayList<Student> students) throws IOException {
         filename = "src/csvFiles/exportStudent.csv";
         FileWriter csvWriter = null;
         try {
@@ -171,7 +177,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
 
 
     /************************************************** Teachers **************************************************/
-    public static ArrayList<Teacher> addTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
+    @Override
+    public ArrayList<Teacher> addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/teachers.csv";
         try {
@@ -197,7 +204,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return teachers;
     }
 
-    public static ArrayList<Teacher> editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers)  {
+    @Override
+    public ArrayList<Teacher> editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers)  {
         if(!isExistentTeacher(email,teachers))
             return null;
 
@@ -209,7 +217,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return null;
     }
 
-    public static ArrayList<Teacher> deleteTeacher(String email, ArrayList<Teacher> teachers){
+    @Override
+    public ArrayList<Teacher> deleteTeacher(String email, ArrayList<Teacher> teachers){
         if(!isExistentTeacher(email,teachers))
             return null;
         else
@@ -217,9 +226,11 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return teachers;
     }
 
-    public static void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
+    @Override
+    public void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
 
-    public static void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
+    @Override
+    public void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
         filename = "src/csvFiles/exportTeachers.csv";
         FileWriter csvWriter = null;
         try {
@@ -246,7 +257,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
 
 
     /************************************************** Proposals **************************************************/
-    public static ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
+    @Override
+    public ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/proposals.csv";
         try {
@@ -294,7 +306,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return proposals;
     }
 
-    public static ArrayList<Proposal> editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals)  {
+    @Override
+    public ArrayList<Proposal> editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals)  {
         if(!isExistentProposal(id,proposals))
             return null;
 
@@ -309,7 +322,8 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return null;
     }
 
-    public static ArrayList<Proposal> deleteProposals(String id, ArrayList<Proposal> proposals){
+    @Override
+    public ArrayList<Proposal> deleteProposals(String id, ArrayList<Proposal> proposals){
         if(!isExistentProposal(id,proposals))
             return null;
         else
@@ -317,9 +331,11 @@ public class FirstPhaseState extends PhaseStateAdapter {
         return proposals;
     }
 
-    public static void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
+    @Override
+    public void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
 
-    public static void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+    @Override
+    public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
         filename = "src/csvFiles/exportProposals.csv";
         FileWriter csvWriter = null;
         try {

@@ -1,6 +1,8 @@
 package pt.isec.pa.apoio_poe.model.data;
 
-public class Teacher {
+import java.io.Serializable;
+
+public class Teacher  implements Serializable {
     private String name, email;
 
     public Teacher(String name, String email) {
