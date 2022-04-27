@@ -1,8 +1,9 @@
 package pt.isec.pa.apoio_poe.model.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Proposal {
+public class Proposal  implements Serializable {
     private String identification, title, type;
 
     public Proposal(String identification, String title, String type) {

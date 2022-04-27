@@ -1,6 +1,8 @@
 package pt.isec.pa.apoio_poe.model.data;
 
-public class ProposalSelfProposed extends Proposal{
+import java.io.Serializable;
+
+public class ProposalSelfProposed extends Proposal  implements Serializable {
     private long studentNumber;
 
     public ProposalSelfProposed(String identification, String title, long studentNumber) {

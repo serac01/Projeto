@@ -1,9 +1,10 @@
 package pt.isec.pa.apoio_poe.model.data;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Student {
+public class Student  implements Serializable {
     private long studentNumber;
     private String name, email, courseAcronym, industryAcronym;
     private double classification;

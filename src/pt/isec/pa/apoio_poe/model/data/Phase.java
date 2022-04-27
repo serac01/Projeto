@@ -1,6 +1,8 @@
 package pt.isec.pa.apoio_poe.model.data;
 
-public class Phase {
+import java.io.Serializable;
+
+public class Phase implements Serializable {
     private int currentPhase;
 
     public Phase(int currentPhase){this.currentPhase=currentPhase;}

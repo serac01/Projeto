@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SecondPhaseState extends PhaseStateAdapter {
+public class SecondPhaseState extends PhaseStateAdapter{
     SecondPhaseState(PhaseContext context, Phase phase) {
         super(context, phase);
         phase.setCurrentPhase(2);
@@ -32,7 +32,9 @@ public class SecondPhaseState extends PhaseStateAdapter {
 
 
     /************************************************** Applications **************************************************/
-    public static ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException {
+
+    @Override
+    public ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/application.csv";
         try {
@@ -63,7 +65,8 @@ public class SecondPhaseState extends PhaseStateAdapter {
         return applications;
     }
 
-    public static ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals)  {
+    @Override
+    public ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals)  {
         if(!isExistentApplication(number,applications))
             return null;
 
@@ -94,16 +97,19 @@ public class SecondPhaseState extends PhaseStateAdapter {
         return null;
     }
 
-    public static ArrayList<Application> deleteApplication(long number, ArrayList<Application> applications){
+    @Override
+    public ArrayList<Application> deleteApplication(long number, ArrayList<Application> applications){
         if(!isExistentApplication(number,applications))
             return null;
         applications.removeIf(a -> a.getStudentNumber() == number);
         return applications;
     }
 
-    public static void showApplication(ArrayList<Application> applications){ applications.forEach((n) -> System.out.println(n.toString())); }
+    @Override
+    public void showApplication(ArrayList<Application> applications){ applications.forEach((n) -> System.out.println(n.toString())); }
 
-    public static void exportApplications(String filename, ArrayList<Application> applications) throws IOException {
+    @Override
+    public void exportApplications(String filename, ArrayList<Application> applications) throws IOException {
         filename = "src/csvFiles/exportApplications.csv";
         FileWriter csvWriter = null;
         try {
@@ -136,7 +142,8 @@ public class SecondPhaseState extends PhaseStateAdapter {
     }
 
     /************************************************** Obter lista de alunos **************************************************/
-    public static void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students){
+    @Override
+    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students){
         ArrayList<Long> studentList = new ArrayList<Long>();
         int count=0;
 
@@ -165,7 +172,8 @@ public class SecondPhaseState extends PhaseStateAdapter {
             System.out.print(l+" ");
     }
 
-    public static void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications){
+    @Override
+    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications){
         ArrayList<String> proposalList = new ArrayList<>();
         boolean exist = false;
 
