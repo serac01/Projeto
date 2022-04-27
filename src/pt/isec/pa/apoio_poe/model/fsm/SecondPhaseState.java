@@ -142,12 +142,13 @@ public class SecondPhaseState extends PhaseStateAdapter {
 
         if(selfProposed)
             for(Proposal p : proposals)
-                if(p.getType().equalsIgnoreCase("T3"))
+                if(p.getType().equalsIgnoreCase("T3") && !isExistentStudent(p.getStudentNumber(),studentList))
                     studentList.add(p.getStudentNumber());
 
         if(alreadyRegistered)
             for(Application a : applications)
-                studentList.add(a.getStudentNumber());
+                if(!isExistentStudent(a.getStudentNumber(),studentList))
+                    studentList.add(a.getStudentNumber());
 
         if(withoutRegistered)
             for(Student s : students) {
@@ -155,7 +156,7 @@ public class SecondPhaseState extends PhaseStateAdapter {
                 for (Application a : applications) {
                     if (a.getStudentNumber() != s.getStudentNumber())
                         count++;
-                    if (count == applications.size())
+                    if (count == applications.size() && !isExistentStudent(s.getStudentNumber(),studentList))
                         studentList.add(s.getStudentNumber());
                 }
             }
@@ -164,9 +165,57 @@ public class SecondPhaseState extends PhaseStateAdapter {
             System.out.print(l+" ");
     }
 
+    public static void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications){
+        ArrayList<String> proposalList = new ArrayList<>();
+        boolean exist = false;
 
+        if(selfProposed)
+            for(Proposal p : proposals)
+                if(p.getType().equalsIgnoreCase("T3"))
+                    proposalList.add(p.getIdentification());
+
+        if(proposeTeacher)
+            for(Proposal p : proposals)
+                if(p.getType().equalsIgnoreCase("T2"))
+                    proposalList.add(p.getIdentification());
+
+        if(withApplications)
+            for(Proposal p : proposals)
+                for(Application a : applications)
+                    for (String s : a.getIdProposals())
+                        if(s.equalsIgnoreCase(p.getIdentification()))
+                            proposalList.add(p.getIdentification());
+
+        if(withoutApplications) {
+            List<String> aux = new ArrayList<>();
+            for (Application a : applications)
+                aux.addAll(a.getIdProposals());
+
+            for (Proposal p : proposals) {
+                for (String s : aux)
+                    if (s.equalsIgnoreCase(p.getIdentification())) {
+                        exist = true;
+                        break;
+                    }
+
+                if(!exist)
+                    proposalList.add(p.getIdentification());
+                exist=false;
+            }
+        }
+
+        for(String s : proposalList)
+            System.out.print(s+" ");
+    }
 
     /************************************************** Validations **************************************************/
+    private static boolean isExistentStudent(long number, ArrayList<Long> students){
+        for(Long s : students)
+            if(s == number)
+                return true;
+        return false;
+    }
+
     private static boolean isAProposalAssigned(Long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if (number == p.getStudentNumber())
