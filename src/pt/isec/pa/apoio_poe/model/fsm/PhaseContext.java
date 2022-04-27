@@ -162,7 +162,11 @@ public class PhaseContext {
 
     public void exportApplications(String filename) throws IOException { SecondPhaseState.exportApplications(filename,management.getApplications()); }
 
-    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered) throws IOException { SecondPhaseState.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered,management.getProposals(),management.getApplications(), management.getStudent()); }
+    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered) { SecondPhaseState.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered,management.getProposals(),management.getApplications(), management.getStudent()); }
+
+    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications) {
+        SecondPhaseState.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications, management.getProposals(), management.getApplications());
+    }
 
 }
 

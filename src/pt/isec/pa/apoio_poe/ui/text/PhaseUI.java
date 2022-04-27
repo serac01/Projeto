@@ -162,7 +162,21 @@ public class PhaseUI {
                         default -> allChosen=true;
                     }
             }
-            case 7, 8 -> System.out.println("\tTo be implemented!\n");
+            case 7 -> {
+                boolean allChosen=false,selfProposed=false,proposeTeacher=false,withApplications=false,withoutApplications=false;
+                while(!allChosen)
+                    switch (Input.chooseOption("Choose the option:","self-proposals from students",
+                            "proposals from teachers", "Proposals with applications",
+                            "Proposals without applications", "Generate the list", "Quit")){
+                        case 1 -> selfProposed=true;
+                        case 2 -> proposeTeacher=true;
+                        case 3 -> withApplications=true;
+                        case 4 -> withoutApplications=true;
+                        case 5 -> fsm.generateProposalsList(selfProposed,proposeTeacher,withApplications,withoutApplications);
+                        default -> allChosen=true;
+                    }
+            }
+            case 8 -> System.out.println("\tTo be implemented!\n");
             case 9 -> fsm.previousPhase();
             case 10 -> fsm.nextPhase();
             default -> finish=true;
