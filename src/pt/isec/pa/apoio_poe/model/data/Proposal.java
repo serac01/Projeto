@@ -21,15 +21,15 @@ public class Proposal  implements Serializable {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public long getStudentNumber() { return 0; }
+    public Student getStudent() { return new Student(0,"","","","",0,false); }
 
     public List<String> getArea() { return null; }
 
     public String getHostEntity() { return ""; }
 
-    public String getTeacherEmail() { return ""; }
+    public Teacher getTeacher() { return null; }
     
-        @Override
+    @Override
     public String toString() {
         return "Proposal{" +
                 "identification=" + identification +

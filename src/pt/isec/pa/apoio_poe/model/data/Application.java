@@ -5,30 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Application implements Serializable {
-    private long studentNumber;
+    private Student student;
     private List<String> idProposals;
 
 
-    public Application(long studentNumber, List<String> idProposals) {
-        this.studentNumber = studentNumber;
+    public Application(Student student, List<String> idProposals) {
+        this.student = student;
         this.idProposals = idProposals;
     }
 
-    public long getStudentNumber() {
-        return studentNumber;
+    public Student getStudentNumber() {
+        return student;
     }
-
-    public void setStudentNumber(long studentNumber) {
-        this.studentNumber = studentNumber;
-    }
+    public void setStudent(Student student) { this.student = student; }
 
     public List<String> getIdProposals() { return idProposals; }
-
     public void setIdProposals(List<String> idProposals) { this.idProposals = idProposals; }
 
     @Override
     public String toString() {
-        System.out.print("Number: "+studentNumber);
+        System.out.print("Student: "+student.toString()+ "Proposals: ");
         for (String s : idProposals)
             System.out.print(" "+s);
         return "";
