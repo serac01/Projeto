@@ -3,20 +3,19 @@ package pt.isec.pa.apoio_poe.model.fsm;
 import pt.isec.pa.apoio_poe.model.data.Phase;
 
 public class FourthPhaseState extends PhaseStateAdapter {
-    FourthPhaseState(PhaseContext context, Phase phase){
-        super(context,phase);
-        phase.setCurrentPhase(4);
-    }
+    public static final long serialVersionUID=2020129026;
+
+    FourthPhaseState(PhaseContext context){ super(context); }
 
     @Override
     public boolean previousPhase() {
-        changeState(new ThirdPhaseState(context,phase));
+        changeState(new ThirdPhaseState(context));
         return true;
     }
 
     @Override
     public boolean nextPhase() {
-        changeState(new FifthPhaseState(context,phase));
+        changeState(new FifthPhaseState(context));
         return true;
     }
 

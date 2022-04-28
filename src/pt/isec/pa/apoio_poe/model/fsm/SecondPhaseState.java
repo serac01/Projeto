@@ -7,23 +7,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SecondPhaseState extends PhaseStateAdapter implements Serializable{
+public class SecondPhaseState extends PhaseStateAdapter implements Serializable {
     public static final long serialVersionUID=2020129026;
 
-    SecondPhaseState(PhaseContext context, Phase phase) {
-        super(context, phase);
-        phase.setCurrentPhase(2);
-    }
+    SecondPhaseState(PhaseContext context) { super(context); }
 
     @Override
     public boolean previousPhase() {
-        changeState(new FirstPhaseState(context, phase));
+        changeState(new FirstPhaseState(context));
         return true;
     }
 
     @Override
     public boolean nextPhase() {
-        changeState(new ThirdPhaseState(context, phase));
+        changeState(new ThirdPhaseState(context));
         return true;
     }
 
@@ -49,7 +46,7 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable{
                 for (int i=1; i<tempArr.size(); i++)
                     idProposals.add(tempArr.get(i));
                 //Valida os parametros de entrada
-                if(tempArr.size()<2 || /*hasProposalAlreadyAStudent(idProposals, proposals) ||*/ isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals) || !isExistentStudent(Long.parseLong(tempArr.get(0)), students))
+                if(tempArr.size()<2 || hasProposalAlreadyAStudent(idProposals, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals) || !isExistentStudent(Long.parseLong(tempArr.get(0)), students))
                     System.out.println("The student with code " + tempArr.get(0) + ", entered wrong data");
                 else if(isExistentApplication(Long.parseLong(tempArr.get(0)),applications))
                     System.out.println("The application of student with code " + tempArr.get(0) + ", has duplicated data or two or has two iterations");

@@ -108,9 +108,10 @@ public class PhaseUI {
             String email = Input.readString("Email ",true);
             boolean everythingEdited=false;
             while(!everythingEdited)
-                switch (Input.chooseOption("Choose the option:","Edit name",  "Quit")){
-                    case 1 -> System.out.print(fsm.editTeacher(email,Input.readString("New name ",false)));
-                    default -> everythingEdited=true;
+                if (Input.chooseOption("Choose the option:", "Edit name", "Quit") == 1) {
+                    System.out.print(fsm.editTeacher(email, Input.readString("New name ", false)));
+                } else {
+                    everythingEdited = true;
                 }
         }
         else if(name.equalsIgnoreCase("proposals for internships or projects")){
@@ -203,7 +204,8 @@ public class PhaseUI {
         switch (Input.chooseOption("Choose the option:","Automatically assign self-proposals or proposals from teachers with an associated student",
                 "Automatically assign a proposal without assignments","Manual assignment of proposals","Manually removing an assignment",
                 "Undo or redo", "Get student lists","Get lists of internship project proposals","Close phase","Return to previous phase","Next phase","Quit")){
-            case 1, 2, 3, 4, 5, 6, 7, 8 -> System.out.println("\tTo be implemented!\n");
+            case 1 -> System.out.println("\tIts Done\n");
+            case 2, 3, 4, 5, 6, 7, 8 -> System.out.println("\tTo be implemented!\n");
             case 9 -> fsm.previousPhase();
             case 10 -> fsm.nextPhase();
             default -> finish=true;

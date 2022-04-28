@@ -21,7 +21,7 @@ public class Proposal  implements Serializable {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public Student getStudent() { return new Student(0,"","","","",0,false); }
+    public Student getStudent() { return null; }
 
     public List<String> getArea() { return null; }
 
