@@ -14,6 +14,8 @@ public interface IPhaseState {
     boolean nextPhase();
     boolean previousPhase();
     boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> student);
+    void changeState(IPhaseState newState);
+    void setContext(PhaseContext context);
 
     ArrayList<Student> addStudents(String filename, ArrayList<Student> students) throws IOException;
     ArrayList<Student> editStudent(long number, String toUpdate, int option, ArrayList<Student> students);
