@@ -8,15 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
+    public static final long serialVersionUID=2020129026;
 
-    FirstPhaseState(PhaseContext context, Phase phase){
-        super(context,phase);
-        phase.setCurrentPhase(1);
-    }
+    FirstPhaseState(PhaseContext context){ super(context); }
 
     @Override
     public boolean nextPhase() {
-        changeState(new SecondPhaseState(context,phase));
+        changeState(new SecondPhaseState(context));
         return true;
     }
 
@@ -268,7 +266,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                 List<String> tempArr = Arrays.asList(line.split(","));
                 if(tempArr.get(0).equalsIgnoreCase("T1")){
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(!isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals))
+                    if(isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
                         ProposalIntership proposalIntership = new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4));
@@ -282,7 +280,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(5)))
                                 stud=s;
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(!isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals) || !isExistentTeacher(tempArr.get(4),teachers))
+                    if(isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals) || !isExistentTeacher(tempArr.get(4),teachers))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
                         Teacher t=null;
@@ -449,7 +447,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
             if(s.equalsIgnoreCase("SI") || s.equalsIgnoreCase("DA") || s.equalsIgnoreCase("RAS"))
                 count++;
 
-        return count == industryAcronym.size();
+        return count != industryAcronym.size();
     }
 
     private static boolean isAValidClassification(double classification){ return classification>=0 && classification<=1; }
@@ -458,8 +456,9 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
 
     private static boolean isARepeatSelfProposedStudent(long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
-            if(number == p.getStudent().getStudentNumber())
-                return true;
+            if(p.getStudent() != null)
+                if(number == p.getStudent().getStudentNumber())
+                    return true;
 
         return false;
     }

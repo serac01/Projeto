@@ -10,7 +10,7 @@ public class PhaseContext implements Serializable{
     ManagementPoE management;
 
     public PhaseContext(){
-        state = new FirstPhaseState(this, new Phase(1));
+        state = new FirstPhaseState(this);
         management = new ManagementPoE();
     }
 

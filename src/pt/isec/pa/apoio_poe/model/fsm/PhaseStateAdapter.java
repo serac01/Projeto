@@ -6,14 +6,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 abstract class PhaseStateAdapter implements IPhaseState, Serializable{
-    protected Phase phase;
     protected PhaseContext context;
 
-    protected PhaseStateAdapter(PhaseContext context, Phase phase){
-        this.context = context;
-        this.phase = phase;
-
-    }
+    protected PhaseStateAdapter(PhaseContext context){ this.context = context; }
 
     @Override
     public void changeState(IPhaseState newState){
