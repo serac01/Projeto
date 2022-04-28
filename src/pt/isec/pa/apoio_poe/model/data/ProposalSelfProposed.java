@@ -3,16 +3,16 @@ package pt.isec.pa.apoio_poe.model.data;
 import java.io.Serializable;
 
 public class ProposalSelfProposed extends Proposal  implements Serializable {
-    private long studentNumber;
+    private Student student;
 
-    public ProposalSelfProposed(String identification, String title, long studentNumber) {
+    public ProposalSelfProposed(String identification, String title, Student student) {
         super(identification, title, "T3");
-        this.studentNumber= studentNumber;
+        this.student = student;
     
     }
 
     @Override
-    public long getStudentNumber() { return studentNumber; }
+    public Student getStudent() { return student; }
 
     /*@Override
     public String toString() {

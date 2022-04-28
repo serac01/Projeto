@@ -9,9 +9,14 @@ public class PhaseContext implements Serializable{
     IPhaseState state;
     ManagementPoE management;
 
+    public PhaseContext(){
+        state = new FirstPhaseState(this, new Phase(1));
+        management = new ManagementPoE();
+    }
+
     public void serialization() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("src/context.ser");
+            FileOutputStream fileOut = new FileOutputStream("src/context.bin");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(state);
             out.writeObject(management);
@@ -24,9 +29,10 @@ public class PhaseContext implements Serializable{
 
     public void deserialization() {
         try {
-            FileInputStream fileIn = new FileInputStream("src/context.ser");
+            FileInputStream fileIn = new FileInputStream("src/context.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            state = (IPhaseState) in.readObject();
+            //state = (IPhaseState) in.readObject();
+            changeState((IPhaseState) in.readObject());
             management = (ManagementPoE) in.readObject();
             in.close();
             fileIn.close();
@@ -36,12 +42,6 @@ public class PhaseContext implements Serializable{
 
     }
 
-    public PhaseContext(){
-        state = new FirstPhaseState(this, new Phase(1));
-        management = new ManagementPoE();
-    }
-
-    //package private (by default) --> sendo assim é so usado pelos estados (FSM)
     void changeState(IPhaseState newState){ this.state = newState; }
 
     //State interface methods
@@ -52,8 +52,6 @@ public class PhaseContext implements Serializable{
     public boolean previousPhase(){ return state.previousPhase(); }
 
     public boolean closePhase(){ return state.closePhase(management.getProposals(), management.getStudent()); }
-
-    //public int getCurrentPhase(){return phase.getCurrentPhase();}
 
     /************************************************** Students **************************************************/
     public void addStudents(String filename) throws IOException {

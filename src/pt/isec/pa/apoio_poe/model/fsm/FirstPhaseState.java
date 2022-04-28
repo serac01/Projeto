@@ -82,7 +82,6 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
             if (br != null)
                 br.close();
         }
-        System.out.println("Here I am");
         return students;
     }
 
@@ -277,14 +276,20 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                     }
                 }
                 else if(tempArr.get(0).equalsIgnoreCase("T2")){
-                    long number=0;
+                    Student stud=null;
                     if(tempArr.size()==6)
-                        number=Long.parseLong(tempArr.get(5));
+                        for(Student s : students)
+                            if(s.getStudentNumber() == Long.parseLong(tempArr.get(5)))
+                                stud=s;
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
                     if(!isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals) || !isExistentTeacher(tempArr.get(4),teachers))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
-                        ProposalProject proposalProject = new ProposalProject(tempArr.get(1), tempArr.get(3), area, tempArr.get(4), number);
+                        Teacher t=null;
+                        for(Teacher teacher : teachers)
+                            if(teacher.getEmail().equalsIgnoreCase(tempArr.get(4)))
+                                t=teacher;
+                        ProposalProject proposalProject = new ProposalProject(tempArr.get(1), tempArr.get(3), area, t, stud);
                         proposals.add(proposalProject);
                     }
                 }
@@ -292,7 +297,11 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                     if(isExistentProposal(tempArr.get(1),proposals) || isARepeatSelfProposedStudent(Long.parseLong(tempArr.get(3)), proposals))
                         System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
                     else {
-                        ProposalSelfProposed proposalSelfProposed = new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), Long.parseLong(tempArr.get(3)));
+                        Student stud=null;
+                        for(Student s : students)
+                            if(s.getStudentNumber() == Long.parseLong(tempArr.get(3)))
+                                stud=s;
+                        ProposalSelfProposed proposalSelfProposed = new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), stud);
                         proposals.add(proposalSelfProposed);
                     }
                 }
@@ -381,10 +390,10 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                         csvWriter.append(",");
                         csvWriter.append(p.getTitle());
                         csvWriter.append(",");
-                        csvWriter.append(p.getTeacherEmail());
-                        if(p.getStudentNumber()!=0){
+                        csvWriter.append(p.getTeacher().getEmail());
+                        if(p.getStudent()!=null){
                             csvWriter.append(",");
-                            csvWriter.append(String.valueOf(p.getStudentNumber()));
+                            csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
                         }
                     }else if(p.getType().equalsIgnoreCase("T3")){
                         csvWriter.append(p.getType());
@@ -393,7 +402,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
                         csvWriter.append(",");
                         csvWriter.append(p.getTitle());
                         csvWriter.append(",");
-                        csvWriter.append(String.valueOf(p.getStudentNumber()));
+                        csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
                     }
                     count++;
                     if (count < proposals.size())
@@ -449,27 +458,9 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
 
     private static boolean isARepeatSelfProposedStudent(long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
-            if(number == p.getStudentNumber())
+            if(number == p.getStudent().getStudentNumber())
                 return true;
 
         return false;
     }
-
-    /*private static boolean isProposalIntership(Proposal p){
-        if(p.getType().equalsIgnoreCase("T1"))
-            return true;
-        return false;
-    }
-
-    private static boolean isProposalProject(Proposal p){
-        if(p.getType().equalsIgnoreCase("T2"))
-            return true;
-        return false;
-    }
-
-    private static boolean isProposalSelfProposed(Proposal p){
-        if(p.getType().equalsIgnoreCase("T3"))
-            return true;
-        return false;
-    }*/
 }

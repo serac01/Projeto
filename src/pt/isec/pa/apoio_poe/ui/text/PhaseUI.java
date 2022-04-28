@@ -27,7 +27,7 @@ public class PhaseUI {
     public void firstPhaseUI() throws IOException {
         System.out.print("\n1st Phase");
         switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
-                "Management proposals for internships or projects","Close phase","Next phase","Quit")){
+                "Management proposals for internships or projects","Close phase","Next phase","Serialization","Deserialization","Quit")){
             case 1 -> management("student");
             case 2 -> management("teacher");
             case 3 -> management("proposals for internships or projects");
@@ -36,6 +36,8 @@ public class PhaseUI {
                     System.out.println("Closed Phase");
             }
             case 5 -> fsm.nextPhase();
+            case 6 -> fsm.serialization();
+            case 7 -> fsm.deserialization();
             default -> finish = true;
         }
     }
@@ -134,7 +136,7 @@ public class PhaseUI {
         System.out.print("\n2nd Phase");
         switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
                 "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
-                "Close phase","Return to previous phase","Next phase","Quit")){
+                "Close phase","Return to previous phase","Next phase","Serialization","Deserialization","Quit")){
             case 1 -> fsm.addApplications(Input.readString("Filename ",false));
             case 2 -> fsm.showApplications();
             case 3 -> {
@@ -179,6 +181,8 @@ public class PhaseUI {
             case 8 -> System.out.println("\tTo be implemented!\n");
             case 9 -> fsm.previousPhase();
             case 10 -> fsm.nextPhase();
+            case 11 -> fsm.serialization();
+            case 12 -> fsm.deserialization();
             default -> finish=true;
         }
     }

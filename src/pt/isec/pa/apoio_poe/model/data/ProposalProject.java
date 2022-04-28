@@ -5,15 +5,15 @@ import java.util.List;
 
 public class ProposalProject extends Proposal  implements Serializable {
     private List<String> area;
-    private String teacherEmail;
-    private long studentNumber;
+    private Student student;
+    private Teacher teacher;
 
 
-    public ProposalProject(String identification, String title, List<String> area, String teacherEmail, long studentNumber) {
+    public ProposalProject(String identification, String title, List<String> area, Teacher teacher, Student student) {
         super(identification, title, "T2");
         this.area = area;
-        this.teacherEmail=teacherEmail;
-        this.studentNumber=studentNumber;
+        this.teacher=teacher;
+        this.student=student;
     }
 
     @Override
@@ -21,10 +21,10 @@ public class ProposalProject extends Proposal  implements Serializable {
     public void setArea(List<String> area) { this.area = area; }
 
     @Override
-    public long getStudentNumber() { return studentNumber; }
+    public Student getStudent() { return student; }
 
     @Override
-    public String getTeacherEmail() { return teacherEmail; }
+    public Teacher getTeacher() { return teacher; }
 
     /*@Override
     public String toString() {

@@ -8,7 +8,6 @@ public class Phase implements Serializable {
     public Phase(int currentPhase){this.currentPhase=currentPhase;}
 
     public int getCurrentPhase() { return currentPhase; }
-
     public void setCurrentPhase(int currentPhase) { this.currentPhase = currentPhase; }
 
     @Override
