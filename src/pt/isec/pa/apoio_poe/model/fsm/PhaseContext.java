@@ -31,8 +31,11 @@ public class PhaseContext implements Serializable{
         try {
             FileInputStream fileIn = new FileInputStream("src/context.bin");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            //state = (IPhaseState) in.readObject();
-            changeState((IPhaseState) in.readObject());
+            state = (IPhaseState) in.readObject();
+
+            state.setContext(this);
+            changeState(state);
+            
             management = (ManagementPoE) in.readObject();
             in.close();
             fileIn.close();

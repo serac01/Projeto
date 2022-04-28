@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SecondPhaseState extends PhaseStateAdapter implements Serializable{
+    public static final long serialVersionUID=2020129026;
 
     SecondPhaseState(PhaseContext context, Phase phase) {
         super(context, phase);

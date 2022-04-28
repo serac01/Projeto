@@ -12,14 +12,19 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     protected PhaseStateAdapter(PhaseContext context, Phase phase){
         this.context = context;
         this.phase = phase;
+
     }
 
-    protected void changeState(IPhaseState newState){
+    @Override
+    public void changeState(IPhaseState newState){
         context.changeState(newState);
     }
 
     @Override
     public boolean nextPhase() { return false; }
+
+    @Override
+    public void setContext(PhaseContext context) { this.context=context;  }
 
     @Override
     public boolean previousPhase() { return false; }
