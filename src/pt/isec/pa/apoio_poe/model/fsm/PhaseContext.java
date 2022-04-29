@@ -54,94 +54,42 @@ public class PhaseContext implements Serializable{
 
     public boolean previousPhase(){ return state.previousPhase(); }
 
+    public boolean isClosed(){ return state.isClosed(); }
+
     public boolean closePhase(){ return state.closePhase(management.getProposals(), management.getStudent()); }
 
     /************************************************** Students **************************************************/
     public void addStudents(String filename) throws IOException {
-        ArrayList<Student> aux = state.addStudents(filename,management.getStudent());
-        if(aux!=null)
-            management.setStudent(aux);
-
-        //To delete
+        state.addStudents(filename,management.getStudent());
         state.addTeachers("",management.getTeachers());
         state.addProposals("",management.getProposals(),management.getStudent(),management.getTeachers());
     }
 
-    public String editStudent(long number, String toUpdate,int option) {
-        ArrayList<Student> aux = state.editStudent(number,toUpdate, option,management.getStudent());
-        if (aux!=null)
-            management.setStudent(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public String editStudent(long number, String toUpdate,int option) { state.editStudent(number,toUpdate, option,management.getStudent()); return "";}
 
-    public String deleteStudents(long number){
-        ArrayList<Student> aux = state.deleteStudents(number,management.getStudent());
-        if (aux!=null)
-            management.setStudent(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public void deleteStudents(long number){ state.deleteStudents(number,management.getStudent()); }
 
     public void showStudents(){ state.showStudents(management.getStudent()); }
 
     public void exportStudents(String filename) throws IOException { state.exportStudents(filename,management.getStudent()); }
 
     /************************************************** Teachers **************************************************/
-    public void addTeachers(String filename) throws IOException {
-        ArrayList<Teacher> aux = state.addTeachers(filename,management.getTeachers());
-        if(aux!=null)
-            management.setTeachers(aux);
-    }
+    public void addTeachers(String filename) throws IOException { state.addTeachers(filename,management.getTeachers()); }
 
-    public String editTeacher(String email, String toUpdate) {
-        ArrayList<Teacher> aux = state.editTeacher(email,toUpdate,management.getTeachers());
-        if (aux!=null)
-            management.setTeachers(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public String editTeacher(String email, String toUpdate) { state.editTeacher(email,toUpdate,management.getTeachers()); return ""; }
 
-    public String deleteTeachers(String email){
-        ArrayList<Teacher> aux = state.deleteTeacher(email,management.getTeachers());
-        if (aux!=null)
-            management.setTeachers(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public void deleteTeachers(String email){ state.deleteTeacher(email,management.getTeachers()); }
 
     public void showTeachers(){ state.showTeachers(management.getTeachers()); }
 
     public void exportTeachers(String filename) throws IOException { state.exportTeacher(filename,management.getTeachers()); }
 
     /************************************************** Proposals **************************************************/
-    public void addProposals(String filename) throws IOException {
-        ArrayList<Proposal> aux = state.addProposals(filename,management.getProposals(),management.getStudent(),management.getTeachers());
-        if(aux!=null)
-            management.setProposals(aux);
-    }
+    public void addProposals(String filename) throws IOException { state.addProposals(filename,management.getProposals(),management.getStudent(),management.getTeachers()); }
 
-    public String editProposals(String id, String toUpdate,int option) {
-        ArrayList<Proposal> aux = state.editProposals(id,toUpdate, option,management.getProposals());
-        if (aux!=null)
-            management.setProposals(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public String editProposals(String id, String toUpdate,int option) { state.editProposals(id,toUpdate, option,management.getProposals()); return ""; }
 
-    public String deleteProposals(String id){
-        ArrayList<Proposal> aux = state.deleteProposals(id,management.getProposals());
-        if (aux!=null)
-            management.setProposals(aux);
-        else
-            return "\nYou have entered wrong data, please confirm again\n";
-        return "";
-    }
+    public void deleteProposals(String id){ state.deleteProposals(id,management.getProposals()); }
 
     public void showProposals(){ state.showProposals(management.getProposals()); }
 
@@ -178,9 +126,7 @@ public class PhaseContext implements Serializable{
 
     public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered) { state.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered,management.getProposals(),management.getApplications(), management.getStudent()); }
 
-    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications) {
-        state.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications, management.getProposals(), management.getApplications());
-    }
+    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications) { state.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications, management.getProposals(), management.getApplications()); }
 
 }
 
