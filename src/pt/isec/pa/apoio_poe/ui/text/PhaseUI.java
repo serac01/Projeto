@@ -26,20 +26,31 @@ public class PhaseUI {
 
     public void firstPhaseUI() throws IOException {
         System.out.print("\n1st Phase");
-        switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
-                "Management proposals for internships or projects","Close phase","Next phase","Serialization","Deserialization","Quit")){
-            case 1 -> management("student");
-            case 2 -> management("teacher");
-            case 3 -> management("proposals for internships or projects");
-            case 4 -> {
-                if (fsm.closePhase())
-                    System.out.println("Closed Phase");
+        if(fsm.isClosed())
+            switch (Input.chooseOption("Choose the option:","Student management","Close phase","Next phase","Serialization","Deserialization","Quit")){
+                case 1 -> management("student");
+                case 2 -> management("teacher");
+                case 3 -> management("proposals for internships or projects");
+                case 5 -> fsm.nextPhase();
+                case 6 -> fsm.serialization();
+                case 7 -> fsm.deserialization();
+                default -> finish = true;
             }
-            case 5 -> fsm.nextPhase();
-            case 6 -> fsm.serialization();
-            case 7 -> fsm.deserialization();
-            default -> finish = true;
-        }
+        else
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
+                    "Management proposals for internships or projects","Close phase","Next phase","Serialization","Deserialization","Quit")){
+                case 1 -> management("student");
+                case 2 -> management("teacher");
+                case 3 -> management("proposals for internships or projects");
+                case 4 -> {
+                    if (fsm.closePhase())
+                        System.out.println("Closed Phase");
+                }
+                case 5 -> fsm.nextPhase();
+                case 6 -> fsm.serialization();
+                case 7 -> fsm.deserialization();
+                default -> finish = true;
+            }
     }
 
     public void management(String name) throws IOException {

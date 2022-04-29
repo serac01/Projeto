@@ -14,66 +14,50 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     public void changeState(IPhaseState newState){
         context.changeState(newState);
     }
-
     @Override
     public boolean nextPhase() { return false; }
-
     @Override
     public void setContext(PhaseContext context) { this.context=context;  }
-
     @Override
     public boolean previousPhase() { return false; }
-
+    @Override
+    public boolean isClosed(){ return false; }
     @Override
     public boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students){ return false; }
 
     @Override
-    public ArrayList<Student> addStudents(String filename, ArrayList<Student> students) throws IOException { return null; }
-
+    public void addStudents(String filename, ArrayList<Student> students) throws IOException { }
     @Override
-    public ArrayList<Student> editStudent(long number, String toUpdate, int option, ArrayList<Student> students) { return null; }
-
+    public void editStudent(long number, String toUpdate, int option, ArrayList<Student> students) { }
     @Override
-    public ArrayList<Student> deleteStudents(long number, ArrayList<Student> students) { return null; }
-
+    public void deleteStudents(long number, ArrayList<Student> students) { }
     @Override
     public void showStudents(ArrayList<Student> students) { }
-
     @Override
     public void exportStudents(String filename, ArrayList<Student> students) throws IOException { }
 
 
     /************************************************** Teachers **************************************************/
-
     @Override
-    public ArrayList<Teacher> addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { return null; }
-
+    public void addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { }
     @Override
-    public ArrayList<Teacher> editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { return null; }
-
+    public void editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { }
     @Override
-    public ArrayList<Teacher> deleteTeacher(String email, ArrayList<Teacher> teachers) { return null; }
-
+    public void deleteTeacher(String email, ArrayList<Teacher> teachers) { }
     @Override
     public void showTeachers(ArrayList<Teacher> teachers) { }
-
     @Override
     public void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {  }
 
-
     /************************************************** Proposals **************************************************/
     @Override
-    public ArrayList<Proposal> addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return null; }
-
+    public void addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { }
     @Override
-    public ArrayList<Proposal> editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals) { return null; }
-
+    public void editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals) { }
     @Override
-    public ArrayList<Proposal> deleteProposals(String id, ArrayList<Proposal> proposals) { return null; }
-
+    public void deleteProposals(String id, ArrayList<Proposal> proposals) { }
     @Override
     public void showProposals(ArrayList<Proposal> proposals) { }
-
     @Override
     public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException { }
 
