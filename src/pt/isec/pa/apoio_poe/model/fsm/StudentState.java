@@ -7,23 +7,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StudentState {
-    public static void addStudents(String filename, ArrayList<Student> students) throws IOException {
+public class StudentState implements Serializable{
+    public static final long serialVersionUID=2020129026;
+
+    public static String addStudents(String filename, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/eStudents.csv";
+        StringBuilder warnings = new StringBuilder();
+        filename="src/csvFiles/students.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String line;
             while((line=br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
-                //Valida os parametros de entrada
-                if(isExistentStudent(Long.parseLong(tempArr.get(0)), students) || !isACourseAcronym(tempArr.get(3)) || !isAIndustryAcronym(tempArr.get(4)) || !isAValidClassification(Double.parseDouble(tempArr.get(5))) || !isAValidBollean(tempArr.get(6)))
-                    System.out.println("The student with code " + tempArr.get(0) + ", has invalid or duplicated data");
-                else {
-                    Student student = new Student(Long.parseLong(tempArr.get(0)), tempArr.get(1), tempArr.get(2), tempArr.get(3), tempArr.get(4),Double.parseDouble(tempArr.get(5)), Boolean.parseBoolean(tempArr.get(6)));
-                    students.add(student);
-                }
+
+                //Validation of input parameters
+                if(tempArr.size()<7)
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", has missing data\n");
+                else if(isExistentStudent(Long.parseLong(tempArr.get(0)), students))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", already exists\n");
+                else if(isAInvalidCourseAcronym(tempArr.get(3)))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong course acronym\n");
+                else if(isAInvalidIndustryAcronym(tempArr.get(4)))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong industry acronym\n");
+                else if(isAInvalidClassification(Double.parseDouble(tempArr.get(5))))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong classification\n");
+                else if(isAInvalidBoolean(tempArr.get(6)))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong value to access internships\n");
+                else
+                    students.add(new Student(Long.parseLong(tempArr.get(0)), tempArr.get(1), tempArr.get(2), tempArr.get(3), tempArr.get(4),Double.parseDouble(tempArr.get(5)), Boolean.parseBoolean(tempArr.get(6))));
             }
         }catch(IOException ioe) {
             ioe.printStackTrace();
@@ -31,46 +43,47 @@ public class StudentState {
             if (br != null)
                 br.close();
         }
+        return warnings.toString();
     }
 
-    public static void editStudent(long number, String toUpdate, int option, ArrayList<Student> students)  {
+    public static String editStudent(long number, String toUpdate, int option, ArrayList<Student> students)  {
         if(!isExistentStudent(number,students))
-            return;
+            return "The student with code "+number+", doesn't exists\n";
 
         for(Student s : students)
             if(s.getStudentNumber()==number)
                 switch (option){
-                    case 1 -> {
-                        s.setName(toUpdate);
-                    }
+                    case 1 -> s.setName(toUpdate);
                     case 2 -> {
-                        if(isACourseAcronym(toUpdate)) {
-                            s.setCourseAcronym(toUpdate);
-                        }
+                        if(isAInvalidCourseAcronym(toUpdate))
+                            return "You have entered an invalid course acronym\n";
+                        s.setCourseAcronym(toUpdate);
                     }
                     case 3 -> {
-                        if(isAIndustryAcronym(toUpdate)) {
-                            s.setIndustryAcronym(toUpdate);
-                        }
+                        if(isAInvalidIndustryAcronym(toUpdate))
+                            return "You have entered an invalid industry acronym\n";
+                        s.setIndustryAcronym(toUpdate);
                     }
                     case 4 -> {
-                        if(isAValidClassification(Double.parseDouble(toUpdate))) {
-                            s.setClassification(Double.parseDouble(toUpdate));
-                        }
+                        if(isAInvalidClassification(Double.parseDouble(toUpdate)))
+                            return "You have entered an invalid classification\n";
+                        s.setClassification(Double.parseDouble(toUpdate));
                     }
                     case 5 -> {
-                        if(isAValidBollean(toUpdate)) {
-                            s.setAccessInternships(Boolean.parseBoolean(toUpdate));
-                        }
+                        if(isAInvalidBoolean(toUpdate))
+                            return "You have entered an invalid value to access internships";
+                        s.setAccessInternships(Boolean.parseBoolean(toUpdate));
                     }
                 }
+        return "";
     }
 
-    public static void deleteStudents(long number, ArrayList<Student> students){
+    public static String deleteStudents(long number, ArrayList<Student> students){
         if(!isExistentStudent(number,students))
-            return;
+            return "The student with code "+number+", doesn't exists\n";
 
         students.removeIf(s -> s.getStudentNumber() == number);
+        return "";
     }
 
     public static void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
@@ -120,11 +133,11 @@ public class StudentState {
         return false;
     }
 
-    private static boolean isACourseAcronym(String courseAcronym){ return courseAcronym.equalsIgnoreCase("LEI-PL") || courseAcronym.equalsIgnoreCase("LEI"); }
+    private static boolean isAInvalidCourseAcronym(String courseAcronym){ return !courseAcronym.equalsIgnoreCase("LEI-PL") && !courseAcronym.equalsIgnoreCase("LEI"); }
 
-    private static boolean isAIndustryAcronym(String industryAcronym){ return industryAcronym.equalsIgnoreCase("SI") || industryAcronym.equalsIgnoreCase("DA") || industryAcronym.equalsIgnoreCase("RAS"); }
+    private static boolean isAInvalidIndustryAcronym(String industryAcronym){ return !industryAcronym.equalsIgnoreCase("SI") && !industryAcronym.equalsIgnoreCase("DA") && !industryAcronym.equalsIgnoreCase("RAS"); }
 
-    private static boolean isAValidClassification(double classification){ return classification>=0 && classification<=1; }
+    private static boolean isAInvalidClassification(double classification){ return !(classification >= 0) || !(classification <= 1); }
 
-    private static boolean isAValidBollean(String accessInternships){ return accessInternships.equalsIgnoreCase("true") || accessInternships.equalsIgnoreCase("false"); }
+    private static boolean isAInvalidBoolean(String accessInternships){ return !accessInternships.equalsIgnoreCase("true") && !accessInternships.equalsIgnoreCase("false"); }
 }

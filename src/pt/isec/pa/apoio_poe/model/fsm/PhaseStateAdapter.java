@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     protected PhaseContext context;
+    public static final long serialVersionUID=2020129026;
 
     protected PhaseStateAdapter(PhaseContext context){ this.context = context; }
 
@@ -23,14 +24,14 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public boolean isClosed(){ return false; }
     @Override
-    public boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students){ return false; }
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students){ return null; }
 
     @Override
-    public void addStudents(String filename, ArrayList<Student> students) throws IOException { }
+    public String addStudents(String filename, ArrayList<Student> students) throws IOException { return null; }
     @Override
-    public void editStudent(long number, String toUpdate, int option, ArrayList<Student> students) { }
+    public String editStudent(long number, String toUpdate, int option, ArrayList<Student> students) { return null; }
     @Override
-    public void deleteStudents(long number, ArrayList<Student> students) { }
+    public String deleteStudents(long number, ArrayList<Student> students) { return null; }
     @Override
     public void showStudents(ArrayList<Student> students) { }
     @Override
@@ -39,11 +40,11 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
 
     /************************************************** Teachers **************************************************/
     @Override
-    public void addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { }
+    public String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { return null; }
     @Override
-    public void editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { }
+    public String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { return null; }
     @Override
-    public void deleteTeacher(String email, ArrayList<Teacher> teachers) { }
+    public String deleteTeacher(String email, ArrayList<Teacher> teachers) { return null; }
     @Override
     public void showTeachers(ArrayList<Teacher> teachers) { }
     @Override
@@ -51,11 +52,9 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
 
     /************************************************** Proposals **************************************************/
     @Override
-    public void addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { }
+    public String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return null; }
     @Override
-    public void editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals) { }
-    @Override
-    public void deleteProposals(String id, ArrayList<Proposal> proposals) { }
+    public String deleteProposals(String id, ArrayList<Proposal> proposals) { return null; }
     @Override
     public void showProposals(ArrayList<Proposal> proposals) { }
     @Override

@@ -6,23 +6,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TeacherState {
-    public static void addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException {
+public class TeacherState implements Serializable{
+    public static final long serialVersionUID=2020129026;
+
+    public static String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/teachers.csv";
+        StringBuilder warnings = new StringBuilder();
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String line;
             while((line=br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
-                //Valida os parametros de entrada
                 if(isExistentTeacher(tempArr.get(1), teachers))
-                    System.out.println("The teacher " + tempArr.get(0) + ", has an invalid email");
-                else {
-                    Teacher teacher = new Teacher(tempArr.get(0), tempArr.get(1));
-                    teachers.add(teacher);
-                }
+                    warnings.append("The teacher ").append(tempArr.get(0)).append(", has an invalid email");
+                else
+                    teachers.add(new Teacher(tempArr.get(0), tempArr.get(1)));
             }
         }catch(IOException ioe) {
             ioe.printStackTrace();
@@ -30,22 +30,27 @@ public class TeacherState {
             if (br != null)
                 br.close();
         }
+        return warnings.toString();
     }
 
-    public static void editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers)  {
+    public static String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers)  {
         if(!isExistentTeacher(email,teachers))
-            return;
+            return "The teacher with email "+email+", doesn't exists\n";
 
         for(Teacher t : teachers)
             if(email.equalsIgnoreCase(t.getEmail())) {
                 t.setName(toUpdate);
+                break;
             }
+        return "";
     }
 
-    public static void deleteTeacher(String email, ArrayList<Teacher> teachers){
+    public static String deleteTeacher(String email, ArrayList<Teacher> teachers){
         if(!isExistentTeacher(email,teachers))
-            return;
+            return "The teacher with email "+email+", doesn't exists\n";
+
         teachers.removeIf(t -> t.getEmail().equalsIgnoreCase(email));
+        return "";
     }
 
     public static void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
