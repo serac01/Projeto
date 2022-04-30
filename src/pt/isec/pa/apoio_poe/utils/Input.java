@@ -89,4 +89,6 @@ public final class Input {
         return option;
     }
 
+    public static boolean changeBoolean(boolean a) { return !a; }
+
 }

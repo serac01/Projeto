@@ -53,7 +53,12 @@ public class TeacherState implements Serializable{
         return "";
     }
 
-    public static void showTeachers(ArrayList<Teacher> teachers){ teachers.forEach((n) -> System.out.println(n.toString())); }
+    public static String showTeachers(ArrayList<Teacher> teachers){
+        StringBuilder s = new StringBuilder();
+        for (Teacher t:teachers)
+            s.append(String.format("Teacher name: %-40s Teacher email: %-50s \n",t.getName(),t.getEmail()));
+        return s.toString();
+    }
 
     public static void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
         filename = "src/csvFiles/exportTeachers.csv";

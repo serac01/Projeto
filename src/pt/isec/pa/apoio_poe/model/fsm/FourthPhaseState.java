@@ -1,7 +1,5 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
-import pt.isec.pa.apoio_poe.model.data.Phase;
-
 public class FourthPhaseState extends PhaseStateAdapter {
     public static final long serialVersionUID=2020129026;
 

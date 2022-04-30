@@ -3,7 +3,8 @@ package pt.isec.pa.apoio_poe.model.data;
 import java.io.Serializable;
 
 public class Teacher  implements Serializable {
-    private String name, email;
+    private String name;
+    private final String email;
 
     public Teacher(String name, String email) {
         this.name = name;
@@ -14,14 +15,4 @@ public class Teacher  implements Serializable {
     public void setName(String name) { this.name = name; }
 
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\''+
-                '}';
-    }
-    
 }

@@ -9,69 +9,75 @@ import java.util.List;
 
 public class SecondPhaseState extends PhaseStateAdapter implements Serializable {
     public static final long serialVersionUID=2020129026;
+    private boolean isClosed;
 
-    SecondPhaseState(PhaseContext context) { super(context); }
+    SecondPhaseState(PhaseContext context) {
+        super(context);
+        isClosed=false;
+    }
 
+    //Sate
     @Override
     public boolean previousPhase() {
         changeState(new FirstPhaseState(context));
         return true;
     }
-
     @Override
     public boolean nextPhase() {
         changeState(new ThirdPhaseState(context));
         return true;
     }
-
     @Override
     public PhaseState getState() {
         return PhaseState.PHASE_2;
     }
-
-
-    /************************************************** Applications **************************************************/
-
     @Override
-    public ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException {
-        BufferedReader br = null;
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value) {
+        if(!value)
+            return "The previous phase is still open, so you cannot close this one\n";
+        isClosed=true;
+        return "";
+    }
+    @Override
+    public boolean isClosed() { return isClosed; }
+
+    //Applications
+    @Override
+    public String addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) {
         filename="src/csvFiles/application.csv";
-        try {
-            FileReader fr = new FileReader(filename);
-            br = new BufferedReader(fr);
+        StringBuilder warnings = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
-            while((line=br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
                 List<String> idProposals = new ArrayList<>();
-                for (int i=1; i<tempArr.size(); i++)
+                for (int i = 1; i < tempArr.size(); i++)
                     idProposals.add(tempArr.get(i));
-                //Valida os parametros de entrada
-                if(tempArr.size()<2 || hasProposalAlreadyAStudent(idProposals, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals) || !isExistentStudent(Long.parseLong(tempArr.get(0)), students))
-                    System.out.println("The student with code " + tempArr.get(0) + ", entered wrong data");
-                else if(isExistentApplication(Long.parseLong(tempArr.get(0)),applications))
-                    System.out.println("The application of student with code " + tempArr.get(0) + ", has duplicated data or two or has two iterations");
-                else {
-                    Student student=null;
-                    for(Student s : students)
-                        if(Long.parseLong(tempArr.get(0)) == s.getStudentNumber())
-                            student=s;
-                    Application application = new Application(student, idProposals);
-                    applications.add(application);
-                }
+                Student student = null;
+                for (Student s : students)
+                    if (Long.parseLong(tempArr.get(0)) == s.getStudentNumber())
+                        student = s;
+                //Valid input parameters
+                if (tempArr.size() < 2)
+                    warnings.append("the application with the student number ").append(tempArr.get(0)).append(", doesn't have enough data\n");
+                else if (hasProposalAlreadyAStudent(idProposals, proposals) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), proposals))
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", chose a proposal that is not available\n");
+                else if (student==null)
+                    warnings.append("The student with code ").append(tempArr.get(0)).append(", doesn't exist\n");
+                else if (isExistentApplication(Long.parseLong(tempArr.get(0)), applications))
+                    warnings.append("The application of student with code ").append(tempArr.get(0)).append(", has duplicated data or two or has two iterations\n");
+                else
+                    applications.add(new Application(student, idProposals));
             }
-        }catch(IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
-        }finally {
-            if (br != null)
-                br.close();
         }
-        return applications;
+        return warnings.toString();
     }
-
     @Override
-    public ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals)  {
+    public String editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals)  {
         if(!isExistentApplication(number,applications))
-            return null;
+            return "The student "+number+", didn't apply or doesn't exist\n";
 
         for(Application a : applications)
                 if(a.getStudentNumber().getStudentNumber()==number)
@@ -82,8 +88,8 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                                 if (p.getIdentification().equalsIgnoreCase(id) && !isADuplicateProposal(id,aux) && isAValidProposal(id,proposals) && !hasProposalAlreadyAStudent(aux,proposals)) {
                                     aux.add(id);
                                     a.setIdProposals(aux);
-                                    return applications;
-                                }
+                                }else
+                                    return "It's impossible to add this proposal to this application\n";
                             }
                         }
                         case 2 -> {
@@ -92,25 +98,31 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                                 if (p.getIdentification().equalsIgnoreCase(id) && aux.size()>1) {
                                     aux.remove(id);
                                     a.setIdProposals(aux);
-                                    return applications;
-                                }
+                                }else
+                                    return "It's impossible to remove this proposal to this application\n";
                             }
                         }
                     }
-        return null;
+        return "";
     }
-
     @Override
-    public ArrayList<Application> deleteApplication(long number, ArrayList<Application> applications){
+    public String deleteApplication(long number, ArrayList<Application> applications){
         if(!isExistentApplication(number,applications))
-            return null;
+            return "This application doesn't exist\n";
             applications.removeIf(a -> a.getStudentNumber().getStudentNumber() == number);
-        return applications;
+        return "";
     }
-
     @Override
-    public void showApplication(ArrayList<Application> applications){ applications.forEach((n) -> System.out.println(n.toString())); }
-
+    public String showApplication(ArrayList<Application> applications){
+        StringBuilder s = new StringBuilder();
+        for(Application a : applications){
+            s.append(String.format("Applicant number: %d Proposal ID's: ",a.getStudentNumber().getStudentNumber()));
+            for(String st: a.getIdProposals())
+                s.append(st).append("; ");
+            s.append("\n");
+        }
+        return s.toString();
+    }
     @Override
     public void exportApplications(String filename, ArrayList<Application> applications) throws IOException {
         filename = "src/csvFiles/exportApplications.csv";
@@ -144,20 +156,21 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         }
     }
 
-    /************************************************** Obter lista de alunos **************************************************/
+    //Get lists
     @Override
-    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students){
-        ArrayList<Long> studentList = new ArrayList<Long>();
-        int count=0;
+    public String generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students){
+        ArrayList<Long> studentList = new ArrayList<>();
+        StringBuilder listStudent = new StringBuilder();
+        int count;
 
         if(selfProposed)
             for(Proposal p : proposals)
-                if(p.getType().equalsIgnoreCase("T3") && !isExistentStudent(p.getStudent().getStudentNumber(),studentList))
+                if(p.getType().equalsIgnoreCase("T3") && isExistentStudent(p.getStudent().getStudentNumber(), students))
                     studentList.add(p.getStudent().getStudentNumber());
 
         if(alreadyRegistered)
             for(Application a : applications)
-                if(!isExistentStudent(a.getStudentNumber().getStudentNumber(),studentList))
+                if(isExistentStudent(a.getStudentNumber().getStudentNumber(), students))
                     studentList.add(a.getStudentNumber().getStudentNumber());
 
         if(withoutRegistered)
@@ -166,18 +179,19 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                 for (Application a : applications) {
                     if (a.getStudentNumber().getStudentNumber() != s.getStudentNumber())
                         count++;
-                    if (count == applications.size() && !isExistentStudent(s.getStudentNumber(),studentList))
+                    if (count == applications.size() && isExistentStudent(s.getStudentNumber(), students))
                         studentList.add(s.getStudentNumber());
                 }
             }
 
         for(Long l : studentList)
-            System.out.print(l+" ");
+            listStudent.append(l).append("\t");
+        return listStudent.toString();
     }
-
     @Override
-    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications){
+    public String generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications){
         ArrayList<String> proposalList = new ArrayList<>();
+        StringBuilder listStudent = new StringBuilder();
         boolean exist = false;
 
         if(selfProposed)
@@ -216,31 +230,30 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         }
 
         for(String s : proposalList)
-            System.out.print(s+" ");
+            listStudent.append(s).append(" ");
+
+        return listStudent.toString();
     }
 
-    /************************************************** Validations **************************************************/
-    private static boolean isExistentStudent(long number, ArrayList<Long> students){
-        for(Long s : students)
-            if(s == number)
+    //Validations
+    private static boolean isExistentStudent(long number, ArrayList<Student> students){
+        for(Student s : students)
+            if(s.getStudentNumber() == number)
                 return true;
         return false;
     }
-
     private static boolean isAProposalAssigned(Long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if (p.getStudent() != null && number == p.getStudent().getStudentNumber())
                 return true;
         return false;
     }
-
     private static boolean isExistentApplication(Long number, ArrayList<Application> applications){
         for(Application a : applications)
             if(number==a.getStudentNumber().getStudentNumber())
                 return true;
         return false;
     }
-
     private static boolean hasProposalAlreadyAStudent(List<String> idProposals, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             for(String s : idProposals)
@@ -248,21 +261,12 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                     return true;
         return false;
     }
-
-    private static boolean isExistentStudent(Long number, ArrayList<Student> students){
-        for(Student s : students)
-            if(number==s.getStudentNumber())
-                return true;
-        return false;
-    }
-
     private static boolean isAValidProposal(String id, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
     }
-
     private static boolean isADuplicateProposal(String id, List<String> idProposals){
         for(String s : idProposals)
             if (s.equalsIgnoreCase(id))

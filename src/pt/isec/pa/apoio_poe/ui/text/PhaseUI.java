@@ -61,11 +61,11 @@ public class PhaseUI {
                 switch (Input.chooseOption("Choose the option:","Show "+name,"Export "+name,"Quit")){
                     case 1 ->  {
                         if(name.equalsIgnoreCase("student"))
-                            fsm.showStudents();
+                            System.out.println(fsm.showStudents());
                         else if(name.equalsIgnoreCase("teacher"))
-                            fsm.showTeachers();
+                            System.out.println(fsm.showTeachers());
                         else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            fsm.showProposals();
+                            System.out.println(fsm.showProposals());
                     }
                     case 2 -> {
                         if(name.equalsIgnoreCase("student"))
@@ -90,11 +90,11 @@ public class PhaseUI {
                     }
                     case 2 ->  {
                         if(name.equalsIgnoreCase("student"))
-                            fsm.showStudents();
+                            System.out.println(fsm.showStudents());
                         else if(name.equalsIgnoreCase("teacher"))
-                            fsm.showTeachers();
+                            System.out.println(fsm.showTeachers());
                         else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            fsm.showProposals();
+                            System.out.println(fsm.showProposals());
                     }
                     case 3 -> {
                         if(name.equalsIgnoreCase("student")){
@@ -143,64 +143,94 @@ public class PhaseUI {
     }
 
     public void secondPhaseUI() throws IOException {
-        /** As funcionalidades disponíveis na fase de candidaturas são as seguintes:
-         * Inserção, consulta, edição e eliminação de candidaturas
-         * Obtenção de listas de alunos (Com autoproposta, Com candidatura já registada, Sem candidatura registada)
-         * Obtenção de listas de propostas de projecto/estágio (autopropostas de alunos, propostas de docentes, Propostas com candidaturas, Propostas sem candidatura)
-         * Fechar a fase
-         * Regresso à fase anterior
-         * Avançar para a fase seguinte*/
         System.out.print("\n2nd Phase");
-        switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
-                "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
-                "Close phase","Return to previous phase","Next phase","Save the sate","Quit")){
-            case 1 -> fsm.addApplications(Input.readString("Filename ",false));
-            case 2 -> fsm.showApplications();
-            case 3 -> {
-                long studentNumber = (long) Input.readNumber("Enter student number ");
-                boolean everythingEdited=false;
-                while(!everythingEdited)
-                    switch (Input.chooseOption("Choose the option:","New proposal", "Delete proposal",  "Quit")){
-                        case 1 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),1));
-                        case 2 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),2));
-                        default -> everythingEdited=true;
+        if(fsm.isClosed())
+            switch (Input.chooseOption("Choose the option:","Consult applications", "Export applications",
+                    "Get the list of students","Get lists of project/internship proposals",
+                    "Return to previous phase","Next phase","Save the sate","Quit")){
+                case 1 -> System.out.println(fsm.showApplications());
+                case 2 -> fsm.exportApplications(Input.readString("Filename ",false));
+                case 3 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Quit")){
+                            case 1 -> System.out.println(fsm.generateStudentList(true,false,false));
+                            case 2 -> System.out.println(fsm.generateStudentList(false,true,false));
+                            case 3 -> System.out.println(fsm.generateStudentList(false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 4 -> {
+                    boolean allChosen=false, selfProposed=false,proposeTeacher=false,withApplications=false,withoutApplications=false;
+                    while(!allChosen) {
+                        switch (Input.chooseOption("Choose the option:", "self-proposals from students",
+                                "proposals from teachers", "Proposals with applications",
+                                "Proposals without applications", "Generate the list", "Quit")) {
+                            case 1 -> selfProposed=Input.changeBoolean(selfProposed);
+                            case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
+                            case 3 -> withApplications=Input.changeBoolean(withApplications);
+                            case 4 -> withoutApplications=Input.changeBoolean(withoutApplications);
+                            case 5 -> System.out.println(fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications));
+                            default -> allChosen = true;
+                        }
                     }
+                }
+                case 5 -> fsm.previousPhase();
+                case 6 -> fsm.nextPhase();
+                case 7 -> fsm.serialization(Input.readString("Filename ",false));
+                default -> finish=true;
             }
-            case 4 -> {
+        else
+            switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
+                    "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
+                    "Close phase","Return to previous phase","Next phase","Save the sate","Quit")){
+                case 1 -> System.out.println(fsm.addApplications(Input.readString("Filename ",false)));
+                case 2 -> System.out.println(fsm.showApplications());
+                case 3 -> {
+                    long studentNumber = (long) Input.readNumber("Enter student number ");
+                    boolean everythingEdited=false;
+                    while(!everythingEdited)
+                        switch (Input.chooseOption("Choose the option:","New proposal", "Delete proposal",  "Quit")){
+                            case 1 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),1));
+                            case 2 -> System.out.print(fsm.editApplication(studentNumber,Input.readString("Proposal id ",false),2));
+                            default -> everythingEdited=true;
+                        }
+                }
+                case 4 -> {
                     long studentNumber = (long) Input.readNumber("Enter student number ");
                     System.out.print(fsm.deleteApplication(studentNumber));}
-            case 5 -> fsm.exportApplications(Input.readString("Filename ",false));
-            case 6 -> {
-                boolean allChosen=false,selfProposed=false,alreadyRegistered=false,withoutRegistered=false;
-                while(!allChosen)
-                    switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Generate the list", "Quit")){
-                        case 1 -> selfProposed=true;
-                        case 2 -> alreadyRegistered=true;
-                        case 3 -> withoutRegistered=true;
-                        case 4 -> fsm.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered);
-                        default -> allChosen=true;
+                case 5 -> fsm.exportApplications(Input.readString("Filename ",false));
+                case 6 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Quit")){
+                            case 1 -> System.out.println(fsm.generateStudentList(true,false,false));
+                            case 2 -> System.out.println(fsm.generateStudentList(false,true,false));
+                            case 3 -> System.out.println(fsm.generateStudentList(false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 7 -> {
+                    boolean allChosen=false, selfProposed=false,proposeTeacher=false,withApplications=false,withoutApplications=false;
+                    while(!allChosen) {
+                        switch (Input.chooseOption("Choose the option:", "self-proposals from students",
+                                "proposals from teachers", "Proposals with applications",
+                                "Proposals without applications", "Generate the list", "Quit")) {
+                            case 1 -> selfProposed=Input.changeBoolean(selfProposed);
+                            case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
+                            case 3 -> withApplications=Input.changeBoolean(withApplications);
+                            case 4 -> withoutApplications=Input.changeBoolean(withoutApplications);
+                            case 5 -> System.out.println(fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications));
+                            default -> allChosen = true;
+                        }
                     }
+                }
+                case 8 -> System.out.println(fsm.closePhase());
+                case 9 -> fsm.previousPhase();
+                case 10 -> fsm.nextPhase();
+                case 11 -> fsm.serialization(Input.readString("Filename ",false));
+                default -> finish=true;
             }
-            case 7 -> {
-                boolean allChosen=false,selfProposed=false,proposeTeacher=false,withApplications=false,withoutApplications=false;
-                while(!allChosen)
-                    switch (Input.chooseOption("Choose the option:","self-proposals from students",
-                            "proposals from teachers", "Proposals with applications",
-                            "Proposals without applications", "Generate the list", "Quit")){
-                        case 1 -> selfProposed=true;
-                        case 2 -> proposeTeacher=true;
-                        case 3 -> withApplications=true;
-                        case 4 -> withoutApplications=true;
-                        case 5 -> fsm.generateProposalsList(selfProposed,proposeTeacher,withApplications,withoutApplications);
-                        default -> allChosen=true;
-                    }
-            }
-            case 8 -> System.out.println("\tTo be implemented!\n");
-            case 9 -> fsm.previousPhase();
-            case 10 -> fsm.nextPhase();
-            case 11 -> fsm.serialization(Input.readString("Filename ",false));
-            default -> finish=true;
-        }
     }
 
     public void thirdPhaseUI(){

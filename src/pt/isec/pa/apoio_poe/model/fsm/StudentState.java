@@ -86,7 +86,12 @@ public class StudentState implements Serializable{
         return "";
     }
 
-    public static void showStudents(ArrayList<Student> students){ students.forEach((n) -> System.out.println(n.toString())); }
+    public static String showStudents(ArrayList<Student> students){
+        StringBuilder s = new StringBuilder();
+        for(Student student: students)
+            s.append(String.format("Student number: %-10d Student name: %-30s Email: %s Course acronym: %-6s Industry acronym: %-7s Classification: %.6f Access to Internship : %b \n",student.getStudentNumber(),student.getName(),student.getEmail(),student.getCourseAcronym(),student.getIndustryAcronym(),student.getClassification(),student.isAccessInternships()));
+        return s.toString();
+    }
 
     public static void exportStudents(String filename, ArrayList<Student> students) throws IOException {
         filename = "src/csvFiles/exportStudent.csv";

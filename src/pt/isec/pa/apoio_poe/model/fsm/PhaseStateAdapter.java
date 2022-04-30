@@ -11,6 +11,7 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
 
     protected PhaseStateAdapter(PhaseContext context){ this.context = context; }
 
+    //States
     @Override
     public void changeState(IPhaseState newState){
         context.changeState(newState);
@@ -24,8 +25,9 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public boolean isClosed(){ return false; }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students){ return null; }
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value){ return null; }
 
+    //Students
     @Override
     public String addStudents(String filename, ArrayList<Student> students) throws IOException { return null; }
     @Override
@@ -33,12 +35,11 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String deleteStudents(long number, ArrayList<Student> students) { return null; }
     @Override
-    public void showStudents(ArrayList<Student> students) { }
+    public String showStudents(ArrayList<Student> students) { return null; }
     @Override
     public void exportStudents(String filename, ArrayList<Student> students) throws IOException { }
 
-
-    /************************************************** Teachers **************************************************/
+    //Teachers
     @Override
     public String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { return null; }
     @Override
@@ -46,41 +47,34 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String deleteTeacher(String email, ArrayList<Teacher> teachers) { return null; }
     @Override
-    public void showTeachers(ArrayList<Teacher> teachers) { }
+    public String showTeachers(ArrayList<Teacher> teachers) { return null; }
     @Override
     public void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {  }
 
-    /************************************************** Proposals **************************************************/
+    //Proposals
     @Override
     public String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return null; }
     @Override
     public String deleteProposals(String id, ArrayList<Proposal> proposals) { return null; }
     @Override
-    public void showProposals(ArrayList<Proposal> proposals) { }
+    public String showProposals(ArrayList<Proposal> proposals) { return null; }
     @Override
     public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException { }
 
-    /******************************/
-
+    //Applications
     @Override
-    public ArrayList<Application> addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException { return null; }
-
+    public String addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) throws IOException { return null; }
     @Override
-    public ArrayList<Application> editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals) { return null; }
-
+    public String editApplication(long number, String id, int option, ArrayList<Application> applications, ArrayList<Proposal> proposals) { return null; }
     @Override
-    public ArrayList<Application> deleteApplication(long number, ArrayList<Application> applications){ return null; }
-
+    public String deleteApplication(long number, ArrayList<Application> applications){ return null; }
     @Override
-    public void showApplication(ArrayList<Application> applications) {}
-
+    public String showApplication(ArrayList<Application> applications) { return null; }
     @Override
-    public void exportApplications(String filename, ArrayList<Application> applications) throws IOException { }
-
+    public void exportApplications(String filename, ArrayList<Application> applications) throws IOException {}
     @Override
-    public void generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students) { }
-
+    public String generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students) { return null; }
     @Override
-    public void generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications) { }
+    public String generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications) { return null; }
 
 }
