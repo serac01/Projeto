@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
-    private boolean isClosed;
     public static final long serialVersionUID=2020129026;
+    private boolean isClosed;
 
     FirstPhaseState(PhaseContext context){
         super(context);
         this.isClosed = false;
     }
 
+    //State
     @Override
     public boolean nextPhase() {
         changeState(new SecondPhaseState(context));
@@ -22,7 +23,9 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public boolean isClosed() { return isClosed; }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students) {
+    public PhaseState getState() { return PhaseState.PHASE_1; }
+    @Override
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value) {
         if(students.isEmpty() || proposals.isEmpty())
             return "You still don't have the necessary data to be able to close the phase\n";
 
@@ -59,9 +62,8 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
             return "Unable to close this phase\n";
         return "";
     }
-    @Override
-    public PhaseState getState() { return PhaseState.PHASE_1; }
 
+    //Students
     @Override
     public String addStudents(String filename, ArrayList<Student> students) throws IOException { return StudentState.addStudents(filename, students); }
     @Override
@@ -69,10 +71,11 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public String deleteStudents(long number, ArrayList<Student> students){ return StudentState.deleteStudents(number,students); }
     @Override
-    public void showStudents(ArrayList<Student> students){ StudentState.showStudents(students); }
+    public String showStudents(ArrayList<Student> students){ return StudentState.showStudents(students); }
     @Override
     public void exportStudents(String filename, ArrayList<Student> students) throws IOException { StudentState.exportStudents(filename, students); }
 
+    //Teachers
     @Override
     public String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException { return TeacherState.addTeachers(filename,teachers); }
     @Override
@@ -80,16 +83,17 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public String deleteTeacher(String email, ArrayList<Teacher> teachers) { return TeacherState.deleteTeacher(email,teachers); }
     @Override
-    public void showTeachers(ArrayList<Teacher> teachers) { TeacherState.showTeachers(teachers); }
+    public String showTeachers(ArrayList<Teacher> teachers) { return TeacherState.showTeachers(teachers); }
     @Override
     public void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException { TeacherState.exportTeacher(filename,teachers); }
 
+    //Proposals
     @Override
     public String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return ProposalsState.addProposals(filename,proposals,students,teachers); }
     @Override
     public String deleteProposals(String id, ArrayList<Proposal> proposals) { return ProposalsState.deleteProposals(id, proposals); }
     @Override
-    public void showProposals(ArrayList<Proposal> proposals) { ProposalsState.showProposals(proposals); }
+    public String showProposals(ArrayList<Proposal> proposals) { return ProposalsState.showProposals(proposals); }
     @Override
     public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException { ProposalsState.exportProposals(filename, proposals); }
 }

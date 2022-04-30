@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ProposalProject extends Proposal  implements Serializable {
-    private List<String> area;
-    private Student student;
-    private Teacher teacher;
+    private final List<String> area;
+    private final Student student;
+    private final Teacher teacher;
 
 
     public ProposalProject(String identification, String title, List<String> area, Teacher teacher, Student student) {
@@ -18,20 +18,10 @@ public class ProposalProject extends Proposal  implements Serializable {
 
     @Override
     public List<String> getArea() { return area; }
-    public void setArea(List<String> area) { this.area = area; }
 
     @Override
     public Student getStudent() { return student; }
 
     @Override
     public Teacher getTeacher() { return teacher; }
-
-    /*@Override
-    public String toString() {
-        return "Proposal{" +
-                "identification=" + identification +
-                ", title='" + title + '\'' +
-                ", area='" + area + '\'' +
-                '}';
-    }*/
 }

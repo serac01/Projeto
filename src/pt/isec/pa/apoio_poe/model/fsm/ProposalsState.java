@@ -88,7 +88,19 @@ public class ProposalsState implements Serializable{
         return "";
     }
 
-    public static void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
+    public static String showProposals(ArrayList<Proposal> proposals){
+        StringBuilder s = new StringBuilder();
+        for (Proposal p:proposals)
+            if(p.getType().equalsIgnoreCase("T1"))
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getHostEntity()));
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail()));
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty",p.getTeacher().getName(),p.getTeacher().getEmail()));
+            else if(p.getType().equalsIgnoreCase("T3"))
+                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10s  \n",p.getIdentification(),p.getType(),p.getTitle(),"empty","empty"));
+        return s.toString();
+    }
 
     public static void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
         filename = "src/csvFiles/exportProposals.csv";

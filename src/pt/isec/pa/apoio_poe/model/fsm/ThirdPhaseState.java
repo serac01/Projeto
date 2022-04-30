@@ -1,6 +1,5 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
-import pt.isec.pa.apoio_poe.model.data.Phase;
 import pt.isec.pa.apoio_poe.model.data.Student;
 
 import java.util.ArrayList;

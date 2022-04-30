@@ -1,7 +1,6 @@
 package pt.isec.pa.apoio_poe.model.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Application implements Serializable {
@@ -21,12 +20,4 @@ public class Application implements Serializable {
 
     public List<String> getIdProposals() { return idProposals; }
     public void setIdProposals(List<String> idProposals) { this.idProposals = idProposals; }
-
-    @Override
-    public String toString() {
-        System.out.print("Student: "+student.toString()+ "Proposals: ");
-        for (String s : idProposals)
-            System.out.print(" "+s);
-        return "";
-    }
 }
