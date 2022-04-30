@@ -14,6 +14,9 @@ public class PhaseUI {
     }
 
     public void start() throws IOException {
+        switch (Input.chooseOption("Choose the option:","load a state","Quit")) {
+            case 1 -> fsm.deserialization(Input.readString("Filename ",false));
+        }
         while (!finish)
             switch (fsm.getState()){
                 case PHASE_1 -> firstPhaseUI();
@@ -27,28 +30,24 @@ public class PhaseUI {
     public void firstPhaseUI() throws IOException {
         System.out.print("\n1st Phase");
         if(fsm.isClosed())
-            switch (Input.chooseOption("Choose the option:","Student management","Close phase","Next phase","Serialization","Deserialization","Quit")){
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
+                    "Management proposals for internships or projects","Save the sate","Next phase","Quit")){
                 case 1 -> management("student");
                 case 2 -> management("teacher");
                 case 3 -> management("proposals for internships or projects");
+                case 4 -> fsm.serialization(Input.readString("Filename ",false));
                 case 5 -> fsm.nextPhase();
-                case 6 -> fsm.serialization();
-                case 7 -> fsm.deserialization();
                 default -> finish = true;
             }
         else
             switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
-                    "Management proposals for internships or projects","Close phase","Next phase","Serialization","Deserialization","Quit")){
+                    "Management proposals for internships or projects","Close phase","Next phase","Save the state","Quit")){
                 case 1 -> management("student");
                 case 2 -> management("teacher");
                 case 3 -> management("proposals for internships or projects");
-                case 4 -> {
-                    if (fsm.closePhase())
-                        System.out.println("Closed Phase");
-                }
+                case 4 -> System.out.println(fsm.closePhase());
                 case 5 -> fsm.nextPhase();
-                case 6 -> fsm.serialization();
-                case 7 -> fsm.deserialization();
+                case 6 -> fsm.serialization(Input.readString("Filename ",false));
                 default -> finish = true;
             }
     }
@@ -58,83 +57,89 @@ public class PhaseUI {
         boolean finishManagement=false;
         long studentNumber;
         while(!finishManagement)
-            switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
-                    "Edit "+name,"Delete "+name,"Export "+name,"Quit")){
-                case 1 -> {
-                    if(name.equalsIgnoreCase("student"))
-                        fsm.addStudents(Input.readString("Filename ",false));
-                    else if(name.equalsIgnoreCase("teacher"))
-                        fsm.addTeachers(Input.readString("Filename ",false));
-                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                        fsm.addProposals(Input.readString("Filename ",false));
+            if(fsm.isClosed())
+                switch (Input.chooseOption("Choose the option:","Show "+name,"Export "+name,"Quit")){
+                    case 1 ->  {
+                        if(name.equalsIgnoreCase("student"))
+                            fsm.showStudents();
+                        else if(name.equalsIgnoreCase("teacher"))
+                            fsm.showTeachers();
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            fsm.showProposals();
+                    }
+                    case 2 -> {
+                        if(name.equalsIgnoreCase("student"))
+                            fsm.exportStudents(Input.readString("Filename ",false));
+                        else if(name.equalsIgnoreCase("teacher"))
+                            fsm.exportTeachers(Input.readString("Filename ",false));
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            fsm.exportProposals(Input.readString("Filename ",false));
+                    }
+                    default -> finishManagement=true;
                 }
-                case 2 ->  {
-                    if(name.equalsIgnoreCase("student"))
-                        fsm.showStudents();
-                    else if(name.equalsIgnoreCase("teacher"))
-                        fsm.showTeachers();
-                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                        fsm.showProposals();
+            else
+                switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
+                        "Edit "+name,"Delete "+name,"Export "+name,"Quit")){
+                    case 1 -> {
+                        if(name.equalsIgnoreCase("student"))
+                            System.out.println(fsm.addStudents(Input.readString("Filename ",false)));
+                        else if(name.equalsIgnoreCase("teacher"))
+                            System.out.println(fsm.addTeachers(Input.readString("Filename ",false)));
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            System.out.println(fsm.addProposals(Input.readString("Filename ",false)));
+                    }
+                    case 2 ->  {
+                        if(name.equalsIgnoreCase("student"))
+                            fsm.showStudents();
+                        else if(name.equalsIgnoreCase("teacher"))
+                            fsm.showTeachers();
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            fsm.showProposals();
+                    }
+                    case 3 -> {
+                        if(name.equalsIgnoreCase("student")){
+                            System.out.println("Enter student number");
+                            studentNumber = (long) Input.readNumber(" ");
+                            boolean everythingEdited=false;
+                            while(!everythingEdited)
+                                switch (Input.chooseOption("Choose the option:","Edit name", "Edit course acronym",
+                                        "Edit industry acronym", "Edit classification", "Edit access internships", "Quit")){
+                                    case 1 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New name ",false),1));
+                                    case 2 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New course acronym ",true),2));
+                                    case 3 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New industry acronym ",true),3));
+                                    case 4 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New classification",true),4));
+                                    case 5 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("Access internships [true/false] ",true),5));
+                                    default -> everythingEdited=true;
+                                }
+                        }else if(name.equalsIgnoreCase("teacher")){
+                            System.out.println("Enter teacher email");
+                            String email = Input.readString("Email ",true);
+                            boolean everythingEdited=false;
+                            while(!everythingEdited)
+                                if (Input.chooseOption("Choose the option:", "Edit name", "Quit") == 1)
+                                    System.out.print(fsm.editTeacher(email, Input.readString("New name ", false)));
+                                else
+                                    everythingEdited = true;
+                        }
+                    }
+                    case 4 -> {
+                        if(name.equalsIgnoreCase("student"))
+                            System.out.println(fsm.deleteStudents((long) Input.readNumber("Enter student number ")));
+                        else if(name.equalsIgnoreCase("teacher"))
+                            System.out.println(fsm.deleteTeachers(Input.readString("Enter teacher email ",false)));
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            System.out.println(fsm.deleteProposals(Input.readString("Enter proposal id ",false)));
+                    }
+                    case 5 -> {
+                        if(name.equalsIgnoreCase("student"))
+                            fsm.exportStudents(Input.readString("Filename ",false));
+                        else if(name.equalsIgnoreCase("teacher"))
+                            fsm.exportTeachers(Input.readString("Filename ",false));
+                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
+                            fsm.exportProposals(Input.readString("Filename ",false));
+                    }
+                    default -> finishManagement=true;
                 }
-                case 3 -> editMenu(name);
-                case 4 -> {
-                    if(name.equalsIgnoreCase("student")){
-                        studentNumber = (long) Input.readNumber("Enter student number ");
-                        fsm.deleteStudents(studentNumber);}
-                    else if(name.equalsIgnoreCase("teacher"))
-                        fsm.deleteTeachers(Input.readString("Enter teacher email ",false));
-                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                        fsm.deleteProposals(Input.readString("Enter proposal id ",false));
-                }
-                case 5 -> {
-                    if(name.equalsIgnoreCase("student"))
-                        fsm.exportStudents(Input.readString("Filename ",false));
-                    else if(name.equalsIgnoreCase("teacher"))
-                        fsm.exportTeachers(Input.readString("Filename ",false));
-                    else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                        fsm.exportProposals(Input.readString("Filename ",false));
-                }
-                default -> finishManagement=true;
-            }
-    }
-
-    public void editMenu(String name) {
-        if(name.equalsIgnoreCase("student")){
-            System.out.println("Enter student number");
-            long studentNumber = (long) Input.readNumber(" ");
-            boolean everythingEdited=false;
-            while(!everythingEdited)
-                switch (Input.chooseOption("Choose the option:","Edit name", "Edit course acronym",
-                        "Edit industry acronym", "Edit classification", "Edit access internships", "Quit")){
-                    case 1 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New name ",false),1));
-                    case 2 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New course acronym ",true),2));
-                    case 3 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New industry acronym ",true),3));
-                    case 4 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New classification",true),4));
-                    case 5 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("Access internships [true/false] ",true),5));
-                    default -> everythingEdited=true;
-                }
-        }
-        else if(name.equalsIgnoreCase("teacher")){
-            System.out.println("Enter teacher email");
-            String email = Input.readString("Email ",true);
-            boolean everythingEdited=false;
-            while(!everythingEdited)
-                if (Input.chooseOption("Choose the option:", "Edit name", "Quit") == 1) {
-                    System.out.print(fsm.editTeacher(email, Input.readString("New name ", false)));
-                } else {
-                    everythingEdited = true;
-                }
-        }
-        else if(name.equalsIgnoreCase("proposals for internships or projects")){
-            System.out.println("Enter proposal id");
-            String id = Input.readString("Proposal id ",true);
-            boolean everythingEdited=false;
-            while(!everythingEdited)
-                switch (Input.chooseOption("Choose the option:","Edit title",  "Quit")){
-                    case 1 -> System.out.print(fsm.editProposals(id,Input.readString("New title ",false),1));
-                    default -> everythingEdited=true;
-                }
-        }
     }
 
     public void secondPhaseUI() throws IOException {
@@ -148,7 +153,7 @@ public class PhaseUI {
         System.out.print("\n2nd Phase");
         switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
                 "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
-                "Close phase","Return to previous phase","Next phase","Serialization","Deserialization","Quit")){
+                "Close phase","Return to previous phase","Next phase","Save the sate","Quit")){
             case 1 -> fsm.addApplications(Input.readString("Filename ",false));
             case 2 -> fsm.showApplications();
             case 3 -> {
@@ -193,8 +198,7 @@ public class PhaseUI {
             case 8 -> System.out.println("\tTo be implemented!\n");
             case 9 -> fsm.previousPhase();
             case 10 -> fsm.nextPhase();
-            case 11 -> fsm.serialization();
-            case 12 -> fsm.deserialization();
+            case 11 -> fsm.serialization(Input.readString("Filename ",false));
             default -> finish=true;
         }
     }

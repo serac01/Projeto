@@ -13,26 +13,25 @@ import java.util.List;
 public interface IPhaseState {
     boolean nextPhase();
     boolean previousPhase();
-    boolean closePhase(ArrayList<Proposal> proposals, ArrayList<Student> student);
+    String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> student);
     boolean isClosed();
     void changeState(IPhaseState newState);
     void setContext(PhaseContext context);
 
-    void addStudents(String filename, ArrayList<Student> students) throws IOException;
-    void editStudent(long number, String toUpdate, int option, ArrayList<Student> students);
-    void deleteStudents(long number, ArrayList<Student> students);
+    String addStudents(String filename, ArrayList<Student> students) throws IOException;
+    String editStudent(long number, String toUpdate, int option, ArrayList<Student> students);
+    String deleteStudents(long number, ArrayList<Student> students);
     void showStudents(ArrayList<Student> students);
     void exportStudents(String filename, ArrayList<Student> students) throws IOException;
 
-    void addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException;
-    void editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers);
-    void deleteTeacher(String email, ArrayList<Teacher> teachers);
+    String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException;
+    String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers);
+    String deleteTeacher(String email, ArrayList<Teacher> teachers);
     void showTeachers(ArrayList<Teacher> teachers);
     void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException;
 
-    void addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException;
-    void editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals);
-    void deleteProposals(String id, ArrayList<Proposal> proposals);
+    String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException;
+    String deleteProposals(String id, ArrayList<Proposal> proposals);
     void showProposals(ArrayList<Proposal> proposals);
     void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException;
 

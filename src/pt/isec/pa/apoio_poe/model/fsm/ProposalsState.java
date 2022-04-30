@@ -6,53 +6,68 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProposalsState {
-    public static void addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
+public class ProposalsState implements Serializable{
+    public static final long serialVersionUID=2020129026;
+
+    public static String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
         filename="src/csvFiles/proposals.csv";
+        StringBuilder warnings = new StringBuilder();
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
             String line;
             while((line=br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
+
+                //For all T1 proposals
                 if(tempArr.get(0).equalsIgnoreCase("T1")){
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals))
-                        System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
-                    else {
-                        ProposalIntership proposalIntership = new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4));
-                        proposals.add(proposalIntership);
-                    }
+                    if(isExistentProposal(tempArr.get(1),proposals))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
+                    else if(isAInvalidIndustryAcronymList(area))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid industry acronym\n");
+                    else
+                        proposals.add(new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4)));
                 }
+
+                //For all T2 proposals
                 else if(tempArr.get(0).equalsIgnoreCase("T2")){
-                    Student stud=null;
+                    //Get the student if exists
+                    Student auxStudent = null;
                     if(tempArr.size()==6)
                         for(Student s : students)
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(5)))
-                                stud=s;
+                                auxStudent=s;
+                    //Get the teacher
+                    Teacher auxTeacher = null;
+                    for(Teacher teacher : teachers)
+                        if(teacher.getEmail().equalsIgnoreCase(tempArr.get(4)))
+                            auxTeacher=teacher;
+
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(isAIndustryAcronymList(area) || isExistentProposal(tempArr.get(1),proposals) || !isExistentTeacher(tempArr.get(4),teachers))
-                        System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
-                    else {
-                        Teacher t=null;
-                        for(Teacher teacher : teachers)
-                            if(teacher.getEmail().equalsIgnoreCase(tempArr.get(4)))
-                                t=teacher;
-                        ProposalProject proposalProject = new ProposalProject(tempArr.get(1), tempArr.get(3), area, t, stud);
-                        proposals.add(proposalProject);
-                    }
+                    if(isExistentProposal(tempArr.get(1),proposals))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
+                    else if(isAInvalidIndustryAcronymList(area))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has invalid industry acronym\n");
+                    else if(auxTeacher==null)
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid teacher\n");
+                    else
+                        proposals.add(new ProposalProject(tempArr.get(1), tempArr.get(3), area, auxTeacher, auxStudent));
                 }
+
+                //For all T3 proposals
                 else if(tempArr.get(0).equalsIgnoreCase("T3")){
-                    if(isExistentProposal(tempArr.get(1),proposals) || isARepeatSelfProposedStudent(Long.parseLong(tempArr.get(3)), proposals))
-                        System.out.println("The proposal with code " + tempArr.get(1) + ", has invalid or duplicated data");
+                    if(isExistentProposal(tempArr.get(1),proposals))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
+                    else if(isARepeatStudent(Long.parseLong(tempArr.get(3)), proposals))
+                        warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid student, this student already has an associated proposal\n");
                     else {
-                        Student stud=null;
+                        Student auxStudent=null;
                         for(Student s : students)
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(3)))
-                                stud=s;
-                        ProposalSelfProposed proposalSelfProposed = new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), stud);
-                        proposals.add(proposalSelfProposed);
+                                auxStudent=s;
+                        proposals.add(new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), auxStudent));
                     }
                 }
             }
@@ -62,24 +77,15 @@ public class ProposalsState {
             if (br != null)
                 br.close();
         }
+        return warnings.toString();
     }
 
-    public static void editProposals(String id, String toUpdate, int option, ArrayList<Proposal> proposals)  {
+    public static String deleteProposals(String id, ArrayList<Proposal> proposals){
         if(!isExistentProposal(id,proposals))
-            return;
-
-        for(Proposal p : proposals)
-            if(id.equalsIgnoreCase(p.getIdentification()))
-                switch (option){
-                    case 1 -> p.setTitle(toUpdate);
-                }
-    }
-
-    public static void deleteProposals(String id, ArrayList<Proposal> proposals){
-        if(!isExistentProposal(id,proposals))
-            return;
+            return "The proposal with code "+id+", doesn't exists\n";
 
         proposals.removeIf(p -> p.getIdentification().equalsIgnoreCase(id));
+        return "";
     }
 
     public static void showProposals(ArrayList<Proposal> proposals){ proposals.forEach((n) -> System.out.println(n.toString())); }
@@ -91,38 +97,21 @@ public class ProposalsState {
             File file = new File(filename);
             if(!file.exists()) {
                 csvWriter = new FileWriter(file);
-
                 int count = 0;
 
                 for (Proposal p : proposals) {
+                    csvWriter.append(p.getType());
+                    csvWriter.append(",");
+                    csvWriter.append(p.getIdentification());
+                    csvWriter.append(",");
                     if(p.getType().equalsIgnoreCase("T1")){
-                        StringBuilder stringBuilder = new StringBuilder(5);
-                        int countAreaT1=0;
-                        for(String s : p.getArea()) {
-                            stringBuilder.append(s);
-                            countAreaT1++;
-                            if(countAreaT1 < p.getArea().size())
-                                stringBuilder.append("|");
-                        }
-                        csvWriter.append(stringBuilder);
+                        csvWriter.append(getStringIndustryAcronym(p.getArea()));
                         csvWriter.append(",");
                         csvWriter.append(p.getTitle());
                         csvWriter.append(",");
                         csvWriter.append(p.getHostEntity());
                     }else if(p.getType().equalsIgnoreCase("T2")){
-                        csvWriter.append(p.getType());
-                        csvWriter.append(",");
-                        csvWriter.append(p.getIdentification());
-                        csvWriter.append(",");
-                        StringBuilder stringBuilder = new StringBuilder(5);
-                        int countAreaT2=0;
-                        for(String s : p.getArea()) {
-                            stringBuilder.append(s);
-                            countAreaT2++;
-                            if(countAreaT2 < p.getArea().size())
-                                stringBuilder.append("|");
-                        }
-                        csvWriter.append(stringBuilder);
+                        csvWriter.append(getStringIndustryAcronym(p.getArea()));
                         csvWriter.append(",");
                         csvWriter.append(p.getTitle());
                         csvWriter.append(",");
@@ -132,10 +121,6 @@ public class ProposalsState {
                             csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
                         }
                     }else if(p.getType().equalsIgnoreCase("T3")){
-                        csvWriter.append(p.getType());
-                        csvWriter.append(",");
-                        csvWriter.append(p.getIdentification());
-                        csvWriter.append(",");
                         csvWriter.append(p.getTitle());
                         csvWriter.append(",");
                         csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
@@ -153,14 +138,19 @@ public class ProposalsState {
         }
     }
 
-    //Validations
-    private static boolean isExistentTeacher(String email, ArrayList<Teacher> teachers){
-        for(Teacher t : teachers)
-            if(email.equalsIgnoreCase(t.getEmail()))
-                return true;
-        return false;
+    private static String getStringIndustryAcronym(List<String> area){
+        StringBuilder listIndustryAcronym = new StringBuilder(5);
+        int countIndustryAcronym=0;
+        for(String s : area) {
+            listIndustryAcronym.append(s);
+            countIndustryAcronym++;
+            if(countIndustryAcronym < area.size())
+                listIndustryAcronym.append("|");
+        }
+        return listIndustryAcronym.toString();
     }
 
+    //Validations
     private static boolean isExistentProposal(String id, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if(id.equalsIgnoreCase(p.getIdentification()))
@@ -168,7 +158,7 @@ public class ProposalsState {
         return false;
     }
 
-    private static boolean isAIndustryAcronymList(List<String> industryAcronym){
+    private static boolean isAInvalidIndustryAcronymList(List<String> industryAcronym){
         int count=0;
         for(String s : industryAcronym)
             if(s.equalsIgnoreCase("SI") || s.equalsIgnoreCase("DA") || s.equalsIgnoreCase("RAS"))
@@ -177,12 +167,11 @@ public class ProposalsState {
         return count != industryAcronym.size();
     }
 
-    private static boolean isARepeatSelfProposedStudent(long number, ArrayList<Proposal> proposals){
+    private static boolean isARepeatStudent(long number, ArrayList<Proposal> proposals){
         for(Proposal p : proposals)
             if(p.getStudent() != null)
                 if(number == p.getStudent().getStudentNumber())
                     return true;
-
         return false;
     }
 }
