@@ -25,7 +25,7 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public boolean isClosed(){ return false; }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value){ return null; }
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Application> applications, boolean value){ return null; }
 
     //Students
     @Override
@@ -77,4 +77,14 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications) { return null; }
 
+    @Override
+    public String assignAProposalWithoutAssignments(ArrayList<Application> applications, ArrayList<Student> students, ArrayList<Proposal> proposals){ return null; }
+    @Override
+    public String associateProposalToStudents(String proposal, Long student, ArrayList<Proposal> proposals, ArrayList<Student> students) { return null; }
+    @Override
+    public  String removeStudentFromProposal(String proposal, ArrayList<Proposal> proposals){ return null; }
+    @Override
+    public String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ArrayList<Student> students, ArrayList<Proposal> proposals) { return null; }
+    @Override
+    public String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ArrayList<Proposal> proposals){ return null; }
 }

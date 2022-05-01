@@ -32,7 +32,7 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         return PhaseState.PHASE_2;
     }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value) {
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Application> applications, boolean value) {
         if(!value)
             return "The previous phase is still open, so you cannot close this one\n";
         isClosed=true;

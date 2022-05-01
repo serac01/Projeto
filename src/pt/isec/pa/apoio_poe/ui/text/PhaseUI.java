@@ -234,43 +234,98 @@ public class PhaseUI {
     }
 
     public void thirdPhaseUI(){
-        /** As funcionalidades disponíveis na fase de atribuição de propostas são as seguintes:
-            * Atribuição automática das autopropostas ou propostas de docentes com aluno associado
-            * Atribuição automática de uma proposta disponível aos alunos ainda sem atribuições
-            * Atribuição manual de propostas disponíveis aos alunos sem atribuição ainda definida.
-            * Remoção manual de uma atribuição
-            * A gestão manual deverá permitir operações de undo e redo.
-            * Obtenção de listas de alunos
-            * Obtenção de listas de propostas de projecto estágio
-            * Fechar a fase
-            * Regresso à fase anterior para consulta de dados ou realizar alterações
-            * Avançar para a fase seguinte*/
         System.out.print("\n3rd Phase");
-        switch (Input.chooseOption("Choose the option:","Automatically assign self-proposals or proposals from teachers with an associated student",
-                "Automatically assign a proposal without assignments","Manual assignment of proposals","Manually removing an assignment",
-                "Undo or redo", "Get student lists","Get lists of internship project proposals","Close phase","Return to previous phase","Next phase","Quit")){
-            case 1 -> System.out.println("\tIts Done\n");
-            case 2, 3, 4, 5, 6, 7, 8 -> System.out.println("\tTo be implemented!\n");
-            case 9 -> fsm.previousPhase();
-            case 10 -> fsm.nextPhase();
-            default -> finish=true;
-        }
+        if(fsm.isClosed())
+            switch (Input.chooseOption("Choose the option:",
+                    "Get student lists","Get lists of internship project proposals","Save the state","Return to previous phase","Next phase","Quit")){
+                case 1 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","Have an associated self-proposal",
+                                "Have an application already registered","Have a proposal assigned", "Don't have any proposal attributed", "Quit")){
+                            case 1 -> System.out.println(fsm.generateListProposalStudents(true,false,false,false));
+                            case 2 -> System.out.println(fsm.generateListProposalStudents(false,true,false,false));
+                            case 3 -> System.out.println(fsm.generateListProposalStudents(false,false,true,false));
+                            case 4 -> System.out.println(fsm.generateListProposalStudents(false,false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 2 -> {
+                    boolean allChosen=false, selfProposed=false,proposeTeacher=false,withProposals=false,withoutProposals=false;
+                    while(!allChosen) {
+                        switch (Input.chooseOption("Choose the option:", "Student self-proposals",
+                                "Teachers proposals", "Available proposals", "Assigned proposals", "Generate the list", "Quit")) {
+                            case 1 -> selfProposed=Input.changeBoolean(selfProposed);
+                            case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
+                            case 3 -> withProposals=Input.changeBoolean(withProposals);
+                            case 4 -> withoutProposals=Input.changeBoolean(withoutProposals);
+                            case 5 -> System.out.println(fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals));
+                            default -> allChosen = true;
+                        }
+                    }
+                }
+                case 3 -> fsm.serialization(Input.readString("Filename ",false));
+                case 4 -> fsm.previousPhase();
+                case 5 -> fsm.nextPhase();
+                default -> finish=true;
+            }
+        else
+            switch (Input.chooseOption("Choose the option:","Automatically assign self-proposals or proposals from teachers with an associated student",
+                    "Automatically assign a proposal without assignments","Manual assignment of proposals","Manually removing an assignment",
+                    "Get student lists","Get lists of internship project proposals","Save the state","Close phase","Return to previous phase","Next phase","Quit")){
+                case 1 -> System.out.println(); //It is already done in the way the project was structured
+                case 2 -> System.out.println(fsm.assignAProposalWithoutAssignments());
+                case 3 -> System.out.println(fsm.associateProposalToStudents(Input.readString("Proposal id: ",true),(long) Input.readNumber("Enter student number ")));
+                case 4 -> System.out.println(fsm.removeStudentFromProposal(Input.readString("Proposal id: ",true)));
+                case 5 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","Have an associated self-proposal",
+                                "Have an application already registered","Have a proposal assigned", "Don't have any proposal attributed", "Quit")){
+                            case 1 -> System.out.println(fsm.generateListProposalStudents(true,false,false,false));
+                            case 2 -> System.out.println(fsm.generateListProposalStudents(false,true,false,false));
+                            case 3 -> System.out.println(fsm.generateListProposalStudents(false,false,true,false));
+                            case 4 -> System.out.println(fsm.generateListProposalStudents(false,false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 6 -> {
+                    boolean allChosen=false, selfProposed=false,proposeTeacher=false,withProposals=false,withoutProposals=false;
+                    while(!allChosen) {
+                        switch (Input.chooseOption("Choose the option:", "Student self-proposals",
+                                "Teachers proposals", "Available proposals", "Assigned proposals", "Generate the list", "Quit")) {
+                            case 1 -> selfProposed=Input.changeBoolean(selfProposed);
+                            case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
+                            case 3 -> withProposals=Input.changeBoolean(withProposals);
+                            case 4 -> withoutProposals=Input.changeBoolean(withoutProposals);
+                            case 5 -> System.out.println(fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals));
+                            default -> allChosen = true;
+                        }
+                    }
+                }
+                case 7 -> fsm.serialization(Input.readString("Filename ",false));
+                case 8 -> System.out.println(fsm.closePhase());
+                case 9 -> fsm.previousPhase();
+                case 10 -> fsm.nextPhase();
+                default -> finish=true;
+            }
     }
 
     public void fourthPhaseUI(){
         /** As funcionalidades disponíveis na fase de atribuição de orientadores são as seguintes:
             * Associação automática dos docentes
             * Atribuição, consulta, alteração e eliminação de um orientador
-            * Undo e redo
             * Obtenção de listas sobre atribuições de orientadores
             * Fechar fase
             * Regresso à fase anterior*/
         System.out.print("\n4th Phase");
         switch (Input.chooseOption("Choose the option:","Automatically associate teachers","Assign advisor",
-                "Consult advisor","Change advisor","Delete advisor","Undo or redo","Get lists of advisors assignments",
+                "Consult advisor","Change advisor","Delete advisor","Get lists of advisors assignments","Save the state",
                 "Close phase","Return to previous phase","Quit")){
-            case 1, 2, 3, 4, 5, 6, 7 -> System.out.println("\tTo be implemented!\n");
-            case 8 -> /*Fechar a fase*/ fsm.nextPhase();
+            case 1 -> System.out.println(); //Done
+            case 2, 3, 4, 5, 6 -> System.out.println("\tTo be implemented!\n");
+            case 7 -> fsm.serialization(Input.readString("Filename ",false));
+            case 8 -> fsm.nextPhase();
             case 9 -> fsm.previousPhase();
             default -> finish=true;
         }

@@ -25,7 +25,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public PhaseState getState() { return PhaseState.PHASE_1; }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, boolean value) {
+    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Application> applications, boolean value) {
         if(students.isEmpty() || proposals.isEmpty())
             return "You still don't have the necessary data to be able to close the phase\n";
 
