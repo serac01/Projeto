@@ -3,6 +3,7 @@ package pt.isec.pa.apoio_poe.model.fsm;
 import pt.isec.pa.apoio_poe.model.data.*;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class PhaseContext implements Serializable{
     public static final long serialVersionUID=2020129026;
@@ -51,20 +52,20 @@ public class PhaseContext implements Serializable{
     public void nextPhase(){
         state.nextPhase();
         if(state.getState()==PhaseState.PHASE_2 && management.isPhase2Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
         else if(state.getState()==PhaseState.PHASE_3 && management.isPhase3Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
         else if(state.getState()==PhaseState.PHASE_4 && management.isPhase4Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
     }
     public void previousPhase(){
         state.previousPhase();
         if(state.getState()==PhaseState.PHASE_1 && management.isPhase1Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
         else if(state.getState()==PhaseState.PHASE_2 && management.isPhase2Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
         else if(state.getState()==PhaseState.PHASE_3 && management.isPhase3Closed())
-            state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());
+            state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());
     }
     public boolean isClosed(){
         if(getState() == PhaseState.PHASE_1)
@@ -77,7 +78,7 @@ public class PhaseContext implements Serializable{
             management.setPhase4Closed(state.isClosed());
         return state.isClosed();
     }
-    public String closePhase(){ return state.closePhase(management.getProposals(), management.getStudent(), management.isPhase1Closed());}
+    public String closePhase(){ return state.closePhase(management.getProposals(), management.getStudent(), management.getApplications(), management.isPhase1Closed());}
 
     /************************************************** Students **************************************************/
     public String addStudents(String filename) throws IOException {
@@ -113,6 +114,12 @@ public class PhaseContext implements Serializable{
     public String generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered) { return state.generateStudentList(selfProposed,alreadyRegistered,withoutRegistered,management.getProposals(),management.getApplications(), management.getStudent()); }
     public String generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications) { return state.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications, management.getProposals(), management.getApplications()); }
 
+    /************************************************** Attribution of proposals **************************************************/
+    public String assignAProposalWithoutAssignments(){ return state.assignAProposalWithoutAssignments(management.getApplications(),management.getStudent(), management.getProposals()); }
+    public String associateProposalToStudents(String proposal, Long student) { return state.associateProposalToStudents(proposal,student,management.getProposals(),management.getStudent()); }
+    public String removeStudentFromProposal(String proposal){ return state.removeStudentFromProposal(proposal,management.getProposals()); }
+    public String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed) { return state.generateListProposalStudents(associatedSelfProposed,alreadyRegistered,proposalAssigned,anyProposalAttributed,management.getStudent(),management.getProposals()); }
+    public String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals){ return state.generateListProposalPhase3(selfProposed,proposeTeacher,withProposals,withoutProposals,management.getProposals()); }
 }
 
 

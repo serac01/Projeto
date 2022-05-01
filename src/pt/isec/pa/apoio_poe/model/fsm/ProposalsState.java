@@ -28,7 +28,7 @@ public class ProposalsState implements Serializable{
                     else if(isAInvalidIndustryAcronymList(area))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid industry acronym\n");
                     else
-                        proposals.add(new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4)));
+                        proposals.add(new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4),null,null));
                 }
 
                 //For all T2 proposals
@@ -67,7 +67,7 @@ public class ProposalsState implements Serializable{
                         for(Student s : students)
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(3)))
                                 auxStudent=s;
-                        proposals.add(new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), auxStudent));
+                        proposals.add(new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), auxStudent,null));
                     }
                 }
             }
@@ -91,14 +91,26 @@ public class ProposalsState implements Serializable{
     public static String showProposals(ArrayList<Proposal> proposals){
         StringBuilder s = new StringBuilder();
         for (Proposal p:proposals)
-            if(p.getType().equalsIgnoreCase("T1"))
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getHostEntity()));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null)
+            if(p.getType().equalsIgnoreCase("T1") && p.getStudent()!=null && p.getTeacher()!=null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail(),p.getHostEntity()));
+            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()!=null && p.getTeacher()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty",p.getHostEntity()));
+            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()==null && p.getTeacher()!=null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty",p.getTeacher().getName(),p.getTeacher().getEmail(),p.getHostEntity()));
+            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()==null && p.getTeacher()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty","empty","empty",p.getHostEntity()));
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null && p.getTeacher()!=null)
                 s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail()));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null)
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null && p.getTeacher()!=null)
                 s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty",p.getTeacher().getName(),p.getTeacher().getEmail()));
-            else if(p.getType().equalsIgnoreCase("T3"))
-                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10s  \n",p.getIdentification(),p.getType(),p.getTitle(),"empty","empty"));
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null && p.getTeacher()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty"));
+            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null && p.getTeacher()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty","empty","empty"));
+            else if(p.getType().equalsIgnoreCase("T3") && p.getTeacher()!=null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail()));
+            else if(p.getType().equalsIgnoreCase("T3") && p.getTeacher()==null)
+                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty"));
         return s.toString();
     }
 

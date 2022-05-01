@@ -7,8 +7,8 @@ public class ProposalIntership extends Proposal implements Serializable {
     private final String hostEntity;
     private final List<String> area;
 
-    public ProposalIntership(String identification, String title, List<String> area, String hostEntity) {
-        super(identification, title, "T1");
+    public ProposalIntership(String identification, String title, List<String> area, String hostEntity, Student student, Teacher teacher) {
+        super(identification, title, "T1",student,teacher);
         this.area = area;
         this.hostEntity = hostEntity;
     }

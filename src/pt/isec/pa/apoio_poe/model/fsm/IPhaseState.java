@@ -13,7 +13,7 @@ import java.util.List;
 public interface IPhaseState {
     boolean nextPhase();
     boolean previousPhase();
-    String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> student, boolean value);
+    String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> student, ArrayList<Application> applications, boolean value);
     boolean isClosed();
     void changeState(IPhaseState newState);
     void setContext(PhaseContext context);
@@ -43,7 +43,11 @@ public interface IPhaseState {
     String generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ArrayList<Proposal> proposals, ArrayList <Application> applications, ArrayList <Student> students);
     String generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications,ArrayList<Proposal> proposals, ArrayList<Application> applications);
 
+    String assignAProposalWithoutAssignments(ArrayList<Application> applications, ArrayList<Student> students, ArrayList<Proposal> proposals);
+    String associateProposalToStudents(String proposal, Long student, ArrayList<Proposal> proposals, ArrayList<Student> students);
+    String removeStudentFromProposal(String proposal, ArrayList<Proposal> proposals);
+    String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ArrayList<Student> students, ArrayList<Proposal> proposals);
+    String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ArrayList<Proposal> proposals);
 
     PhaseState getState();
-
 }
