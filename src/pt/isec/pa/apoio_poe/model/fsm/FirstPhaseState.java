@@ -69,7 +69,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public String editStudent(long number, String toUpdate, int option, ArrayList<Student> students)  { return StudentState.editStudent(number, toUpdate, option, students); }
     @Override
-    public String deleteStudents(long number, ArrayList<Student> students){ return StudentState.deleteStudents(number,students); }
+    public String deleteStudents(long number, ArrayList<Student> students, ArrayList<Proposal> proposals, ArrayList<Application> applications){ return StudentState.deleteStudents(number,students,proposals,applications); }
     @Override
     public String showStudents(ArrayList<Student> students){ return StudentState.showStudents(students); }
     @Override
@@ -81,7 +81,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { return TeacherState.editTeacher(email,toUpdate,teachers); }
     @Override
-    public String deleteTeacher(String email, ArrayList<Teacher> teachers) { return TeacherState.deleteTeacher(email,teachers); }
+    public String deleteTeacher(String email, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals) { return TeacherState.deleteTeacher(email,teachers,proposals); }
     @Override
     public String showTeachers(ArrayList<Teacher> teachers) { return TeacherState.showTeachers(teachers); }
     @Override
@@ -91,7 +91,7 @@ public class FirstPhaseState extends PhaseStateAdapter implements Serializable {
     @Override
     public String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return ProposalsState.addProposals(filename,proposals,students,teachers); }
     @Override
-    public String deleteProposals(String id, ArrayList<Proposal> proposals) { return ProposalsState.deleteProposals(id, proposals); }
+    public String deleteProposals(String id, ArrayList<Proposal> proposals, ArrayList<Application> applications) { return ProposalsState.deleteProposals(id, proposals, applications); }
     @Override
     public String showProposals(ArrayList<Proposal> proposals) { return ProposalsState.showProposals(proposals); }
     @Override

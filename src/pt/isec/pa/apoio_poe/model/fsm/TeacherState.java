@@ -1,5 +1,6 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
+import pt.isec.pa.apoio_poe.model.data.Proposal;
 import pt.isec.pa.apoio_poe.model.data.Teacher;
 import java.io.*;
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ public class TeacherState implements Serializable{
 
     public static String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/teachers.csv";
         StringBuilder warnings = new StringBuilder();
         try {
             FileReader fr = new FileReader(filename);
@@ -45,9 +45,12 @@ public class TeacherState implements Serializable{
         return "";
     }
 
-    public static String deleteTeacher(String email, ArrayList<Teacher> teachers){
+    public static String deleteTeacher(String email, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals){
         if(!isExistentTeacher(email,teachers))
             return "The teacher with email "+email+", doesn't exists\n";
+        for(Proposal p : proposals)
+            if(p.getTeacher().getEmail().equalsIgnoreCase(email))
+                return "Impossible to remove teacher due to existing relation";
 
         teachers.removeIf(t -> t.getEmail().equalsIgnoreCase(email));
         return "";
@@ -61,7 +64,6 @@ public class TeacherState implements Serializable{
     }
 
     public static void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
-        filename = "src/csvFiles/exportTeachers.csv";
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);

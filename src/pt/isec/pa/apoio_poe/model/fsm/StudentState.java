@@ -13,7 +13,6 @@ public class StudentState implements Serializable{
     public static String addStudents(String filename, ArrayList<Student> students) throws IOException {
         BufferedReader br = null;
         StringBuilder warnings = new StringBuilder();
-        filename="src/csvFiles/students.csv";
         try {
             FileReader fr = new FileReader(filename);
             br = new BufferedReader(fr);
@@ -78,9 +77,15 @@ public class StudentState implements Serializable{
         return "";
     }
 
-    public static String deleteStudents(long number, ArrayList<Student> students){
+    public static String deleteStudents(long number, ArrayList<Student> students, ArrayList<Proposal> proposals, ArrayList<Application> applications){
         if(!isExistentStudent(number,students))
             return "The student with code "+number+", doesn't exists\n";
+        for(Proposal p: proposals)
+            if(p.getStudent().getStudentNumber()== number)
+                return "Impossible to delete student due to existent relation\n";
+        for(Application a : applications)
+            if(a.getStudentNumber().getStudentNumber()== number)
+                return "Impossible to delete student due to existent relation\n";
 
         students.removeIf(s -> s.getStudentNumber() == number);
         return "";
@@ -94,7 +99,6 @@ public class StudentState implements Serializable{
     }
 
     public static void exportStudents(String filename, ArrayList<Student> students) throws IOException {
-        filename = "src/csvFiles/exportStudent.csv";
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);

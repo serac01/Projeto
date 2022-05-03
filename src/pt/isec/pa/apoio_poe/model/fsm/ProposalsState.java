@@ -11,7 +11,6 @@ public class ProposalsState implements Serializable{
 
     public static String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
         BufferedReader br = null;
-        filename="src/csvFiles/proposals.csv";
         StringBuilder warnings = new StringBuilder();
         try {
             FileReader fr = new FileReader(filename);
@@ -80,9 +79,13 @@ public class ProposalsState implements Serializable{
         return warnings.toString();
     }
 
-    public static String deleteProposals(String id, ArrayList<Proposal> proposals){
+    public static String deleteProposals(String id, ArrayList<Proposal> proposals, ArrayList<Application> applications){
         if(!isExistentProposal(id,proposals))
             return "The proposal with code "+id+", doesn't exists\n";
+        for(Application a:applications)
+            for(String s: a.getIdProposals())
+                if(s.equalsIgnoreCase(id))
+                    return "Impossible to delete Proposal due to existing relation\n";
 
         proposals.removeIf(p -> p.getIdentification().equalsIgnoreCase(id));
         return "";
@@ -115,7 +118,6 @@ public class ProposalsState implements Serializable{
     }
 
     public static void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
-        filename = "src/csvFiles/exportProposals.csv";
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);

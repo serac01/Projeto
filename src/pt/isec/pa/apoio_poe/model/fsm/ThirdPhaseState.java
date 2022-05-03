@@ -1,8 +1,10 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.*;
-import pt.isec.pa.apoio_poe.utils.Input;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +47,6 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     public String assignAProposalWithoutAssignments(ArrayList<Application> applications, ArrayList<Student> students, ArrayList<Proposal> proposals){
         //Extract the students
 
-        System.out.println(ProposalsState.showProposals(proposals));
         ArrayList<Student> studentsOrder = new ArrayList<>();
         for(Application a : applications)
             for(Student s : students)
@@ -77,7 +78,6 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                                     counter++;
                 }
 
-        System.out.println(ProposalsState.showProposals(proposals));
         return "";
     }
 
@@ -95,10 +95,6 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                 for(Student s : students)
                     if(s.getStudentNumber() == student)
                         p.setStudent(s);
-
-        System.out.println(ProposalsState.showProposals(proposals));
-        System.out.println(StudentState.showStudents(students));
-
         return "";
     }
 
@@ -169,6 +165,78 @@ public class ThirdPhaseState extends PhaseStateAdapter {
         }
 
         return ProposalsState.showProposals(proposalList);
+    }
+
+    @Override
+    public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+        FileWriter csvWriter = null;
+        try {
+            File file = new File(filename);
+            if(!file.exists()) {
+                csvWriter = new FileWriter(file);
+                int count = 0;
+
+                for (Proposal p : proposals) {
+                    csvWriter.append(p.getType());
+                    csvWriter.append(",");
+                    csvWriter.append(p.getIdentification());
+                    csvWriter.append(",");
+                    if(p.getType().equalsIgnoreCase("T1")){
+                        csvWriter.append(getStringIndustryAcronym(p.getArea()));
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getHostEntity());
+                        if(p.getStudent()!=null){
+                            csvWriter.append(",");
+                            csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
+                        }
+                        if(p.getTeacher()!=null){
+                            csvWriter.append(",");
+                            csvWriter.append(String.valueOf(p.getTeacher().getEmail()));
+                        }
+                    }else if(p.getType().equalsIgnoreCase("T2")){
+                        csvWriter.append(getStringIndustryAcronym(p.getArea()));
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(p.getTeacher().getEmail());
+                        if(p.getStudent()!=null){
+                            csvWriter.append(",");
+                            csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
+                        }
+                    }else if(p.getType().equalsIgnoreCase("T3")){
+                        csvWriter.append(p.getTitle());
+                        csvWriter.append(",");
+                        csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
+                        if(p.getTeacher()!=null){
+                            csvWriter.append(",");
+                            csvWriter.append(String.valueOf(p.getTeacher().getEmail()));
+                        }
+                    }
+                    count++;
+                    if (count < proposals.size())
+                        csvWriter.append("\n");
+                }
+            }
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }finally {
+            if (csvWriter != null)
+                csvWriter.close();
+        }
+    }
+
+    private String getStringIndustryAcronym(List<String> area){
+        StringBuilder listIndustryAcronym = new StringBuilder(5);
+        int countIndustryAcronym=0;
+        for(String s : area) {
+            listIndustryAcronym.append(s);
+            countIndustryAcronym++;
+            if(countIndustryAcronym < area.size())
+                listIndustryAcronym.append("|");
+        }
+        return listIndustryAcronym.toString();
     }
 
     //Validations
