@@ -233,11 +233,11 @@ public class PhaseUI {
             }
     }
 
-    public void thirdPhaseUI(){
+    public void thirdPhaseUI() throws IOException {
         System.out.print("\n3rd Phase");
         if(fsm.isClosed())
             switch (Input.chooseOption("Choose the option:",
-                    "Get student lists","Get lists of internship project proposals","Save the state","Return to previous phase","Next phase","Quit")){
+                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Return to previous phase","Next phase","Quit")){
                 case 1 -> {
                     boolean allChosen=false;
                     while(!allChosen)
@@ -265,14 +265,15 @@ public class PhaseUI {
                     }
                 }
                 case 3 -> fsm.serialization(Input.readString("Filename ",false));
-                case 4 -> fsm.previousPhase();
-                case 5 -> fsm.nextPhase();
+                case 4 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 5 -> fsm.previousPhase();
+                case 6 -> fsm.nextPhase();
                 default -> finish=true;
             }
         else
             switch (Input.chooseOption("Choose the option:","Automatically assign self-proposals or proposals from teachers with an associated student",
                     "Automatically assign a proposal without assignments","Manual assignment of proposals","Manually removing an assignment",
-                    "Get student lists","Get lists of internship project proposals","Save the state","Close phase","Return to previous phase","Next phase","Quit")){
+                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Close phase","Return to previous phase","Next phase","Quit")){
                 case 1 -> System.out.println(); //It is already done in the way the project was structured
                 case 2 -> System.out.println(fsm.assignAProposalWithoutAssignments());
                 case 3 -> System.out.println(fsm.associateProposalToStudents(Input.readString("Proposal id: ",true),(long) Input.readNumber("Enter student number ")));
@@ -304,44 +305,78 @@ public class PhaseUI {
                     }
                 }
                 case 7 -> fsm.serialization(Input.readString("Filename ",false));
-                case 8 -> System.out.println(fsm.closePhase());
-                case 9 -> fsm.previousPhase();
-                case 10 -> fsm.nextPhase();
+                case 8 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 9 -> System.out.println(fsm.closePhase());
+                case 10 -> fsm.previousPhase();
+                case 11 -> fsm.nextPhase();
                 default -> finish=true;
             }
     }
 
-    public void fourthPhaseUI(){
-        /** As funcionalidades disponíveis na fase de atribuição de orientadores são as seguintes:
-            * Associação automática dos docentes
-            * Atribuição, consulta, alteração e eliminação de um orientador
-            * Obtenção de listas sobre atribuições de orientadores
-            * Fechar fase
-            * Regresso à fase anterior*/
+    public void fourthPhaseUI() throws IOException {
         System.out.print("\n4th Phase");
-        switch (Input.chooseOption("Choose the option:","Automatically associate teachers","Assign advisor",
-                "Consult advisor","Change advisor","Delete advisor","Get lists of advisors assignments","Save the state",
-                "Close phase","Return to previous phase","Quit")){
-            case 1 -> System.out.println(); //Done
-            case 2, 3, 4, 5, 6 -> System.out.println("\tTo be implemented!\n");
-            case 7 -> fsm.serialization(Input.readString("Filename ",false));
-            case 8 -> fsm.nextPhase();
-            case 9 -> fsm.previousPhase();
-            default -> finish=true;
-        }
+        if(fsm.isClosed())
+            switch (Input.chooseOption("Choose the option:", "Consult advisor","See some data about the advisors assignments",
+                    "Save the state", "Export the data", "Next phase","Return to previous phase","Quit")){
+                case 1 -> System.out.println(fsm.consultAdvisor(Input.readString("Teacher id: ",true)));
+                case 2 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","list of students with a proposal and assigned advisor",
+                                "List of students with an assigned proposal but without an associated supervisor",
+                                "Number of orientations per professor, on average, minimum, maximum, and per specified professor", "Quit")){
+                            case 1 -> System.out.println(fsm.generateListAdvisors(true,false,false));
+                            case 2 -> System.out.println(fsm.generateListAdvisors(false,true,false));
+                            case 3 -> System.out.println(fsm.generateListAdvisors(false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 3 -> fsm.serialization(Input.readString("Filename ",false));
+                case 4 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 5 -> fsm.nextPhase();
+                case 6 -> fsm.previousPhase();
+                default -> finish=true;
+            }
+        else
+            switch (Input.chooseOption("Choose the option:","Automatically associate teachers","Assign advisor",
+                    "Consult advisor","Change advisor","Delete advisor","See some data about the advisors assignments","Save the state",
+                    "Export the data","Close phase","Return to previous phase","Next phase","Quit")){
+                case 1 -> System.out.println(); //Done
+                case 2 -> System.out.println(fsm.assignAdvisor(Input.readString("Proposal id: ",true), Input.readString("Teacher id: ",true)));
+                case 3 -> System.out.println(fsm.consultAdvisor(Input.readString("Teacher id: ",true)));
+                case 4 -> System.out.println(fsm.changeAdvisor(Input.readString("Teacher id: ",true),Input.readString("Proposal id: ",true)));
+                case 5 -> System.out.println(fsm.deleteAdvisor(Input.readString("Proposal id: ",false)));
+                case 6 -> {
+                    boolean allChosen=false;
+                    while(!allChosen)
+                        switch (Input.chooseOption("Choose the option:","list of students with a proposal and assigned advisor",
+                                "List of students with an assigned proposal but without an associated supervisor",
+                                "Number of orientations per professor, on average, minimum, maximum, and per specified professor", "Quit")){
+                            case 1 -> System.out.println(fsm.generateListAdvisors(true,false,false));
+                            case 2 -> System.out.println(fsm.generateListAdvisors(false,true,false));
+                            case 3 -> System.out.println(fsm.generateListAdvisors(false,false,true));
+                            default -> allChosen=true;
+                        }
+                }
+                case 7 -> fsm.serialization(Input.readString("Filename ",false));
+                case 8 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 9 -> fsm.closePhase();
+                case 10 -> fsm.previousPhase();
+                case 11 -> fsm.nextPhase();
+                default -> finish=true;
+            }
     }
 
-    public void fifthPhaseUI(){
-        /** As funcionalidades disponíveis na fase de consulta são as seguintes:
-            * Obter lista de estudantes com propostas
-            * Obter lista de estudantes sem propostas
-            * Obter lista de propostas disponíveis
-            * Obter lista de propostas atribuídas
-            * Número de orientações por docente*/
+    public void fifthPhaseUI() throws IOException {
         System.out.print("\n5th Phase");
         switch (Input.chooseOption("Choose the option:","Get list of students with proposals","Get list of students without proposals",
-                "Get list of available proposals","Get list of assigned proposals","Number of projects and internships per professor","Quit")){
-            case 1, 2, 3, 4, 5 -> System.out.println("\tTo be implemented!\n");
+                "Get list of assigned proposals","Get list of available proposals","Number of projects and internships per professor","Export the data","Quit")){
+            case 1 -> System.out.println(fsm.listPhase5(true,false,false,false,false));
+            case 2 -> System.out.println(fsm.listPhase5(false,true,false,false,false));
+            case 3 -> System.out.println(fsm.listPhase5(false,false,true,false,false));
+            case 4 -> System.out.println(fsm.listPhase5(false,false,false,true,false));
+            case 5 -> System.out.println(fsm.listPhase5(false,false,false,false,true));
+            case 6 -> fsm.exportProposals(Input.readString("Filename ",false));
             default -> finish=true;
         }
     }

@@ -44,7 +44,6 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
     //Applications
     @Override
     public String addApplication(String filename, ArrayList<Application> applications, ArrayList<Proposal> proposals, ArrayList<Student> students) {
-        filename="src/csvFiles/application.csv";
         StringBuilder warnings = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -125,7 +124,6 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
     }
     @Override
     public void exportApplications(String filename, ArrayList<Application> applications) throws IOException {
-        filename = "src/csvFiles/exportApplications.csv";
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);

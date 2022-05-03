@@ -1,7 +1,6 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.*;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ public class PhaseContext implements Serializable{
 
     /************************************************** Serialization & Deserialization **************************************************/
     public void serialization(String filename) {
-        filename = "src/context.bin";
         try {
             FileOutputStream fileOut = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -30,7 +28,6 @@ public class PhaseContext implements Serializable{
         }
     }
     public void deserialization(String filename) {
-        filename = "src/context.bin";
         try {
             FileInputStream fileIn = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -88,20 +85,20 @@ public class PhaseContext implements Serializable{
         return s;
     }
     public String editStudent(long number, String toUpdate,int option) { return state.editStudent(number,toUpdate, option,management.getStudent()); }
-    public String deleteStudents(long number){ return state.deleteStudents(number,management.getStudent()); }
+    public String deleteStudents(long number){ return state.deleteStudents(number,management.getStudent(),management.getProposals(),management.getApplications()); }
     public String showStudents(){ return state.showStudents(management.getStudent()); }
     public void exportStudents(String filename) throws IOException { state.exportStudents(filename,management.getStudent()); }
 
     /************************************************** Teachers **************************************************/
     public String addTeachers(String filename) throws IOException { return state.addTeachers(filename,management.getTeachers()); }
     public String editTeacher(String email, String toUpdate) { return state.editTeacher(email,toUpdate,management.getTeachers()); }
-    public String deleteTeachers(String email){ return state.deleteTeacher(email,management.getTeachers()); }
+    public String deleteTeachers(String email){ return state.deleteTeacher(email,management.getTeachers(),management.getProposals()); }
     public String showTeachers(){ return state.showTeachers(management.getTeachers()); }
     public void exportTeachers(String filename) throws IOException { state.exportTeacher(filename,management.getTeachers()); }
 
     /************************************************** Proposals **************************************************/
     public String addProposals(String filename) throws IOException { return state.addProposals(filename,management.getProposals(),management.getStudent(),management.getTeachers()); }
-    public String deleteProposals(String id){ return state.deleteProposals(id,management.getProposals()); }
+    public String deleteProposals(String id){ return state.deleteProposals(id,management.getProposals(),management.getApplications()); }
     public String showProposals(){ return state.showProposals(management.getProposals()); }
     public void exportProposals(String filename) throws IOException { state.exportProposals(filename,management.getProposals()); }
 
@@ -120,6 +117,14 @@ public class PhaseContext implements Serializable{
     public String removeStudentFromProposal(String proposal){ return state.removeStudentFromProposal(proposal,management.getProposals()); }
     public String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed) { return state.generateListProposalStudents(associatedSelfProposed,alreadyRegistered,proposalAssigned,anyProposalAttributed,management.getStudent(),management.getProposals()); }
     public String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals){ return state.generateListProposalPhase3(selfProposed,proposeTeacher,withProposals,withoutProposals,management.getProposals()); }
+
+    public String assignAdvisor(String proposal, String email){ return state.assignAdvisor(proposal,email,management.getProposals(),management.getTeachers()); }
+    public String consultAdvisor(String email) { return state.consultAdvisor(email,management.getTeachers()); }
+    public String changeAdvisor(String email, String proposal) { return state.changeAdvisor(email,proposal,management.getTeachers(),management.getProposals()); }
+    public String deleteAdvisor(String proposal){ return state.deleteAdvisor(proposal,management.getProposals()); }
+    public String generateListAdvisors(boolean op1, boolean op2, boolean op3){ return state.generateListAdvisors(op1,op2,op3,management.getTeachers(),management.getStudent(),management.getProposals()); }
+
+    public String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5){ return state.listPhase5(op1,op2,op3,op4,op5,management.getTeachers(),management.getStudent(),management.getProposals()); }
 }
 
 

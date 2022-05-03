@@ -33,7 +33,7 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String editStudent(long number, String toUpdate, int option, ArrayList<Student> students) { return null; }
     @Override
-    public String deleteStudents(long number, ArrayList<Student> students) { return null; }
+    public String deleteStudents(long number, ArrayList<Student> students, ArrayList<Proposal> proposals, ArrayList<Application> applications) { return null; }
     @Override
     public String showStudents(ArrayList<Student> students) { return null; }
     @Override
@@ -45,7 +45,7 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers) { return null; }
     @Override
-    public String deleteTeacher(String email, ArrayList<Teacher> teachers) { return null; }
+    public String deleteTeacher(String email, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals) { return null; }
     @Override
     public String showTeachers(ArrayList<Teacher> teachers) { return null; }
     @Override
@@ -55,7 +55,7 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     @Override
     public String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException { return null; }
     @Override
-    public String deleteProposals(String id, ArrayList<Proposal> proposals) { return null; }
+    public String deleteProposals(String id, ArrayList<Proposal> proposals, ArrayList<Application> applications) { return null; }
     @Override
     public String showProposals(ArrayList<Proposal> proposals) { return null; }
     @Override
@@ -87,4 +87,18 @@ abstract class PhaseStateAdapter implements IPhaseState, Serializable{
     public String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ArrayList<Student> students, ArrayList<Proposal> proposals) { return null; }
     @Override
     public String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ArrayList<Proposal> proposals){ return null; }
+
+    @Override
+    public String assignAdvisor(String proposal, String email, ArrayList<Proposal> proposals, ArrayList<Teacher> teachers){ return null; }
+    @Override
+    public String consultAdvisor(String email, ArrayList<Teacher> teachers){ return null; }
+    @Override
+    public String changeAdvisor(String email, String proposal, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals) { return null; }
+    @Override
+    public String deleteAdvisor(String proposal, ArrayList<Proposal> proposals){ return null; }
+    @Override
+    public String generateListAdvisors(boolean op1, boolean op2, boolean op3, ArrayList<Teacher> teachers, ArrayList<Student> students, ArrayList<Proposal> proposals){ return null; }
+
+    @Override
+    public String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5, ArrayList<Teacher> teachers, ArrayList<Student> students, ArrayList<Proposal> proposals){ return null; }
 }

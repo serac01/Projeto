@@ -20,18 +20,18 @@ public interface IPhaseState {
 
     String addStudents(String filename, ArrayList<Student> students) throws IOException;
     String editStudent(long number, String toUpdate, int option, ArrayList<Student> students);
-    String deleteStudents(long number, ArrayList<Student> students);
+    String deleteStudents(long number, ArrayList<Student> students, ArrayList<Proposal> proposals, ArrayList<Application> applications);
     String showStudents(ArrayList<Student> students);
     void exportStudents(String filename, ArrayList<Student> students) throws IOException;
 
     String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException;
     String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers);
-    String deleteTeacher(String email, ArrayList<Teacher> teachers);
+    String deleteTeacher(String email, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals);
     String showTeachers(ArrayList<Teacher> teachers);
     void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException;
 
     String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException;
-    String deleteProposals(String id, ArrayList<Proposal> proposals);
+    String deleteProposals(String id, ArrayList<Proposal> proposals, ArrayList<Application> applications);
     String showProposals(ArrayList<Proposal> proposals);
     void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException;
 
@@ -48,6 +48,14 @@ public interface IPhaseState {
     String removeStudentFromProposal(String proposal, ArrayList<Proposal> proposals);
     String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ArrayList<Student> students, ArrayList<Proposal> proposals);
     String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ArrayList<Proposal> proposals);
+
+    String assignAdvisor(String proposal, String email, ArrayList<Proposal> proposals, ArrayList<Teacher> teachers);
+    String consultAdvisor(String email, ArrayList<Teacher> teachers);
+    String changeAdvisor(String email, String proposal, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals);
+    String deleteAdvisor(String proposal, ArrayList<Proposal> proposals);
+    String generateListAdvisors(boolean op1, boolean op2, boolean op3, ArrayList<Teacher> teachers, ArrayList<Student> students, ArrayList<Proposal> proposals);
+
+    String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5, ArrayList<Teacher> teachers, ArrayList<Student> students, ArrayList<Proposal> proposals);
 
     PhaseState getState();
 }
