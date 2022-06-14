@@ -6,10 +6,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProposalsState implements Serializable{
+public class ProposalsState extends PhaseStateAdapter implements Serializable {
     public static final long serialVersionUID=2020129026;
 
-    public static String addProposals(String filename, ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Teacher> teachers) throws IOException {
+    ProposalsState(PhaseContext context){ super(context); }
+
+    //State
+    @Override
+    public void nextPhase() { changeState(new FirstPhaseState(context)); }
+    @Override
+    public PhaseState getState() { return PhaseState.PROPOSAL_PHASE; }
+    @Override
+    public boolean isPhaseClosed(ManagementPoE management){ return management.isProposalPhaseClosed(); }
+
+    //others methods
+    public String addProposals(String filename, ManagementPoE management) throws IOException {
+        filename="src/csvFiles/proposals.csv";
         BufferedReader br = null;
         StringBuilder warnings = new StringBuilder();
         try {
@@ -22,12 +34,12 @@ public class ProposalsState implements Serializable{
                 //For all T1 proposals
                 if(tempArr.get(0).equalsIgnoreCase("T1")){
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(isExistentProposal(tempArr.get(1),proposals))
+                    if(isExistentProposal(tempArr.get(1),management))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
                     else if(isAInvalidIndustryAcronymList(area))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid industry acronym\n");
                     else
-                        proposals.add(new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4),null,null));
+                        management.addProposal(new ProposalIntership(tempArr.get(1), tempArr.get(3), area, tempArr.get(4),null,null));
                 }
 
                 //For all T2 proposals
@@ -35,38 +47,38 @@ public class ProposalsState implements Serializable{
                     //Get the student if exists
                     Student auxStudent = null;
                     if(tempArr.size()==6)
-                        for(Student s : students)
+                        for(Student s : management.getStudent())
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(5)))
                                 auxStudent=s;
                     //Get the teacher
                     Teacher auxTeacher = null;
-                    for(Teacher teacher : teachers)
+                    for(Teacher teacher : management.getTeachers())
                         if(teacher.getEmail().equalsIgnoreCase(tempArr.get(4)))
                             auxTeacher=teacher;
 
                     List<String> area = Arrays.asList(tempArr.get(2).split("\\|"));
-                    if(isExistentProposal(tempArr.get(1),proposals))
+                    if(isExistentProposal(tempArr.get(1),management))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
                     else if(isAInvalidIndustryAcronymList(area))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has invalid industry acronym\n");
                     else if(auxTeacher==null)
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid teacher\n");
                     else
-                        proposals.add(new ProposalProject(tempArr.get(1), tempArr.get(3), area, auxTeacher, auxStudent));
+                        management.addProposal(new ProposalProject(tempArr.get(1), tempArr.get(3), area, auxTeacher, auxStudent));
                 }
 
                 //For all T3 proposals
                 else if(tempArr.get(0).equalsIgnoreCase("T3")){
-                    if(isExistentProposal(tempArr.get(1),proposals))
+                    if(isExistentProposal(tempArr.get(1),management))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", already exists\n");
-                    else if(isARepeatStudent(Long.parseLong(tempArr.get(3)), proposals))
+                    else if(isARepeatStudent(Long.parseLong(tempArr.get(3)), management))
                         warnings.append("The proposal with code ").append(tempArr.get(1)).append(", has a invalid student, this student already has an associated proposal\n");
                     else {
                         Student auxStudent=null;
-                        for(Student s : students)
+                        for(Student s : management.getStudent())
                             if(s.getStudentNumber() == Long.parseLong(tempArr.get(3)))
                                 auxStudent=s;
-                        proposals.add(new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), auxStudent,null));
+                        management.addProposal(new ProposalSelfProposed(tempArr.get(1), tempArr.get(2), auxStudent,null));
                     }
                 }
             }
@@ -79,45 +91,25 @@ public class ProposalsState implements Serializable{
         return warnings.toString();
     }
 
-    public static String deleteProposals(String id, ArrayList<Proposal> proposals, ArrayList<Application> applications){
-        if(!isExistentProposal(id,proposals))
+    public String deleteProposals(String id, ManagementPoE management){
+        if(!isExistentProposal(id,management))
             return "The proposal with code "+id+", doesn't exists\n";
-        for(Application a:applications)
+        for(Application a: management.getApplications())
             for(String s: a.getIdProposals())
                 if(s.equalsIgnoreCase(id))
                     return "Impossible to delete Proposal due to existing relation\n";
-
-        proposals.removeIf(p -> p.getIdentification().equalsIgnoreCase(id));
+        management.deleteProposalFromList(id);
         return "";
     }
 
-    public static String showProposals(ArrayList<Proposal> proposals){
-        StringBuilder s = new StringBuilder();
-        for (Proposal p:proposals)
-            if(p.getType().equalsIgnoreCase("T1") && p.getStudent()!=null && p.getTeacher()!=null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail(),p.getHostEntity()));
-            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()!=null && p.getTeacher()==null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty",p.getHostEntity()));
-            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()==null && p.getTeacher()!=null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty",p.getTeacher().getName(),p.getTeacher().getEmail(),p.getHostEntity()));
-            else if(p.getType().equalsIgnoreCase("T1") && p.getStudent()==null && p.getTeacher()==null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Internship   Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s Host Entity: %-30s \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty","empty","empty",p.getHostEntity()));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null && p.getTeacher()!=null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail()));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null && p.getTeacher()!=null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty",p.getTeacher().getName(),p.getTeacher().getEmail()));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()!=null && p.getTeacher()==null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty"));
-            else if(p.getType().equalsIgnoreCase("T2") && p.getStudent()==null && p.getTeacher()==null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]Project      Title: %-50s Area: %-13s Assigned Student: %-30s with Number: %-10s Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getArea(),"empty","empty","empty","empty"));
-            else if(p.getType().equalsIgnoreCase("T3") && p.getTeacher()!=null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getStudent().getName(),p.getStudent().getStudentNumber(),p.getTeacher().getName(),p.getTeacher().getEmail()));
-            else if(p.getType().equalsIgnoreCase("T3") && p.getTeacher()==null)
-                s.append(String.format("Proposal ID: %-5s Type: [%s]SelfProposed Title: %-50s                     Assigned Student: %-30s with Number: %-10d Assigned Teacher: %-30s with Email: %-30s  \n",p.getIdentification(),p.getType(),p.getTitle(),p.getStudent().getName(),p.getStudent().getStudentNumber(),"empty","empty"));
-        return s.toString();
+    public List<String> showProposals(ManagementPoE management){
+        List<String> list = new ArrayList<>();
+        for (Proposal p: management.getProposals())
+            list.add(p.toString());
+        return list;
     }
 
-    public static void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+    public void exportProposals(String filename, ManagementPoE management) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -125,7 +117,7 @@ public class ProposalsState implements Serializable{
                 csvWriter = new FileWriter(file);
                 int count = 0;
 
-                for (Proposal p : proposals) {
+                for (Proposal p : management.getProposals()) {
                     csvWriter.append(p.getType());
                     csvWriter.append(",");
                     csvWriter.append(p.getIdentification());
@@ -152,7 +144,7 @@ public class ProposalsState implements Serializable{
                         csvWriter.append(String.valueOf(p.getStudent().getStudentNumber()));
                     }
                     count++;
-                    if (count < proposals.size())
+                    if (count < management.getProposals().size())
                         csvWriter.append("\n");
                 }
             }
@@ -164,7 +156,7 @@ public class ProposalsState implements Serializable{
         }
     }
 
-    private static String getStringIndustryAcronym(List<String> area){
+    private String getStringIndustryAcronym(List<String> area){
         StringBuilder listIndustryAcronym = new StringBuilder(5);
         int countIndustryAcronym=0;
         for(String s : area) {
@@ -177,8 +169,8 @@ public class ProposalsState implements Serializable{
     }
 
     //Validations
-    private static boolean isExistentProposal(String id, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
+    private static boolean isExistentProposal(String id, ManagementPoE management){
+        for(Proposal p : management.getProposals())
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
@@ -193,8 +185,8 @@ public class ProposalsState implements Serializable{
         return count != industryAcronym.size();
     }
 
-    private static boolean isARepeatStudent(long number, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
+    private static boolean isARepeatStudent(long number, ManagementPoE management){
+        for(Proposal p : management.getProposals())
             if(p.getStudent() != null)
                 if(number == p.getStudent().getStudentNumber())
                     return true;

@@ -7,107 +7,133 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ThirdPhaseState extends PhaseStateAdapter {
     public static final long serialVersionUID=2020129026;
-    private boolean isClosed;
 
     ThirdPhaseState(PhaseContext context){ super(context);  }
 
     @Override
-    public boolean previousPhase() {
+    public void previousPhase() {
         changeState(new SecondPhaseState(context));
-        return true;
     }
     @Override
-    public boolean nextPhase() {
+    public void nextPhase() {
         changeState(new FourthPhaseState(context));
-        return true;
     }
     @Override
     public PhaseState getState() { return PhaseState.PHASE_3; }
     @Override
-    public String closePhase(ArrayList<Proposal> proposals, ArrayList<Student> students, ArrayList<Application> applications, boolean value) {
+    public String closePhase(ManagementPoE management) {
         int counter=0;
-        for(Application a : applications)
-            for(Proposal p : proposals)
+        for(Application a : management.getApplications())
+            for(Proposal p : management.getProposals())
                 if(p.getStudent()!=null)
-                    if(p.getStudent().getStudentNumber() == a.getStudentNumber().getStudentNumber())
+                    if(p.getStudent().getStudentNumber() == a.getStudent().getStudentNumber())
                         counter++;
-        if(counter != applications.size())
+        if(counter != management.getApplications().size())
             return "There are still students who applied and still don't have a proposal assigned\n";
-        isClosed=true;
+        management.setPhase3Closed(true);
+        nextPhase();
         return "";
     }
     @Override
-    public boolean isClosed() { return isClosed; }
+    public boolean isPhaseClosed(ManagementPoE management){ return management.isPhase3Closed(); }
 
     @Override
-    public String assignAProposalWithoutAssignments(ArrayList<Application> applications, ArrayList<Student> students, ArrayList<Proposal> proposals){
-        //Extract the students
+    public String assignAProposalWithoutAssignments(ManagementPoE management){
+        ArrayList<Proposal> proposalsWithoutAssignments = new ArrayList<>();
+        ArrayList<Student> studentsWithoutAssignments = new ArrayList<>(management.getStudent());
+        double classification;
+        String proposalId="", currentProposalId="";
+        int repeatedClassification=0,repeatedProposal=0;
 
-        ArrayList<Student> studentsOrder = new ArrayList<>();
-        for(Application a : applications)
-            for(Student s : students)
-                if(s.getStudentNumber()==a.getStudentNumber().getStudentNumber())
-                    studentsOrder.add(s);
+        //Available proposals
+        for(Proposal p : management.getProposals())
+            if(p.getStudent()==null)
+                proposalsWithoutAssignments.add(p);
 
-        //Sort students by classification
-        for (int i = 0; i < studentsOrder.size(); i++)
-            for (int j = i+1; j < studentsOrder.size(); j++)
-                if(studentsOrder.get(i).getClassification() > studentsOrder.get(j).getClassification()) {
-                    Student temp = studentsOrder.get(i);
-                    studentsOrder.set(i,studentsOrder.get(j));
-                    studentsOrder.set(j,temp);
+        //Available students
+        for(Student s : management.getStudent())
+            for(Proposal p : management.getProposals())
+                if(p.getStudent()!=null && p.getStudent().getStudentNumber() == s.getStudentNumber())
+                    studentsWithoutAssignments.remove(s);
+
+        //Sort available students by their classifications
+        //studentsWithoutAssignments.sort((o1, o2) -> Double.compare(o2.getClassification(), o1.getClassification()));
+
+        System.out.println("\n\nFree Proposals:");
+        for(Proposal p : proposalsWithoutAssignments)
+            System.out.println(p.toString());
+        System.out.println("\n\nFree Students:");
+        for(Student s : studentsWithoutAssignments)
+            System.out.println(s.toString());
+        System.out.println("\n\nApplications:");
+        for(Application a : management.getApplications())
+            System.out.println(a.toString());
+
+        //student, proposal
+        classification = studentsWithoutAssignments.get(0).getClassification();
+        for(Application a : management.getApplications())
+            if(a.getStudent().getStudentNumber() ==  studentsWithoutAssignments.get(0).getStudentNumber()) {
+                proposalId=a.getIdProposals().get(0);
+                break;
+            }
+        for(Student s : studentsWithoutAssignments) {
+            for(Application a : management.getApplications())
+                if(a.getStudent().getStudentNumber() == s.getStudentNumber()) {
+                    currentProposalId = a.getIdProposals().get(0);
+                    break;
                 }
-        Collections.reverse(studentsOrder);
-
-        int counter;
-        List<String> listProposals;
-        for(Student s : studentsOrder)
-            for(Application a : applications)
-                if(s.getStudentNumber() == a.getStudentNumber().getStudentNumber()) {
-                    counter=0;
-                    listProposals = a.getIdProposals();
-                        for(Proposal p : proposals)
-                            if (p.getIdentification().equalsIgnoreCase(listProposals.get(counter)))
-                                if (p.getStudent() == null)
-                                    p.setStudent(s);
-                                else
-                                    counter++;
+            if (classification == s.getClassification() && proposalId.equalsIgnoreCase(currentProposalId)) {
+                repeatedClassification++;
+                proposalId=currentProposalId;
+            }
+            else {
+                if(repeatedClassification==1) {
+                    for (Proposal p : proposalsWithoutAssignments)
+                        if (p.getIdentification().equalsIgnoreCase(currentProposalId))
+                            p.setStudent(s);
+                }else{
+                    System.out.println("\n\nExistem "+repeatedClassification+" estudantes com a clasificação "+classification+" repetidos e proposata: "+currentProposalId);
+                    repeatedClassification = 1;
+                    classification = s.getClassification();
                 }
-
+            }
+        }
+        System.out.println("Existem "+repeatedClassification+" estudantes com a clasificação "+classification+" repetidos e proposata: "+currentProposalId);
         return "";
     }
 
     @Override
-    public String associateProposalToStudents(String proposal, Long student, ArrayList<Proposal> proposals, ArrayList<Student> students){
-        if(!isAValidProposal(proposal,proposals))
+    public String associateProposalToStudents(String proposal, Long student, ManagementPoE management){
+        if(!isAValidProposal(proposal,management))
             return "This proposal doesn't exist\n";
-        if(!isExistentStudent(student,students))
+        if(!isExistentStudent(student,management))
             return "This student doesn't exist\n";
-        if(isAProposalAssigned(proposal,proposals))
+        if(isAProposalAssigned(proposal,management))
             return "This proposal is already associated to another student\n";
 
-        for(Proposal p : proposals)
+        for(Proposal p : management.getProposals())
             if(proposal.equalsIgnoreCase(p.getIdentification()))
-                for(Student s : students)
+                for(Student s : management.getStudent())
                     if(s.getStudentNumber() == student)
                         p.setStudent(s);
         return "";
     }
 
     @Override
-    public  String removeStudentFromProposal(String proposal, ArrayList<Proposal> proposals){
-        if(!isAValidProposal(proposal,proposals))
+    public  String removeStudentFromProposal(String proposal, ManagementPoE management){
+        if(!isAValidProposal(proposal,management))
             return "This proposal doesn't exist\n";
-        if(!isAProposalAssigned(proposal,proposals))
+        if(!isAProposalAssigned(proposal,management))
             return "This proposal doesn't yet have a student assigned\n";
-        if(!isAValidProposalToRemove(proposal,proposals))
+        if(!isAValidProposalToRemove(proposal,management))
             return "Cannot remove student from this proposal\n";
 
-        for(Proposal p : proposals)
+        for(Proposal p : management.getProposals())
             if(p.getIdentification().equalsIgnoreCase(proposal))
                 p.setStudent(null);
 
@@ -115,60 +141,60 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public String generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ArrayList<Student> students, ArrayList<Proposal> proposals){
-        ArrayList<Student> listStudents = new ArrayList<>();
+    public List<String> generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ManagementPoE management){
+        ArrayList<String> listStudents = new ArrayList<>();
 
         if(associatedSelfProposed) {
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getType().equalsIgnoreCase("T3"))
-                    listStudents.add(p.getStudent());
+                    listStudents.add(p.getStudent().toString());
         }else if(alreadyRegistered)
-            return "";
+            for (Application a : management.getApplications())
+                listStudents.add(a.getStudent().toString());
         else if(proposalAssigned) {
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getStudent()!=null)
-                    listStudents.add(p.getStudent());
+                    listStudents.add(p.getStudent().toString());
         }else if(anyProposalAttributed) {
-            listStudents.addAll(students);
-            for (Proposal p : proposals)
+            for(Student s : management.getStudent())
+                listStudents.add(s.toString());
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
-                    listStudents.remove(p.getStudent());
+                    listStudents.remove(p.getStudent().toString());
         }
-
-        return StudentState.showStudents(listStudents);
+        return listStudents;
     }
 
     @Override
-    public String generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ArrayList<Proposal> proposals){
-        ArrayList<Proposal> proposalList = new ArrayList<>();
-
+    public List<String> generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ManagementPoE management){
+        ArrayList<String> proposalList = new ArrayList<>();
         if(selfProposed)
-            for(Proposal p : proposals)
+            for(Proposal p : management.getProposals())
                 if(p.getType().equalsIgnoreCase("T3"))
-                    proposalList.add(p);
+                    proposalList.add(p.toString());
 
         if(proposeTeacher)
-            for(Proposal p : proposals)
+            for(Proposal p : management.getProposals())
                 if(p.getType().equalsIgnoreCase("T2"))
-                    proposalList.add(p);
+                    proposalList.add(p.toString());
 
         if(withProposals)
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getStudent()!=null)
-                    proposalList.add(p);
+                    proposalList.add(p.toString());
 
         if(withoutProposals) {
-            proposalList.addAll(proposals);
-            for (Proposal p : proposals)
+            for(Proposal p : management.getProposals())
+                proposalList.add(p.toString());
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
-                    proposalList.remove(p);
+                    proposalList.remove(p.toString());
         }
-
-        return ProposalsState.showProposals(proposalList);
+        return proposalList;
     }
 
     @Override
-    public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+    public void exportProposals(String filename, ManagementPoE management) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -176,7 +202,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                 csvWriter = new FileWriter(file);
                 int count = 0;
 
-                for (Proposal p : proposals) {
+                for (Proposal p : management.getProposals()) {
                     csvWriter.append(p.getType());
                     csvWriter.append(",");
                     csvWriter.append(p.getIdentification());
@@ -215,7 +241,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                         }
                     }
                     count++;
-                    if (count < proposals.size())
+                    if (count < management.getProposals().size())
                         csvWriter.append("\n");
                 }
             }
@@ -240,27 +266,27 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     //Validations
-    private static boolean isExistentStudent(long number, ArrayList<Student> students){
-        for(Student s : students)
+    private static boolean isExistentStudent(long number, ManagementPoE management){
+        for(Student s : management.getStudent())
             if(s.getStudentNumber() == number)
                 return true;
         return false;
     }
-    private static boolean isAValidProposal(String id, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
+    private static boolean isAValidProposal(String id, ManagementPoE management){
+        for(Proposal p : management.getProposals())
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
     }
-    private static boolean isAProposalAssigned(String id, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
+    private static boolean isAProposalAssigned(String id, ManagementPoE management){
+        for(Proposal p : management.getProposals())
             if (p.getIdentification().equalsIgnoreCase(id))
                 if(p.getStudent()!=null)
                     return true;
         return false;
     }
-    private static boolean isAValidProposalToRemove(String id, ArrayList<Proposal> proposals){
-        for(Proposal p : proposals)
+    private static boolean isAValidProposalToRemove(String id, ManagementPoE management){
+        for(Proposal p : management.getProposals())
             if (p.getIdentification().equalsIgnoreCase(id))
                 if(p.getType().equalsIgnoreCase("T3") || (p.getType().equalsIgnoreCase("T2") &&p.getStudent()!=null))
                     return false;

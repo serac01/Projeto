@@ -3,6 +3,7 @@ package pt.isec.pa.apoio_poe.ui.text;
 import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class PhaseUI {
     PhaseContext fsm;
@@ -14,12 +15,14 @@ public class PhaseUI {
     }
 
     public void start() throws IOException {
-        switch (Input.chooseOption("Choose the option:","load a state","Quit")) {
-            case 1 -> fsm.deserialization(Input.readString("Filename ",false));
-        }
+        if (Input.chooseOption("Choose the option:", "load a state", "Quit") == 1)
+            fsm.deserialization(Input.readString("Filename ", false));
         while (!finish)
             switch (fsm.getState()){
                 case PHASE_1 -> firstPhaseUI();
+                case STUDENT_PHASE -> studentUI();
+                case TEACHER_PHASE -> teacherUI();
+                case PROPOSAL_PHASE -> proposalUI();
                 case PHASE_2 -> secondPhaseUI();
                 case PHASE_3 -> thirdPhaseUI();
                 case PHASE_4 -> fourthPhaseUI();
@@ -27,24 +30,22 @@ public class PhaseUI {
             }
     }
 
-    public void firstPhaseUI() throws IOException {
+    public void firstPhaseUI() {
         System.out.print("\n1st Phase");
-        if(fsm.isClosed())
-            switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
-                    "Management proposals for internships or projects","Save the sate","Next phase","Quit")){
-                case 1 -> management("student");
-                case 2 -> management("teacher");
-                case 3 -> management("proposals for internships or projects");
+        if(fsm.isPhaseClosed())
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Save the sate","Next phase","Quit")){
+                case 1 -> fsm.changeToStudent();
+                case 2 -> fsm.changeToTeacher();
+                case 3 -> fsm.changeToProposals();
                 case 4 -> fsm.serialization(Input.readString("Filename ",false));
                 case 5 -> fsm.nextPhase();
                 default -> finish = true;
             }
         else
-            switch (Input.chooseOption("Choose the option:","Student management","Teacher management",
-                    "Management proposals for internships or projects","Close phase","Next phase","Save the state","Quit")){
-                case 1 -> management("student");
-                case 2 -> management("teacher");
-                case 3 -> management("proposals for internships or projects");
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Close phase","Next phase","Save the state","Quit")){
+                case 1 -> fsm.changeToStudent();
+                case 2 -> fsm.changeToTeacher();
+                case 3 -> fsm.changeToProposals();
                 case 4 -> System.out.println(fsm.closePhase());
                 case 5 -> fsm.nextPhase();
                 case 6 -> fsm.serialization(Input.readString("Filename ",false));
@@ -52,111 +53,101 @@ public class PhaseUI {
             }
     }
 
-    public void management(String name) throws IOException {
-        System.out.print("\n\tManagement "+name);
-        boolean finishManagement=false;
+    public void studentUI() throws IOException {
+        System.out.print("\nManagement Student");
         long studentNumber;
-        while(!finishManagement)
-            if(fsm.isClosed())
-                switch (Input.chooseOption("Choose the option:","Show "+name,"Export "+name,"Quit")){
-                    case 1 ->  {
-                        if(name.equalsIgnoreCase("student"))
-                            System.out.println(fsm.showStudents());
-                        else if(name.equalsIgnoreCase("teacher"))
-                            System.out.println(fsm.showTeachers());
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            System.out.println(fsm.showProposals());
-                    }
-                    case 2 -> {
-                        if(name.equalsIgnoreCase("student"))
-                            fsm.exportStudents(Input.readString("Filename ",false));
-                        else if(name.equalsIgnoreCase("teacher"))
-                            fsm.exportTeachers(Input.readString("Filename ",false));
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            fsm.exportProposals(Input.readString("Filename ",false));
-                    }
-                    default -> finishManagement=true;
-                }
-            else
-                switch (Input.chooseOption("Choose the option:","Insert "+name,"Show "+name,
-                        "Edit "+name,"Delete "+name,"Export "+name,"Quit")){
-                    case 1 -> {
-                        if(name.equalsIgnoreCase("student"))
-                            System.out.println(fsm.addStudents(Input.readString("Filename ",false)));
-                        else if(name.equalsIgnoreCase("teacher"))
-                            System.out.println(fsm.addTeachers(Input.readString("Filename ",false)));
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            System.out.println(fsm.addProposals(Input.readString("Filename ",false)));
-                    }
-                    case 2 ->  {
-                        if(name.equalsIgnoreCase("student"))
-                            System.out.println(fsm.showStudents());
-                        else if(name.equalsIgnoreCase("teacher"))
-                            System.out.println(fsm.showTeachers());
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            System.out.println(fsm.showProposals());
-                    }
-                    case 3 -> {
-                        if(name.equalsIgnoreCase("student")){
-                            System.out.println("Enter student number");
-                            studentNumber = (long) Input.readNumber(" ");
-                            boolean everythingEdited=false;
-                            while(!everythingEdited)
-                                switch (Input.chooseOption("Choose the option:","Edit name", "Edit course acronym",
-                                        "Edit industry acronym", "Edit classification", "Edit access internships", "Quit")){
-                                    case 1 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New name ",false),1));
-                                    case 2 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New course acronym ",true),2));
-                                    case 3 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New industry acronym ",true),3));
-                                    case 4 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("New classification",true),4));
-                                    case 5 -> System.out.print(fsm.editStudent(studentNumber,Input.readString("Access internships [true/false] ",true),5));
-                                    default -> everythingEdited=true;
-                                }
-                        }else if(name.equalsIgnoreCase("teacher")){
-                            System.out.println("Enter teacher email");
-                            String email = Input.readString("Email ",true);
-                            boolean everythingEdited=false;
-                            while(!everythingEdited)
-                                if (Input.chooseOption("Choose the option:", "Edit name", "Quit") == 1)
-                                    System.out.print(fsm.editTeacher(email, Input.readString("New name ", false)));
-                                else
-                                    everythingEdited = true;
+        if(fsm.isPhaseClosed())
+            switch (Input.chooseOption("Choose the option:","Show student", "Export student","Quit")){
+                case 1 -> fsm.showStudents().forEach(System.out::println);
+                case 2 -> fsm.exportStudents(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
+        else
+            switch (Input.chooseOption("Choose the option:","Insert student","Show student", "Edit student","Delete student","Export student","Quit")){
+                case 1 -> System.out.println(fsm.addStudents(Input.readString("Filename ",false)));
+                case 2 -> fsm.showStudents().forEach(System.out::println);
+                case 3 -> {
+                    System.out.println("Enter student number");
+                    studentNumber = (long) Input.readNumber(" ");
+                    boolean everythingEdited=false;
+                    while(!everythingEdited)
+                        switch (Input.chooseOption("Choose the option:","Edit name", "Edit course acronym",
+                                "Edit industry acronym", "Edit classification", "Edit access internships", "Quit")) {
+                            case 1 -> System.out.print(fsm.editStudent(studentNumber, Input.readString("New name ", false), 1));
+                            case 2 -> System.out.print(fsm.editStudent(studentNumber, Input.readString("New course acronym ", true), 2));
+                            case 3 -> System.out.print(fsm.editStudent(studentNumber, Input.readString("New industry acronym ", true), 3));
+                            case 4 -> System.out.print(fsm.editStudent(studentNumber, Input.readString("New classification", true), 4));
+                            case 5 -> System.out.print(fsm.editStudent(studentNumber, Input.readString("Access internships [true/false] ", true), 5));
+                            default -> everythingEdited = true;
                         }
-                    }
-                    case 4 -> {
-                        if(name.equalsIgnoreCase("student"))
-                            System.out.println(fsm.deleteStudents((long) Input.readNumber("Enter student number ")));
-                        else if(name.equalsIgnoreCase("teacher"))
-                            System.out.println(fsm.deleteTeachers(Input.readString("Enter teacher email ",false)));
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            System.out.println(fsm.deleteProposals(Input.readString("Enter proposal id ",false)));
-                    }
-                    case 5 -> {
-                        if(name.equalsIgnoreCase("student"))
-                            fsm.exportStudents(Input.readString("Filename ",false));
-                        else if(name.equalsIgnoreCase("teacher"))
-                            fsm.exportTeachers(Input.readString("Filename ",false));
-                        else if(name.equalsIgnoreCase("proposals for internships or projects"))
-                            fsm.exportProposals(Input.readString("Filename ",false));
-                    }
-                    default -> finishManagement=true;
                 }
+                case 4 -> System.out.println(fsm.deleteStudents((long) Input.readNumber("Enter student number ")));
+                case 5 -> fsm.exportStudents(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
+    }
+
+    public void teacherUI() throws IOException {
+        System.out.print("\nManagement Teachers");
+        if(fsm.isPhaseClosed())
+            switch (Input.chooseOption("Choose the option:","Show teachers","Export teachers","Quit")){
+                case 1 -> fsm.showTeachers().forEach(System.out::println);
+                case 2 -> fsm.exportTeachers(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
+        else
+            switch (Input.chooseOption("Choose the option:","Insert teachers","Show teachers", "Edit teacher","Delete teacher","Export teachers","Quit")){
+                case 1 -> System.out.println(fsm.addTeachers(Input.readString("Filename ",false)));
+                case 2 ->  fsm.showTeachers().forEach(System.out::println);
+                case 3 -> {
+                    String email = Input.readString("Enter teacher email ",true);
+                    boolean everythingEdited=false;
+                    while(!everythingEdited)
+                        if (Input.chooseOption("Choose the option:", "Edit name", "Quit") == 1)
+                            System.out.print(fsm.editTeacher(email, Input.readString("New name ", false)));
+                        else
+                            everythingEdited = true;
+                }
+                case 4 -> System.out.println(fsm.deleteTeachers(Input.readString("Enter teacher email ",false)));
+                case 5 -> fsm.exportTeachers(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
+    }
+
+    public void proposalUI() throws IOException {
+        System.out.print("\n\tManagement Proposals");
+        if(fsm.isPhaseClosed())
+            switch (Input.chooseOption("Choose the option:","Show proposals","Export proposals","Quit")){
+                case 1 -> fsm.showProposals().forEach(System.out::println);
+                case 2 -> fsm.exportProposals(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
+        else
+            switch (Input.chooseOption("Choose the option:","Insert proposals","Show proposals","Edit proposal","Delete proposal","Export proposals","Quit")){
+                case 1 -> System.out.println(fsm.addProposals(Input.readString("Filename ",false)));
+                case 2 -> fsm.showProposals().forEach(System.out::println);
+                case 3 -> System.out.println("To implement");
+                case 4 -> System.out.println(fsm.deleteProposals(Input.readString("Enter proposal id ",false)));
+                case 5 -> fsm.exportProposals(Input.readString("Filename ",false));
+                default -> fsm.nextPhase();
+            }
     }
 
     public void secondPhaseUI() throws IOException {
         System.out.print("\n2nd Phase");
-        if(fsm.isClosed())
+        if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:","Consult applications", "Export applications",
                     "Get the list of students","Get lists of project/internship proposals",
                     "Return to previous phase","Next phase","Save the sate","Quit")){
-                case 1 -> System.out.println(fsm.showApplications());
+                case 1 -> fsm.showApplications().forEach(System.out::println);
                 case 2 -> fsm.exportApplications(Input.readString("Filename ",false));
                 case 3 -> {
                     boolean allChosen=false;
                     while(!allChosen)
                         switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Quit")){
-                            case 1 -> System.out.println(fsm.generateStudentList(true,false,false));
-                            case 2 -> System.out.println(fsm.generateStudentList(false,true,false));
-                            case 3 -> System.out.println(fsm.generateStudentList(false,false,true));
+                            case 1 -> fsm.generateStudentList(true,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateStudentList(false,true,false).forEach(System.out::println);
+                            case 3 -> fsm.generateStudentList(false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }
@@ -170,7 +161,7 @@ public class PhaseUI {
                             case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
                             case 3 -> withApplications=Input.changeBoolean(withApplications);
                             case 4 -> withoutApplications=Input.changeBoolean(withoutApplications);
-                            case 5 -> System.out.println(fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications));
+                            case 5 -> fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications).forEach(System.out::println);
                             default -> allChosen = true;
                         }
                     }
@@ -185,7 +176,7 @@ public class PhaseUI {
                     "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
                     "Close phase","Return to previous phase","Next phase","Save the sate","Quit")){
                 case 1 -> System.out.println(fsm.addApplications(Input.readString("Filename ",false)));
-                case 2 -> System.out.println(fsm.showApplications());
+                case 2 -> fsm.showApplications().forEach(System.out::println);
                 case 3 -> {
                     long studentNumber = (long) Input.readNumber("Enter student number ");
                     boolean everythingEdited=false;
@@ -204,9 +195,9 @@ public class PhaseUI {
                     boolean allChosen=false;
                     while(!allChosen)
                         switch (Input.chooseOption("Choose the option:","Self-proposal", "With already registered application", "Without registered application", "Quit")){
-                            case 1 -> System.out.println(fsm.generateStudentList(true,false,false));
-                            case 2 -> System.out.println(fsm.generateStudentList(false,true,false));
-                            case 3 -> System.out.println(fsm.generateStudentList(false,false,true));
+                            case 1 -> fsm.generateStudentList(true,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateStudentList(false,true,false).forEach(System.out::println);
+                            case 3 -> fsm.generateStudentList(false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }
@@ -220,7 +211,7 @@ public class PhaseUI {
                             case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
                             case 3 -> withApplications=Input.changeBoolean(withApplications);
                             case 4 -> withoutApplications=Input.changeBoolean(withoutApplications);
-                            case 5 -> System.out.println(fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications));
+                            case 5 -> fsm.generateProposalsList(selfProposed, proposeTeacher, withApplications, withoutApplications).forEach(System.out::println);
                             default -> allChosen = true;
                         }
                     }
@@ -235,7 +226,7 @@ public class PhaseUI {
 
     public void thirdPhaseUI() throws IOException {
         System.out.print("\n3rd Phase");
-        if(fsm.isClosed())
+        if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:",
                     "Get student lists","Get lists of internship project proposals","Save the state","Export data","Return to previous phase","Next phase","Quit")){
                 case 1 -> {
@@ -243,10 +234,10 @@ public class PhaseUI {
                     while(!allChosen)
                         switch (Input.chooseOption("Choose the option:","Have an associated self-proposal",
                                 "Have an application already registered","Have a proposal assigned", "Don't have any proposal attributed", "Quit")){
-                            case 1 -> System.out.println(fsm.generateListProposalStudents(true,false,false,false));
-                            case 2 -> System.out.println(fsm.generateListProposalStudents(false,true,false,false));
-                            case 3 -> System.out.println(fsm.generateListProposalStudents(false,false,true,false));
-                            case 4 -> System.out.println(fsm.generateListProposalStudents(false,false,false,true));
+                            case 1 -> fsm.generateListProposalStudents(true,false,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateListProposalStudents(false,true,false,false).forEach(System.out::println);
+                            case 3 -> fsm.generateListProposalStudents(false,false,true,false).forEach(System.out::println);
+                            case 4 -> fsm.generateListProposalStudents(false,false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }
@@ -259,7 +250,7 @@ public class PhaseUI {
                             case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
                             case 3 -> withProposals=Input.changeBoolean(withProposals);
                             case 4 -> withoutProposals=Input.changeBoolean(withoutProposals);
-                            case 5 -> System.out.println(fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals));
+                            case 5 -> fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals).forEach(System.out::println);
                             default -> allChosen = true;
                         }
                     }
@@ -283,10 +274,10 @@ public class PhaseUI {
                     while(!allChosen)
                         switch (Input.chooseOption("Choose the option:","Have an associated self-proposal",
                                 "Have an application already registered","Have a proposal assigned", "Don't have any proposal attributed", "Quit")){
-                            case 1 -> System.out.println(fsm.generateListProposalStudents(true,false,false,false));
-                            case 2 -> System.out.println(fsm.generateListProposalStudents(false,true,false,false));
-                            case 3 -> System.out.println(fsm.generateListProposalStudents(false,false,true,false));
-                            case 4 -> System.out.println(fsm.generateListProposalStudents(false,false,false,true));
+                            case 1 -> fsm.generateListProposalStudents(true,false,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateListProposalStudents(false,true,false,false).forEach(System.out::println);
+                            case 3 -> fsm.generateListProposalStudents(false,false,true,false).forEach(System.out::println);
+                            case 4 -> fsm.generateListProposalStudents(false,false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }
@@ -299,7 +290,7 @@ public class PhaseUI {
                             case 2 -> proposeTeacher=Input.changeBoolean(proposeTeacher);
                             case 3 -> withProposals=Input.changeBoolean(withProposals);
                             case 4 -> withoutProposals=Input.changeBoolean(withoutProposals);
-                            case 5 -> System.out.println(fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals));
+                            case 5 -> fsm.generateListProposalPhase3(selfProposed, proposeTeacher, withProposals, withoutProposals).forEach(System.out::println);
                             default -> allChosen = true;
                         }
                     }
@@ -315,7 +306,7 @@ public class PhaseUI {
 
     public void fourthPhaseUI() throws IOException {
         System.out.print("\n4th Phase");
-        if(fsm.isClosed())
+        if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:", "Consult advisor","See some data about the advisors assignments",
                     "Save the state", "Export the data", "Next phase","Return to previous phase","Quit")){
                 case 1 -> System.out.println(fsm.consultAdvisor(Input.readString("Teacher id: ",true)));
@@ -325,9 +316,9 @@ public class PhaseUI {
                         switch (Input.chooseOption("Choose the option:","list of students with a proposal and assigned advisor",
                                 "List of students with an assigned proposal but without an associated supervisor",
                                 "Number of orientations per professor, on average, minimum, maximum, and per specified professor", "Quit")){
-                            case 1 -> System.out.println(fsm.generateListAdvisors(true,false,false));
-                            case 2 -> System.out.println(fsm.generateListAdvisors(false,true,false));
-                            case 3 -> System.out.println(fsm.generateListAdvisors(false,false,true));
+                            case 1 -> fsm.generateListAdvisors(true,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateListAdvisors(false,true,false).forEach(System.out::println);
+                            case 3 -> fsm.generateListAdvisors(false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }
@@ -352,9 +343,9 @@ public class PhaseUI {
                         switch (Input.chooseOption("Choose the option:","list of students with a proposal and assigned advisor",
                                 "List of students with an assigned proposal but without an associated supervisor",
                                 "Number of orientations per professor, on average, minimum, maximum, and per specified professor", "Quit")){
-                            case 1 -> System.out.println(fsm.generateListAdvisors(true,false,false));
-                            case 2 -> System.out.println(fsm.generateListAdvisors(false,true,false));
-                            case 3 -> System.out.println(fsm.generateListAdvisors(false,false,true));
+                            case 1 -> fsm.generateListAdvisors(true,false,false).forEach(System.out::println);
+                            case 2 -> fsm.generateListAdvisors(false,true,false).forEach(System.out::println);
+                            case 3 -> fsm.generateListAdvisors(false,false,true).forEach(System.out::println);
                             default -> allChosen=true;
                         }
                 }

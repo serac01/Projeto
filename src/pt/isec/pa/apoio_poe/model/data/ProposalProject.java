@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ProposalProject extends Proposal  implements Serializable {
+    public static final long serialVersionUID=2020129026;
     private final List<String> area;
 
 

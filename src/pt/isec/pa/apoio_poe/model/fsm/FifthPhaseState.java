@@ -1,5 +1,6 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
+import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.data.Proposal;
 import pt.isec.pa.apoio_poe.model.data.Student;
 import pt.isec.pa.apoio_poe.model.data.Teacher;
@@ -19,38 +20,38 @@ public class FifthPhaseState extends PhaseStateAdapter {
     public PhaseState getState() { return PhaseState.PHASE_5; }
 
     @Override
-    public String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5, ArrayList<Teacher> teachers, ArrayList<Student> students, ArrayList<Proposal> proposals){
-        ArrayList<Student> listStudents = new ArrayList<>();
+    public String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5, ManagementPoE management){
+       ArrayList<Student> listStudents = new ArrayList<>();
         ArrayList<Proposal> listProposals = new ArrayList<>();
         if(op1){
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
                     listStudents.add(p.getStudent());
-            return StudentState.showStudents(listStudents);
+            return ManagementPoE.showListOfStudents(listStudents);
         }else if(op2) {
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
                     listStudents.add(p.getStudent());
-            return StudentState.showStudents(listStudents);
+            return ManagementPoE.showListOfStudents(listStudents);
         }else if(op3) {
-            for (Proposal p : proposals)
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
                     listProposals.add(p);
-            return ProposalsState.showProposals(listProposals);
+            return ManagementPoE.showListOfProposals(listProposals);
         }else if(op4){
-            listProposals.addAll(proposals);
-            for (Proposal p : proposals)
+            listProposals.addAll(management.getProposals());
+            for (Proposal p : management.getProposals())
                 if (p.getStudent() != null)
                     listProposals.remove(p);
-            return ProposalsState.showProposals(listProposals);
+            return ManagementPoE.showListOfProposals(listProposals);
         }
         else if(op5){
             StringBuilder phrase = new StringBuilder();
-            phrase.append("On average there are ").append((float) proposals.size() / teachers.size()).append(" proposals per teacher\n");
+            phrase.append("On average there are ").append((float) management.getProposals().size() / management.getTeachers().size()).append(" proposals per teacher\n");
             int counter;
-            for(Teacher t : teachers) {
+            for(Teacher t : management.getTeachers()) {
                 counter=0;
-                for (Proposal p : proposals)
+                for (Proposal p : management.getProposals())
                     if (p.getTeacher() != null && p.getTeacher().getEmail().equalsIgnoreCase(t.getEmail()))
                         counter++;
                 phrase.append("The teacher ").append(t.getName()).append(" has ").append(counter).append(" assigned proposals\n");
@@ -61,7 +62,7 @@ public class FifthPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public void exportProposals(String filename, ArrayList<Proposal> proposals) throws IOException {
+    public void exportProposals(String filename, ManagementPoE management) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -69,7 +70,7 @@ public class FifthPhaseState extends PhaseStateAdapter {
                 csvWriter = new FileWriter(file);
                 int count = 0;
 
-                for (Proposal p : proposals) {
+                for (Proposal p : management.getProposals()) {
                     csvWriter.append(p.getType());
                     csvWriter.append(",");
                     csvWriter.append(p.getIdentification());
@@ -108,7 +109,7 @@ public class FifthPhaseState extends PhaseStateAdapter {
                         }
                     }
                     count++;
-                    if (count < proposals.size())
+                    if (count < management.getProposals().size())
                         csvWriter.append("\n");
                 }
             }
