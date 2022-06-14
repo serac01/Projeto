@@ -3,6 +3,7 @@ package pt.isec.pa.apoio_poe.model.data;
 import java.io.Serializable;
 
 public class Student  implements Serializable {
+    public static final long serialVersionUID=2020129026;
     private final long studentNumber;
     private final String email;
     private String name, courseAcronym, industryAcronym;
@@ -37,4 +38,10 @@ public class Student  implements Serializable {
 
     public boolean isAccessInternships() { return accessInternships; }
     public void setAccessInternships(boolean accessInternships) { this.accessInternships = accessInternships; }
+
+    @Override
+    public String toString() {
+        return String.format("Student number: %-10d Student name: %-30s Email: %s Course acronym: %-6s Industry acronym: %-7s Classification: %.6f Access to Internship : %b",
+                studentNumber,name,email,courseAcronym,industryAcronym,classification,accessInternships);
+    }
 }

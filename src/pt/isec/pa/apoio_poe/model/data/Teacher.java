@@ -3,6 +3,7 @@ package pt.isec.pa.apoio_poe.model.data;
 import java.io.Serializable;
 
 public class Teacher  implements Serializable {
+    public static final long serialVersionUID=2020129026;
     private String name;
     private final String email;
 
@@ -15,4 +16,9 @@ public class Teacher  implements Serializable {
     public void setName(String name) { this.name = name; }
 
     public String getEmail() { return email; }
+
+    @Override
+    public String toString() {
+        return String.format("Teacher name: %-40s Teacher email: %-50s",name,email);
+    }
 }

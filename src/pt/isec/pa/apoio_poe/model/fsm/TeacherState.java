@@ -1,5 +1,6 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
+import pt.isec.pa.apoio_poe.model.data.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.data.Proposal;
 import pt.isec.pa.apoio_poe.model.data.Teacher;
 import java.io.*;
@@ -7,10 +8,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TeacherState implements Serializable{
+public class TeacherState extends PhaseStateAdapter implements Serializable {
     public static final long serialVersionUID=2020129026;
 
-    public static String addTeachers(String filename, ArrayList<Teacher> teachers) throws IOException {
+    TeacherState(PhaseContext context){ super(context); }
+
+    //State
+    @Override
+    public void nextPhase() { changeState(new FirstPhaseState(context)); }
+    @Override
+    public PhaseState getState() { return PhaseState.TEACHER_PHASE; }
+    @Override
+    public boolean isPhaseClosed(ManagementPoE management){ return management.isTeacherPhaseClosed(); }
+
+    //others methods
+    @Override
+    public String addTeachers(String filename, ManagementPoE management) throws IOException {
+        filename="src/csvFiles/teachers.csv";
         BufferedReader br = null;
         StringBuilder warnings = new StringBuilder();
         try {
@@ -19,10 +33,10 @@ public class TeacherState implements Serializable{
             String line;
             while((line=br.readLine()) != null) {
                 List<String> tempArr = Arrays.asList(line.split(","));
-                if(isExistentTeacher(tempArr.get(1), teachers))
+                if(isExistentTeacher(tempArr.get(1), management))
                     warnings.append("The teacher ").append(tempArr.get(0)).append(", has an invalid email");
                 else
-                    teachers.add(new Teacher(tempArr.get(0), tempArr.get(1)));
+                    management.addTeacher(new Teacher(tempArr.get(0), tempArr.get(1)));
             }
         }catch(IOException ioe) {
             ioe.printStackTrace();
@@ -33,11 +47,12 @@ public class TeacherState implements Serializable{
         return warnings.toString();
     }
 
-    public static String editTeacher(String email, String toUpdate, ArrayList<Teacher> teachers)  {
-        if(!isExistentTeacher(email,teachers))
+    @Override
+    public String editTeacher(String email, String toUpdate, ManagementPoE management)  {
+        if(!isExistentTeacher(email,management))
             return "The teacher with email "+email+", doesn't exists\n";
 
-        for(Teacher t : teachers)
+        for(Teacher t : management.getTeachers())
             if(email.equalsIgnoreCase(t.getEmail())) {
                 t.setName(toUpdate);
                 break;
@@ -45,37 +60,39 @@ public class TeacherState implements Serializable{
         return "";
     }
 
-    public static String deleteTeacher(String email, ArrayList<Teacher> teachers, ArrayList<Proposal> proposals){
-        if(!isExistentTeacher(email,teachers))
+    @Override
+    public String deleteTeacher(String email, ManagementPoE management){
+        if(!isExistentTeacher(email,management))
             return "The teacher with email "+email+", doesn't exists\n";
-        for(Proposal p : proposals)
-            if(p.getTeacher().getEmail().equalsIgnoreCase(email))
+        for(Proposal p : management.getProposals())
+            if(p.getTeacher()!=null && p.getTeacher().getEmail().equalsIgnoreCase(email))
                 return "Impossible to remove teacher due to existing relation";
-
-        teachers.removeIf(t -> t.getEmail().equalsIgnoreCase(email));
+        management.deleteTeacherFromList(email);
         return "";
     }
 
-    public static String showTeachers(ArrayList<Teacher> teachers){
-        StringBuilder s = new StringBuilder();
-        for (Teacher t:teachers)
-            s.append(String.format("Teacher name: %-40s Teacher email: %-50s \n",t.getName(),t.getEmail()));
-        return s.toString();
+    @Override
+    public List<String> showTeachers(ManagementPoE management){
+        List<String> list = new ArrayList<>();
+        for (Teacher t: management.getTeachers())
+            list.add(t.toString());
+        return list;
     }
 
-    public static void exportTeacher(String filename, ArrayList<Teacher> teachers) throws IOException {
+    @Override
+    public void exportTeacher(String filename, ManagementPoE management) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
             if(!file.exists()) {
                 csvWriter = new FileWriter(file);
                 int count = 0;
-                for (Teacher t : teachers) {
+                for (Teacher t : management.getTeachers()) {
                     csvWriter.append(t.getName());
                     csvWriter.append(",");
                     csvWriter.append(t.getEmail());
                     count++;
-                    if (count < teachers.size())
+                    if (count < management.getTeachers().size())
                         csvWriter.append("\n");
                 }
             }
@@ -88,8 +105,8 @@ public class TeacherState implements Serializable{
     }
 
     //Validations
-    private static boolean isExistentTeacher(String email, ArrayList<Teacher> teachers){
-        for(Teacher t : teachers)
+    private static boolean isExistentTeacher(String email, ManagementPoE management){
+        for(Teacher t : management.getTeachers())
             if(email.equalsIgnoreCase(t.getEmail()))
                 return true;
         return false;
