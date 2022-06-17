@@ -3,7 +3,7 @@ package pt.isec.pa.apoio_poe.model.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ManagementPoE implements Serializable {
+public class DataPoE implements Serializable {
     public static final long serialVersionUID=2020129026;
     private final ArrayList<Student> students = new ArrayList<>();
     private final ArrayList<Teacher> teachers = new ArrayList<>();

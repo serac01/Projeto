@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.isec.pa.apoio_poe.ui.gui.PoEPaneController"
+      prefHeight="600.0" prefWidth="900.0"
+      fx:id="root" id="root">
+
+    <HBox prefHeight="1050" prefWidth="1000" id="logo"/>
+
+    <HBox prefHeight="950" alignment="CENTER" spacing="300">
+        <Button text="Load a State" onAction="#onLoadState" id="normal-button"/>
+        <Button text="Start" onAction="#onStart" id="normal-button"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+</VBox>

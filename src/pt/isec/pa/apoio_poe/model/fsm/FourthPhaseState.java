@@ -23,25 +23,25 @@ public class FourthPhaseState extends PhaseStateAdapter {
     @Override
     public PhaseState getState() { return PhaseState.PHASE_4; }
     @Override
-    public String closePhase(ManagementPoE management) {
-        management.setPhase4Closed(true);
+    public String closePhase(DataPoE data) {
+        data.setPhase4Closed(true);
         return "";
     }
     @Override
-    public boolean isPhaseClosed(ManagementPoE management){ return management.isPhase4Closed(); }
+    public boolean isPhaseClosed(DataPoE data){ return data.isPhase4Closed(); }
 
     @Override
-    public String assignAdvisor(String proposal, String email, ManagementPoE management){
-        if(!isAValidProposal(proposal,management))
+    public String assignAdvisor(String proposal, String email, DataPoE data){
+        if(!isAValidProposal(proposal,data))
             return "This proposal doesn't exist\n";
-        if(!isExistentTeacher(email,management))
+        if(!isExistentTeacher(email,data))
             return "This advisor doesn't exist\n";
-        if(isAProposalAssigned(proposal,management))
+        if(isAProposalAssigned(proposal,data))
             return "This proposal is already associated to another advisor\n";
 
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(proposal.equalsIgnoreCase(p.getIdentification()))
-                for(Teacher t : management.getTeachers())
+                for(Teacher t : data.getTeachers())
                     if(t.getEmail().equalsIgnoreCase(email))
                         p.setTeacher(t);
 
@@ -49,59 +49,59 @@ public class FourthPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public String consultAdvisor(String email, ManagementPoE management){
-        if(!isExistentTeacher(email,management))
+    public String consultAdvisor(String email, DataPoE data){
+        if(!isExistentTeacher(email,data))
             return "This advisor doesn't exist\n";
 
-        for(Teacher t : management.getTeachers())
+        for(Teacher t : data.getTeachers())
             if(t.getEmail().equalsIgnoreCase(email))
                 return String.format("Teacher name: %-40s Teacher email: %-50s \n",t.getName(),t.getEmail());
         return "";
     }
 
     @Override
-    public String changeAdvisor(String email, String proposal, ManagementPoE management){
-        if(!isExistentTeacher(email,management))
+    public String changeAdvisor(String email, String proposal, DataPoE data){
+        if(!isExistentTeacher(email,data))
             return "This advisor doesn't exist\n";
-        if(!isAValidProposal(proposal,management))
+        if(!isAValidProposal(proposal,data))
             return "This proposal doesn't exist\n";
 
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(p.getIdentification().equalsIgnoreCase(proposal))
-                for(Teacher t : management.getTeachers())
+                for(Teacher t : data.getTeachers())
                     if(t.getEmail().equalsIgnoreCase(email))
                         p.setTeacher(t);
         return "";
     }
 
     @Override
-    public String deleteAdvisor(String proposal, ManagementPoE management){
-        if(!isAValidProposal(proposal,management))
+    public String deleteAdvisor(String proposal, DataPoE data){
+        if(!isAValidProposal(proposal,data))
             return "This proposal doesn't exist\n";
-        if(!isAProposalAssigned(proposal,management))
+        if(!isAProposalAssigned(proposal,data))
             return "This proposal is not associated with anyone yet\n";
 
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(p.getIdentification().equalsIgnoreCase(proposal))
                 p.setTeacher(null);
         return "";
     }
 
     @Override
-    public List<String> generateListAdvisors(boolean op1, boolean op2, boolean op3, ManagementPoE management){
+    public List<String> generateListAdvisors(boolean op1, boolean op2, boolean op3, DataPoE data){
         ArrayList<String> listOfStudents = new ArrayList<>();
         if(op1) {
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent() != null && p.getTeacher() != null)
-                    for (Student s : management.getStudent())
+                    for (Student s : data.getStudent())
                         if (p.getStudent().getStudentNumber() == s.getStudentNumber())
                             listOfStudents.add(s.toString());
             return listOfStudents;
         }
         else if(op2) {
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent() != null && p.getTeacher() == null)
-                    for (Student s : management.getStudent())
+                    for (Student s : data.getStudent())
                         if (p.getStudent().getStudentNumber() == s.getStudentNumber())
                             listOfStudents.add(s.toString());
             return listOfStudents;
@@ -110,12 +110,12 @@ public class FourthPhaseState extends PhaseStateAdapter {
             StringBuilder phrase = new StringBuilder();
             int counter;
 
-            listOfStudents.add(String.valueOf(phrase.append("On average there are ").append((float) management.getProposals().size() / management.getTeachers().size()).append(" proposals per teacher")));
+            listOfStudents.add(String.valueOf(phrase.append("On average there are ").append((float) data.getProposals().size() / data.getTeachers().size()).append(" proposals per teacher")));
 
-            for(Teacher t : management.getTeachers()) {
+            for(Teacher t : data.getTeachers()) {
                 phrase.setLength(0);
                 counter=0;
-                for (Proposal p : management.getProposals())
+                for (Proposal p : data.getProposals())
                     if (p.getTeacher() != null && p.getTeacher().getEmail().equalsIgnoreCase(t.getEmail()))
                         counter++;
                 listOfStudents.add(String.valueOf(phrase.append("The teacher ").append(t.getName()).append(" has ").append(counter).append(" assigned proposals")));
@@ -126,7 +126,7 @@ public class FourthPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public void exportProposals(String filename, ManagementPoE management) throws IOException {
+    public void exportProposals(String filename, DataPoE data) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -134,7 +134,7 @@ public class FourthPhaseState extends PhaseStateAdapter {
                 csvWriter = new FileWriter(file);
                 int count = 0;
 
-                for (Proposal p : management.getProposals()) {
+                for (Proposal p : data.getProposals()) {
                     csvWriter.append(p.getType());
                     csvWriter.append(",");
                     csvWriter.append(p.getIdentification());
@@ -173,7 +173,7 @@ public class FourthPhaseState extends PhaseStateAdapter {
                         }
                     }
                     count++;
-                    if (count < management.getProposals().size())
+                    if (count < data.getProposals().size())
                         csvWriter.append("\n");
                 }
             }
@@ -198,20 +198,20 @@ public class FourthPhaseState extends PhaseStateAdapter {
     }
 
     //Validations
-    private static boolean isExistentTeacher(String email, ManagementPoE management){
-        for(Teacher t : management.getTeachers())
+    private static boolean isExistentTeacher(String email, DataPoE data){
+        for(Teacher t : data.getTeachers())
             if(t.getEmail().equalsIgnoreCase(email))
                 return true;
         return false;
     }
-    private static boolean isAValidProposal(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAValidProposal(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
     }
-    private static boolean isAProposalAssigned(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAProposalAssigned(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if (p.getIdentification().equalsIgnoreCase(id))
                 if(p.getTeacher() != null)
                     return true;
