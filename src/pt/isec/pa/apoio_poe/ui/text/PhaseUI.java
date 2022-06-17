@@ -1,15 +1,16 @@
 package pt.isec.pa.apoio_poe.ui.text;
 
+import pt.isec.pa.apoio_poe.model.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
 import java.io.IOException;
 import java.util.Arrays;
 
 public class PhaseUI {
-    PhaseContext fsm;
+    ManagementPoE fsm;
     boolean finish;
 
-    public PhaseUI(PhaseContext fsm){
+    public PhaseUI(ManagementPoE fsm){
         this.fsm = fsm;
         this.finish = false;
     }
@@ -39,6 +40,20 @@ public class PhaseUI {
                 case 3 -> fsm.changeToProposals();
                 case 4 -> fsm.serialization(Input.readString("Filename ",false));
                 case 5 -> fsm.nextPhase();
+                case 6 -> {
+                    if (fsm.hasUndo()) {
+                        fsm.undo();
+                    } else {
+                        System.out.println("No undo available at the moment");
+                    }
+                }
+                case 7 -> {
+                    if (fsm.hasRedo()) {
+                        fsm.redo();
+                    } else {
+                        System.out.println("No redo available at the moment");
+                    }
+                }
                 default -> finish = true;
             }
         else
@@ -49,6 +64,20 @@ public class PhaseUI {
                 case 4 -> System.out.println(fsm.closePhase());
                 case 5 -> fsm.nextPhase();
                 case 6 -> fsm.serialization(Input.readString("Filename ",false));
+                case 7 -> {
+                    if (fsm.hasUndo()) {
+                        fsm.undo();
+                    } else {
+                        System.out.println("No undo available at the moment");
+                    }
+                }
+                case 8 -> {
+                    if (fsm.hasRedo()) {
+                        fsm.redo();
+                    } else {
+                        System.out.println("No redo available at the moment");
+                    }
+                }
                 default -> finish = true;
             }
     }
@@ -63,7 +92,7 @@ public class PhaseUI {
                 default -> fsm.nextPhase();
             }
         else
-            switch (Input.chooseOption("Choose the option:","Insert student","Show student", "Edit student","Delete student","Export student","Quit")){
+            switch (Input.chooseOption("Choose the option:","Insert student","Show student", "Edit student","Delete student","Export student","Undo","Redo","Quit")){
                 case 1 -> System.out.println(fsm.addStudents(Input.readString("Filename ",false)));
                 case 2 -> fsm.showStudents().forEach(System.out::println);
                 case 3 -> {
@@ -83,6 +112,20 @@ public class PhaseUI {
                 }
                 case 4 -> System.out.println(fsm.deleteStudents((long) Input.readNumber("Enter student number ")));
                 case 5 -> fsm.exportStudents(Input.readString("Filename ",false));
+                case 6 -> {
+                    if (fsm.hasUndo()) {
+                        fsm.undo();
+                    } else {
+                        System.out.println("No undo available at the moment");
+                    }
+                }
+                case 7 -> {
+                    if (fsm.hasRedo()) {
+                        fsm.redo();
+                    } else {
+                        System.out.println("No redo available at the moment");
+                    }
+                }
                 default -> fsm.nextPhase();
             }
     }

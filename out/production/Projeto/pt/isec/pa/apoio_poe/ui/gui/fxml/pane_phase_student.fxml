@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.isec.pa.apoio_poe.ui.gui.PoEPaneController"
+      prefHeight="600.0" prefWidth="900.0"
+      fx:id="root" id="root">
+
+    <ToolBar>
+        <Button onAction="#onQuit" id="button-toolbar-img">
+            <graphic>
+                <ImageView fitWidth="23" fitHeight="23">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\quit.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Export State" id="button-toolbar"/>
+        <Button text="Undo" id="button-toolbar"/>
+        <Button text="Redo" id="button-toolbar"/>
+    </ToolBar>
+
+    <HBox prefHeight="500" alignment="CENTER">
+        <Label text="First Phase - Student Management" id="label-title"/>
+    </HBox>
+
+    <HBox prefHeight="800" prefWidth="800" alignment="CENTER">
+        <ListView fx:id="lvShowStudents"/>
+    </HBox>
+
+    <HBox prefHeight="300" alignment="TOP_CENTER" spacing="20">
+        <Button text="Insert" onAction="#onInsertStudent" id="normal-button"/>
+        <Button text="Edit" onAction="#onEditStudent" id="normal-button"/>
+        <Button text="Delete" onAction="#onDeleteStudent" id="normal-button"/>
+        <Button text="Export" onAction="#onExportStudent" id="normal-button"/>
+    </HBox>
+
+    <HBox prefHeight="500" alignment="BOTTOM_CENTER">
+        <Label text="Made by: Sérgio Costa  |  ISEC 2021/2022" id="footer"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+</VBox>

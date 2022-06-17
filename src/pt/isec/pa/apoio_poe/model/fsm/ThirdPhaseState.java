@@ -26,38 +26,38 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     @Override
     public PhaseState getState() { return PhaseState.PHASE_3; }
     @Override
-    public String closePhase(ManagementPoE management) {
+    public String closePhase(DataPoE data) {
         int counter=0;
-        for(Application a : management.getApplications())
-            for(Proposal p : management.getProposals())
+        for(Application a : data.getApplications())
+            for(Proposal p : data.getProposals())
                 if(p.getStudent()!=null)
                     if(p.getStudent().getStudentNumber() == a.getStudent().getStudentNumber())
                         counter++;
-        if(counter != management.getApplications().size())
+        if(counter != data.getApplications().size())
             return "There are still students who applied and still don't have a proposal assigned\n";
-        management.setPhase3Closed(true);
+        data.setPhase3Closed(true);
         nextPhase();
         return "";
     }
     @Override
-    public boolean isPhaseClosed(ManagementPoE management){ return management.isPhase3Closed(); }
+    public boolean isPhaseClosed(DataPoE data){ return data.isPhase3Closed(); }
 
     @Override
-    public String assignAProposalWithoutAssignments(ManagementPoE management){
+    public String assignAProposalWithoutAssignments(DataPoE data){
         ArrayList<Proposal> proposalsWithoutAssignments = new ArrayList<>();
-        ArrayList<Student> studentsWithoutAssignments = new ArrayList<>(management.getStudent());
+        ArrayList<Student> studentsWithoutAssignments = new ArrayList<>(data.getStudent());
         double classification;
         String proposalId="", currentProposalId="";
         int repeatedClassification=0,repeatedProposal=0;
 
         //Available proposals
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(p.getStudent()==null)
                 proposalsWithoutAssignments.add(p);
 
         //Available students
-        for(Student s : management.getStudent())
-            for(Proposal p : management.getProposals())
+        for(Student s : data.getStudent())
+            for(Proposal p : data.getProposals())
                 if(p.getStudent()!=null && p.getStudent().getStudentNumber() == s.getStudentNumber())
                     studentsWithoutAssignments.remove(s);
 
@@ -71,18 +71,18 @@ public class ThirdPhaseState extends PhaseStateAdapter {
         for(Student s : studentsWithoutAssignments)
             System.out.println(s.toString());
         System.out.println("\n\nApplications:");
-        for(Application a : management.getApplications())
+        for(Application a : data.getApplications())
             System.out.println(a.toString());
 
         //student, proposal
         classification = studentsWithoutAssignments.get(0).getClassification();
-        for(Application a : management.getApplications())
+        for(Application a : data.getApplications())
             if(a.getStudent().getStudentNumber() ==  studentsWithoutAssignments.get(0).getStudentNumber()) {
                 proposalId=a.getIdProposals().get(0);
                 break;
             }
         for(Student s : studentsWithoutAssignments) {
-            for(Application a : management.getApplications())
+            for(Application a : data.getApplications())
                 if(a.getStudent().getStudentNumber() == s.getStudentNumber()) {
                     currentProposalId = a.getIdProposals().get(0);
                     break;
@@ -108,32 +108,32 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public String associateProposalToStudents(String proposal, Long student, ManagementPoE management){
-        if(!isAValidProposal(proposal,management))
+    public String associateProposalToStudents(String proposal, Long student, DataPoE data){
+        if(!isAValidProposal(proposal,data))
             return "This proposal doesn't exist\n";
-        if(!isExistentStudent(student,management))
+        if(!isExistentStudent(student,data))
             return "This student doesn't exist\n";
-        if(isAProposalAssigned(proposal,management))
+        if(isAProposalAssigned(proposal,data))
             return "This proposal is already associated to another student\n";
 
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(proposal.equalsIgnoreCase(p.getIdentification()))
-                for(Student s : management.getStudent())
+                for(Student s : data.getStudent())
                     if(s.getStudentNumber() == student)
                         p.setStudent(s);
         return "";
     }
 
     @Override
-    public  String removeStudentFromProposal(String proposal, ManagementPoE management){
-        if(!isAValidProposal(proposal,management))
+    public  String removeStudentFromProposal(String proposal, DataPoE data){
+        if(!isAValidProposal(proposal,data))
             return "This proposal doesn't exist\n";
-        if(!isAProposalAssigned(proposal,management))
+        if(!isAProposalAssigned(proposal,data))
             return "This proposal doesn't yet have a student assigned\n";
-        if(!isAValidProposalToRemove(proposal,management))
+        if(!isAValidProposalToRemove(proposal,data))
             return "Cannot remove student from this proposal\n";
 
-        for(Proposal p : management.getProposals())
+        for(Proposal p : data.getProposals())
             if(p.getIdentification().equalsIgnoreCase(proposal))
                 p.setStudent(null);
 
@@ -141,24 +141,24 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public List<String> generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, ManagementPoE management){
+    public List<String> generateListProposalStudents(boolean associatedSelfProposed, boolean alreadyRegistered, boolean proposalAssigned, boolean anyProposalAttributed, DataPoE data){
         ArrayList<String> listStudents = new ArrayList<>();
 
         if(associatedSelfProposed) {
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getType().equalsIgnoreCase("T3"))
                     listStudents.add(p.getStudent().toString());
         }else if(alreadyRegistered)
-            for (Application a : management.getApplications())
+            for (Application a : data.getApplications())
                 listStudents.add(a.getStudent().toString());
         else if(proposalAssigned) {
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent()!=null)
                     listStudents.add(p.getStudent().toString());
         }else if(anyProposalAttributed) {
-            for(Student s : management.getStudent())
+            for(Student s : data.getStudent())
                 listStudents.add(s.toString());
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent() != null)
                     listStudents.remove(p.getStudent().toString());
         }
@@ -166,27 +166,27 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public List<String> generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, ManagementPoE management){
+    public List<String> generateListProposalPhase3(boolean selfProposed, boolean proposeTeacher, boolean withProposals, boolean withoutProposals, DataPoE data){
         ArrayList<String> proposalList = new ArrayList<>();
         if(selfProposed)
-            for(Proposal p : management.getProposals())
+            for(Proposal p : data.getProposals())
                 if(p.getType().equalsIgnoreCase("T3"))
                     proposalList.add(p.toString());
 
         if(proposeTeacher)
-            for(Proposal p : management.getProposals())
+            for(Proposal p : data.getProposals())
                 if(p.getType().equalsIgnoreCase("T2"))
                     proposalList.add(p.toString());
 
         if(withProposals)
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent()!=null)
                     proposalList.add(p.toString());
 
         if(withoutProposals) {
-            for(Proposal p : management.getProposals())
+            for(Proposal p : data.getProposals())
                 proposalList.add(p.toString());
-            for (Proposal p : management.getProposals())
+            for (Proposal p : data.getProposals())
                 if (p.getStudent() != null)
                     proposalList.remove(p.toString());
         }
@@ -194,7 +194,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     @Override
-    public void exportProposals(String filename, ManagementPoE management) throws IOException {
+    public void exportProposals(String filename, DataPoE data) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -202,7 +202,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                 csvWriter = new FileWriter(file);
                 int count = 0;
 
-                for (Proposal p : management.getProposals()) {
+                for (Proposal p : data.getProposals()) {
                     csvWriter.append(p.getType());
                     csvWriter.append(",");
                     csvWriter.append(p.getIdentification());
@@ -241,7 +241,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                         }
                     }
                     count++;
-                    if (count < management.getProposals().size())
+                    if (count < data.getProposals().size())
                         csvWriter.append("\n");
                 }
             }
@@ -266,27 +266,27 @@ public class ThirdPhaseState extends PhaseStateAdapter {
     }
 
     //Validations
-    private static boolean isExistentStudent(long number, ManagementPoE management){
-        for(Student s : management.getStudent())
+    private static boolean isExistentStudent(long number, DataPoE data){
+        for(Student s : data.getStudent())
             if(s.getStudentNumber() == number)
                 return true;
         return false;
     }
-    private static boolean isAValidProposal(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAValidProposal(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
     }
-    private static boolean isAProposalAssigned(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAProposalAssigned(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if (p.getIdentification().equalsIgnoreCase(id))
                 if(p.getStudent()!=null)
                     return true;
         return false;
     }
-    private static boolean isAValidProposalToRemove(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAValidProposalToRemove(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if (p.getIdentification().equalsIgnoreCase(id))
                 if(p.getType().equalsIgnoreCase("T3") || (p.getType().equalsIgnoreCase("T2") &&p.getStudent()!=null))
                     return false;

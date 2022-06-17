@@ -17,11 +17,11 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
     @Override
     public PhaseState getState() { return PhaseState.STUDENT_PHASE; }
     @Override
-    public boolean isPhaseClosed(ManagementPoE management){ return management.isStudentPhaseClosed(); }
+    public boolean isPhaseClosed(DataPoE data){ return data.isStudentPhaseClosed(); }
 
     //others methods
     @Override
-    public String addStudents(String filename, ManagementPoE management) throws IOException {
+    public String addStudents(String filename, DataPoE data) throws IOException {
         filename="src/csvFiles/students.csv";
         BufferedReader br = null;
         StringBuilder warnings = new StringBuilder();
@@ -35,7 +35,7 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
                 //Validation of input parameters
                 if(tempArr.size()<7)
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", has missing data\n");
-                else if(isExistentStudent(Long.parseLong(tempArr.get(0)), management))
+                else if(isExistentStudent(Long.parseLong(tempArr.get(0)), data))
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", already exists\n");
                 else if(isAInvalidCourseAcronym(tempArr.get(3)))
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong course acronym\n");
@@ -46,7 +46,7 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
                 else if(isAInvalidBoolean(tempArr.get(6)))
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", has a wrong value to access internships\n");
                 else
-                    management.addStudent(new Student(Long.parseLong(tempArr.get(0)), tempArr.get(1), tempArr.get(2), tempArr.get(3), tempArr.get(4),Double.parseDouble(tempArr.get(5)), Boolean.parseBoolean(tempArr.get(6))));
+                    data.addStudent(new Student(Long.parseLong(tempArr.get(0)), tempArr.get(1), tempArr.get(2), tempArr.get(3), tempArr.get(4),Double.parseDouble(tempArr.get(5)), Boolean.parseBoolean(tempArr.get(6))));
             }
         }catch(IOException ioe) {
             ioe.printStackTrace();
@@ -58,11 +58,11 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
     }
 
     @Override
-    public String editStudent(long number, String toUpdate, int option, ManagementPoE management)  {
-        if(!isExistentStudent(number,management))
+    public String editStudent(long number, String toUpdate, int option, DataPoE data)  {
+        if(!isExistentStudent(number,data))
             return "The student with code "+number+", doesn't exists\n";
 
-        for(Student s : management.getStudent())
+        for(Student s : data.getStudent())
             if(s.getStudentNumber()==number)
                 switch (option){
                     case 1 -> s.setName(toUpdate);
@@ -91,30 +91,30 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
     }
 
     @Override
-    public String deleteStudents(long number, ManagementPoE management){
-        if(!isExistentStudent(number,management))
+    public String deleteStudents(long number, DataPoE data){
+        if(!isExistentStudent(number,data))
             return "The student with code "+number+", doesn't exists\n";
-        for(Proposal p: management.getProposals())
+        for(Proposal p: data.getProposals())
             if(p.getStudent() != null && p.getStudent().getStudentNumber() == number)
                 return "Impossible to delete student due to existent relation\n";
-        for(Application a : management.getApplications())
+        for(Application a : data.getApplications())
             if(a.getStudent().getStudentNumber()== number)
                 return "Impossible to delete student due to existent relation\n";
 
-        management.deleteStudentFromList(number);
+        data.deleteStudentFromList(number);
         return "";
     }
 
     @Override
-    public List<String> showStudents(ManagementPoE management){
+    public List<String> showStudents(DataPoE data){
         List<String> list = new ArrayList<>();
-        for(Student student: management.getStudent())
+        for(Student student: data.getStudent())
             list.add(student.toString());
         return list;
     }
 
     @Override
-    public void exportStudents(String filename, ManagementPoE management) throws IOException {
+    public void exportStudents(String filename, DataPoE data) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
@@ -123,7 +123,7 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
 
                 int count = 0;
 
-                for (Student s : management.getStudent()) {
+                for (Student s : data.getStudent()) {
                     csvWriter.append(String.valueOf(s.getStudentNumber()));
                     csvWriter.append(",");
                     csvWriter.append(s.getName());
@@ -138,7 +138,7 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
                     csvWriter.append(",");
                     csvWriter.append(String.valueOf(s.isAccessInternships()));
                     count++;
-                    if (count < management.getStudent().size())
+                    if (count < data.getStudent().size())
                         csvWriter.append("\n");
                 }
             }
@@ -151,8 +151,8 @@ public class StudentState extends PhaseStateAdapter implements Serializable {
     }
 
     //Validations
-    private static boolean isExistentStudent(long number, ManagementPoE management){
-        for(Student s : management.getStudent())
+    private static boolean isExistentStudent(long number, DataPoE data){
+        for(Student s : data.getStudent())
             if(s.getStudentNumber()==number)
                 return true;
         return false;

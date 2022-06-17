@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.isec.pa.apoio_poe.ui.gui.PoEPaneController"
+      prefHeight="600.0" prefWidth="900.0"
+      fx:id="root" id="root">
+
+    <ToolBar>
+        <Button onAction="#onQuit" id="button-toolbar-img">
+            <graphic>
+                <ImageView fitWidth="23" fitHeight="23">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\quit.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Export State" id="button-toolbar"/>
+        <Button text="Undo" id="button-toolbar"/>
+        <Button text="Redo" id="button-toolbar"/>
+    </ToolBar>
+
+    <HBox prefHeight="500" alignment="CENTER">
+        <Label text="First Phase - Setup" id="label-title"/>
+    </HBox>
+
+    <HBox prefHeight="500" alignment="CENTER">
+        <Button text="Student Management" onAction="#onStudentManagement" id="card-button">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\student.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Teacher Management" onAction="#onTeacherManagement" id="card-button">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\teacher.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Proposals Management" onAction="#onProposalsManagement" id="card-button">
+        <graphic>
+            <ImageView fitWidth="30" fitHeight="30">
+                <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\proposal.png" />
+            </ImageView>
+        </graphic>
+    </Button>
+    </HBox>
+
+    <HBox prefHeight="500" alignment="CENTER">
+        <Button text="Close Phase" onAction="#onClosePhase" id="card-button">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\close.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Next Phase" onAction="#onNextPhase" id="card-button">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30">
+                    <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\next.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <HBox prefHeight="500" alignment="BOTTOM_CENTER">
+        <Label text="Made by: Sérgio Costa  |  ISEC 2021/2022" id="footer"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles.css" />
+    </stylesheets>
+</VBox>

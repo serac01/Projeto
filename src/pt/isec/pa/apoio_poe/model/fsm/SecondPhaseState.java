@@ -25,19 +25,19 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         return PhaseState.PHASE_2;
     }
     @Override
-    public String closePhase(ManagementPoE management) {
-        if(!management.isPhase1Closed())
+    public String closePhase(DataPoE data) {
+        if(!data.isPhase1Closed())
             return "The previous phase is still open, so you cannot close this one\n";
-        management.setPhase2Closed(true);
+        data.setPhase2Closed(true);
         nextPhase();
         return "";
     }
     @Override
-    public boolean isPhaseClosed(ManagementPoE management){ return management.isPhase2Closed(); }
+    public boolean isPhaseClosed(DataPoE data){ return data.isPhase2Closed(); }
 
     //Applications
     @Override
-    public String addApplication(String filename, ManagementPoE management) {
+    public String addApplication(String filename, DataPoE data) {
         filename="src/csvFiles/application.csv";
         StringBuilder warnings = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -48,22 +48,22 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                 for (int i = 1; i < tempArr.size(); i++)
                     idProposals.add(tempArr.get(i));
                 Student student = null;
-                for (Student s : management.getStudent())
+                for (Student s : data.getStudent())
                     if (Long.parseLong(tempArr.get(0)) == s.getStudentNumber())
                         student = s;
                 //Valid input parameters
                 if (tempArr.size() < 2)
                     warnings.append("the application with the student number ").append(tempArr.get(0)).append(", doesn't have enough data\n");
-                else if (hasProposalAlreadyAStudent(idProposals, management) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), management))
+                else if (hasProposalAlreadyAStudent(idProposals, data) || isAProposalAssigned(Long.parseLong(tempArr.get(0)), data))
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", chose a proposal that is not available\n");
                 else if (student==null)
                     warnings.append("The student with code ").append(tempArr.get(0)).append(", doesn't exist\n");
-                else if (isExistentApplication(Long.parseLong(tempArr.get(0)), management))
+                else if (isExistentApplication(Long.parseLong(tempArr.get(0)), data))
                     warnings.append("The application of student with code ").append(tempArr.get(0)).append(", has duplicated data or two or has two iterations\n");
                 else {
                     if(!student.isAccessInternships())
-                        isAInvalidProposalForStudent(idProposals, management);
-                    management.addApplication(new Application(student, idProposals));
+                        isAInvalidProposalForStudent(idProposals, data);
+                    data.addApplication(new Application(student, idProposals));
                 }
             }
         } catch (IOException ioe) {
@@ -72,18 +72,18 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         return warnings.toString();
     }
     @Override
-    public String editApplication(long number, String id, int option, ManagementPoE management)  {
+    public String editApplication(long number, String id, int option, DataPoE data)  {
         boolean changed=false;
-        if(!isExistentApplication(number,management))
+        if(!isExistentApplication(number,data))
             return "The student "+number+", didn't apply or doesn't exist\n";
 
-        for(Application a : management.getApplications())
+        for(Application a : data.getApplications())
                 if(a.getStudent().getStudentNumber()==number)
                     switch (option){
                         case 1 -> {
                             List<String> aux = a.getIdProposals();
-                            for(Proposal p : management.getProposals())
-                                if (p.getIdentification().equalsIgnoreCase(id) && !isADuplicateProposal(id,aux) && isAValidProposal(id,management) && !hasProposalAlreadyAStudent(aux,management)) {
+                            for(Proposal p : data.getProposals())
+                                if (p.getIdentification().equalsIgnoreCase(id) && !isADuplicateProposal(id,aux) && isAValidProposal(id,data) && !hasProposalAlreadyAStudent(aux,data)) {
                                     aux.add(id);
                                     a.setIdProposals(aux);
                                     changed=true;
@@ -106,28 +106,28 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
         return "";
     }
     @Override
-    public String deleteApplication(long number, ManagementPoE management){
-        if(!isExistentApplication(number,management))
+    public String deleteApplication(long number, DataPoE data){
+        if(!isExistentApplication(number,data))
             return "This application doesn't exist\n";
-        management.deleteApplicationFromList(number);
+        data.deleteApplicationFromList(number);
         return "";
     }
     @Override
-    public List<String> showApplication(ManagementPoE management){
+    public List<String> showApplication(DataPoE data){
         List<String> list = new ArrayList<>();
-        for(Application a : management.getApplications())
+        for(Application a : data.getApplications())
             list.add(a.toString());
         return list;
     }
     @Override
-    public void exportApplications(String filename, ManagementPoE management) throws IOException {
+    public void exportApplications(String filename, DataPoE data) throws IOException {
         FileWriter csvWriter = null;
         try {
             File file = new File(filename);
             if(!file.exists()) {
                 csvWriter = new FileWriter(file);
                 int count = 0;
-                for (Application a : management.getApplications()) {
+                for (Application a : data.getApplications()) {
                     csvWriter.append(String.valueOf(a.getStudent()));
                     csvWriter.append(",");
                     StringBuilder stringBuilder = new StringBuilder(20);
@@ -139,7 +139,7 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                             stringBuilder.append(",");
                     }
                     csvWriter.append(stringBuilder);
-                    if (count < management.getApplications().size())
+                    if (count < data.getApplications().size())
                         csvWriter.append("\n");
                 }
             }
@@ -153,60 +153,60 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
 
     //Get lists
     @Override
-    public List<String> generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, ManagementPoE management){
+    public List<String> generateStudentList(boolean selfProposed, boolean alreadyRegistered, boolean withoutRegistered, DataPoE data){
         ArrayList<String> studentList = new ArrayList<>();
         int count;
 
         if(selfProposed)
-            for(Proposal p : management.getProposals())
-                if(p.getType().equalsIgnoreCase("T3") && isExistentStudent(p.getStudent().getStudentNumber(), management))
+            for(Proposal p : data.getProposals())
+                if(p.getType().equalsIgnoreCase("T3") && isExistentStudent(p.getStudent().getStudentNumber(), data))
                     studentList.add(String.valueOf(p.getStudent().getStudentNumber()));
 
         if(alreadyRegistered)
-            for(Application a : management.getApplications())
-                if(isExistentStudent(a.getStudent().getStudentNumber(), management))
+            for(Application a : data.getApplications())
+                if(isExistentStudent(a.getStudent().getStudentNumber(), data))
                     studentList.add(String.valueOf(a.getStudent().getStudentNumber()));
 
         if(withoutRegistered)
-            for(Student s : management.getStudent()) {
+            for(Student s : data.getStudent()) {
                 count=0;
-                for (Application a : management.getApplications()) {
+                for (Application a : data.getApplications()) {
                     if (a.getStudent().getStudentNumber() != s.getStudentNumber())
                         count++;
-                    if (count == management.getApplications().size() && isExistentStudent(s.getStudentNumber(), management))
+                    if (count == data.getApplications().size() && isExistentStudent(s.getStudentNumber(), data))
                         studentList.add(String.valueOf(s.getStudentNumber()));
                 }
             }
         return studentList;
     }
     @Override
-    public List<String> generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications, ManagementPoE management){
+    public List<String> generateProposalsList(boolean selfProposed, boolean proposeTeacher, boolean withApplications, boolean withoutApplications, DataPoE data){
         ArrayList<String> proposalList = new ArrayList<>();
         boolean exist = false;
 
         if(selfProposed)
-            for(Proposal p : management.getProposals())
+            for(Proposal p : data.getProposals())
                 if(p.getType().equalsIgnoreCase("T3"))
                     proposalList.add(p.getIdentification());
 
         if(proposeTeacher)
-            for(Proposal p : management.getProposals())
+            for(Proposal p : data.getProposals())
                 if(p.getType().equalsIgnoreCase("T2"))
                     proposalList.add(p.getIdentification());
 
         if(withApplications)
-            for(Proposal p : management.getProposals())
-                for(Application a : management.getApplications())
+            for(Proposal p : data.getProposals())
+                for(Application a : data.getApplications())
                     for (String s : a.getIdProposals())
                         if(s.equalsIgnoreCase(p.getIdentification()))
                             proposalList.add(p.getIdentification());
 
         if(withoutApplications) {
             List<String> aux = new ArrayList<>();
-            for (Application a : management.getApplications())
+            for (Application a : data.getApplications())
                 aux.addAll(a.getIdProposals());
 
-            for (Proposal p : management.getProposals()) {
+            for (Proposal p : data.getProposals()) {
                 for (String s : aux)
                     if (s.equalsIgnoreCase(p.getIdentification())) {
                         exist = true;
@@ -223,33 +223,33 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
     }
 
     //Validations
-    private static boolean isExistentStudent(long number, ManagementPoE management){
-        for(Student s : management.getStudent())
+    private static boolean isExistentStudent(long number, DataPoE data){
+        for(Student s : data.getStudent())
             if(s.getStudentNumber() == number)
                 return true;
         return false;
     }
-    private static boolean isAProposalAssigned(Long number, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAProposalAssigned(Long number, DataPoE data){
+        for(Proposal p : data.getProposals())
             if (p.getStudent() != null && number == p.getStudent().getStudentNumber())
                 return true;
         return false;
     }
-    private static boolean isExistentApplication(Long number, ManagementPoE management){
-        for(Application a : management.getApplications())
+    private static boolean isExistentApplication(Long number, DataPoE data){
+        for(Application a : data.getApplications())
             if(number==a.getStudent().getStudentNumber())
                 return true;
         return false;
     }
-    private static boolean hasProposalAlreadyAStudent(List<String> idProposals, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean hasProposalAlreadyAStudent(List<String> idProposals, DataPoE data){
+        for(Proposal p : data.getProposals())
             for(String s : idProposals)
                 if (s.equalsIgnoreCase(p.getIdentification()) && (p.getType().equalsIgnoreCase("T3") || p.getStudent()!=null))
                     return true;
         return false;
     }
-    private static boolean isAValidProposal(String id, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static boolean isAValidProposal(String id, DataPoE data){
+        for(Proposal p : data.getProposals())
             if(id.equalsIgnoreCase(p.getIdentification()))
                 return true;
         return false;
@@ -260,8 +260,8 @@ public class SecondPhaseState extends PhaseStateAdapter implements Serializable 
                 return true;
         return false;
     }
-    private static void isAInvalidProposalForStudent(List<String> idProposals, ManagementPoE management){
-        for(Proposal p : management.getProposals())
+    private static void isAInvalidProposalForStudent(List<String> idProposals, DataPoE data){
+        for(Proposal p : data.getProposals())
             idProposals.removeIf(s -> s.equalsIgnoreCase(p.getIdentification()) && p.getType().equalsIgnoreCase("T1"));
     }
 }

@@ -1,0 +1,77 @@
+#root{
+    -fx-background-color: #eeeeee;
+}
+
+#logo{
+    -fx-background-image: url(images/logo_transparent.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-attachment: fixed;
+    -fx-background-position: center;
+    -fx-background-size: contain;
+}
+
+#normal-button {
+    -fx-border-color: #d72323;
+    -fx-border-radius: 20;
+    -fx-border-width: 3;
+    -fx-background-color: transparent;
+    -fx-color-label-visible: white;
+    -fx-padding: 5 30;
+    -fx-text-alignment: center;
+    -fx-font-size: 16;
+    -fx-cursor: pointer;
+    -fx-text-fill: #d72323;
+    -fx-font-weight: bold;
+}
+
+#card-button {
+    -fx-border-color: #d72323;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 3;
+    -fx-background-color: rgba(215, 35, 35, 0.29);
+    -fx-padding: 20 30;
+    -fx-text-alignment: center;
+    -fx-font-size: 16;
+    -fx-cursor: pointer;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-insets: 10 10 10 10;
+    -fx-border-insets: 10 10 10 10;
+}
+
+#label-title{
+    -fx-text-alignment: center center;
+    -fx-font-size: 30;
+    -fx-text-fill: #d72323;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI";
+}
+
+.tool-bar{
+    -fx-background-color: #afacac;
+    -fx-border-width: 2;
+    -fx-border-style: solid none solid none;
+    -fx-border-color: #797878;
+}
+
+#footer{
+    -fx-text-fill: #797878;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI";
+}
+
+#button-toolbar {
+    -fx-background-color: #afacac;
+    -fx-border-color: #797878;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-cursor: pointer;
+    -fx-text-fill: #ffffff;
+}
+
+#button-toolbar-img {
+    -fx-background-color: #afacac;
+    -fx-cursor: pointer;
+}
