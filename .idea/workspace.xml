@@ -2,45 +2,43 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33693578-f11b-4a0a-ba61-f4109017036d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/images/icons/proposal.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/images/icons/student.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/images/icons/teacher.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/images/logo_transparent.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1" beforeDir="false" afterPath="$PROJECT_DIR$/1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CheckList Erros Meta1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/1" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Design PA.xd" beforeDir="false" afterPath="$PROJECT_DIR$/Design PA.xd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Projeto.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Projeto.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Relatorio.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Relatorio.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/csvFiles/students.csv" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/csvFiles/students.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/data/ManagementPoE.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FifthPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FifthPhaseState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FirstPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FirstPhaseState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FourthPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/FourthPhaseState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/IPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/IPhaseState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/ManagementPoE.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/ManagementPoE.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseContext.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseContext.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseState.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseStateAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/PhaseStateAdapter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/ProposalsState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/ProposalsState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/SecondPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/SecondPhaseState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/StudentState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/StudentState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/TeacherState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/TeacherState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/ThirdPhaseState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/fsm/ThirdPhaseState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/memento/IMemento.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/memento/IMemento.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/memento/MementoPoE.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/model/memento/MementoPoE.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/MainJFX.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/MainJFX.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_1.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_1.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_student.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_student.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/gui/fxml/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/text/PhaseUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/text/PhaseUI$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/text/PhaseUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Projeto/pt/isec/pa/apoio_poe/ui/text/PhaseUI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/csvFiles/students.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/csvFiles/students.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/data/ManagementPoE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/data/DataPoE.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FifthPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FifthPhaseState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FirstPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FirstPhaseState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FourthPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/FourthPhaseState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/IPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/IPhaseState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/ManagementPoE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/ManagementPoE.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseStateAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/PhaseStateAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/ProposalsState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/ProposalsState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/SecondPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/SecondPhaseState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/StudentState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/StudentState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/TeacherState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/TeacherState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/ThirdPhaseState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/fsm/ThirdPhaseState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/CareTaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/CareTaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/IMemento.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/IOriginator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/MementoPoE.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/model/memento/MementoPoE.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/MainJFX.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/MainJFX.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/PoEPaneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_1.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_1.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_student.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/pane_phase_student.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/text/PhaseUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/text/PhaseUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,6 +50,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -69,6 +68,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/pt/isec/pa/apoio_poe/ui/gui/fxml" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -78,6 +78,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="pt.isec.pa.apoio_poe.model.memento" />
       <recent name="pt.isec.pa.apoio_poe" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
@@ -86,7 +87,11 @@
       <recent name="C:\Users\serco\Desktop\A Minha Universidade\PA\projeto\src\pt\isec\pa\apoio_poe\model\memento" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\serco\Desktop\A Minha Universidade\PA\projeto\src\pt\isec\pa\apoio_poe\ui\gui" />
       <recent name="C:\Users\serco\Desktop\A Minha Universidade\PA\projeto\src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="pt.isec.pa.apoio_poe.model.memento" />
     </key>
   </component>
   <component name="RunManager">
@@ -94,7 +99,7 @@
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="pt.isec.pa.apoio_poe.Main" />
-      <module name="projeto" />
+      <module name="Projeto" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -118,6 +123,16 @@
       <workItem from="1655313317947" duration="7042000" />
       <workItem from="1655370996946" duration="24191000" />
       <workItem from="1655409603279" duration="9356000" />
+      <workItem from="1655424251220" duration="13196000" />
+      <workItem from="1655485977750" duration="18000" />
+      <workItem from="1655542690492" duration="24312000" />
+      <workItem from="1655626349494" duration="11767000" />
+      <workItem from="1655643024149" duration="936000" />
+      <workItem from="1655654209947" duration="2067000" />
+      <workItem from="1655659372822" duration="4799000" />
+      <workItem from="1655681229585" duration="10608000" />
+      <workItem from="1655824309211" duration="110000" />
+      <workItem from="1655885004274" duration="3877000" />
     </task>
     <servers />
   </component>

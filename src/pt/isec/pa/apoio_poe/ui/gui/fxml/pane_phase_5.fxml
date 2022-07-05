@@ -20,26 +20,20 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="Export State" onAction="#onExportState" id="button-toolbar"/>
-        <Button text="Undo" onAction="#onUndo" id="button-toolbar"/>
-        <Button text="Redo" onAction="#onRedo" id="button-toolbar"/>
-        <Button text="Back to main menu" onAction="#onNextPhase" id="button-toolbar"/>
     </ToolBar>
 
     <HBox prefHeight="500" alignment="CENTER">
-        <Label text="First Phase - Student Management" id="label-title"/>
+        <Label text="Fifth Phase" id="label-title"/>
     </HBox>
 
     <HBox prefHeight="800" prefWidth="800" alignment="CENTER">
-        <ListView fx:id="lvShowStudents"/>
+        <ListView fx:id="lvShowPhase5"/>
     </HBox>
 
     <HBox prefHeight="300" alignment="CENTER" spacing="20">
-        <Button text="Update Scene" onAction="#onUpdateWindow" id="normal-button"/>
-        <Button text="Insert" onAction="#onInsertStudent" id="normal-button"/>
-        <Button text="Edit" onAction="#onEditStudent" id="normal-button"/>
-        <Button text="Delete" onAction="#onDeleteStudent" id="normal-button"/>
-        <Button text="Export" onAction="#onExportStudent" id="normal-button"/>
+        <Button text="Get lists" id="normal-button"/>
+        <Button text="See some data" id="normal-button"/>
+        <Button text="Export data" id="normal-button"/>
     </HBox>
 
     <HBox prefHeight="500" alignment="BOTTOM_CENTER">

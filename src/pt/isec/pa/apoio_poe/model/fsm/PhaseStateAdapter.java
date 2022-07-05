@@ -1,12 +1,8 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
 import pt.isec.pa.apoio_poe.model.data.*;
-import pt.isec.pa.apoio_poe.model.memento.IMemento;
-import pt.isec.pa.apoio_poe.model.memento.IOriginator;
-import pt.isec.pa.apoio_poe.model.memento.MementoPoE;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class PhaseStateAdapter implements IPhaseState, Serializable {

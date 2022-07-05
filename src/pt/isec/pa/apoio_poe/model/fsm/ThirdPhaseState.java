@@ -62,7 +62,7 @@ public class ThirdPhaseState extends PhaseStateAdapter {
                     studentsWithoutAssignments.remove(s);
 
         //Sort available students by their classifications
-        //studentsWithoutAssignments.sort((o1, o2) -> Double.compare(o2.getClassification(), o1.getClassification()));
+        studentsWithoutAssignments.sort((o1, o2) -> Double.compare(o2.getClassification(), o1.getClassification()));
 
         System.out.println("\n\nFree Proposals:");
         for(Proposal p : proposalsWithoutAssignments)

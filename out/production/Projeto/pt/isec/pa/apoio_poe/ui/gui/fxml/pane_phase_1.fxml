@@ -44,7 +44,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="Proposals Management" onAction="#onProposalsManagement" id="card-button">
+        <Button text="Proposals Management" onAction="#onProposalsManagement" id="card-button" >
         <graphic>
             <ImageView fitWidth="30" fitHeight="30">
                 <Image url="file:src\pt\isec\pa\apoio_poe\ui\gui\fxml\images\icons\proposal.png" />

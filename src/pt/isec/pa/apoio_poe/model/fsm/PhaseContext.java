@@ -1,6 +1,5 @@
 package pt.isec.pa.apoio_poe.model.fsm;
 
-import pt.isec.pa.apoio_poe.model.ManagementPoE;
 import pt.isec.pa.apoio_poe.model.data.*;
 import pt.isec.pa.apoio_poe.model.memento.IMemento;
 import pt.isec.pa.apoio_poe.model.memento.IOriginator;
@@ -17,35 +16,6 @@ public class PhaseContext implements Serializable, IOriginator {
     public PhaseContext(){
         state = new FirstPhaseState(this);
         data = new DataPoE();
-    }
-
-    /************************************************** Serialization & Deserialization **************************************************/
-    public void serialization(String filename) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(filename);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(state);
-            out.writeObject(data);
-            out.close();
-            fileOut.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
-    }
-    public void deserialization(String filename) {
-        try {
-            FileInputStream fileIn = new FileInputStream(filename);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            state = (IPhaseState) in.readObject();
-            state.setContext(this);
-            changeState(state);
-            data = (DataPoE) in.readObject();
-            in.close();
-            fileIn.close();
-        } catch (IOException | ClassNotFoundException i) {
-            i.printStackTrace();
-        }
-
     }
 
     /************************************************** States **************************************************/
@@ -103,22 +73,16 @@ public class PhaseContext implements Serializable, IOriginator {
     public String listPhase5(boolean op1, boolean op2, boolean op3, boolean op4, boolean op5){ return state.listPhase5(op1,op2,op3,op4,op5,data); }
 
     @Override
-    public IMemento save() {
-        return new MementoPoE(this);
-    }
+    public IMemento save() { return new MementoPoE(this); }
 
     @Override
     public void restore(IMemento memento) {
         Object obj = memento.getSnapshot();
         if (obj instanceof PhaseContext m) {
             this.state = m.state;
+            state.setContext(this);
+            changeState(state);
             this.data = m.data;
         }
     }
 }
-
-
-
-
-
-
