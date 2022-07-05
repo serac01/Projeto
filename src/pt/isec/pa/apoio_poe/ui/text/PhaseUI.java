@@ -1,10 +1,8 @@
 package pt.isec.pa.apoio_poe.ui.text;
 
 import pt.isec.pa.apoio_poe.model.ManagementPoE;
-import pt.isec.pa.apoio_poe.model.fsm.PhaseContext;
 import pt.isec.pa.apoio_poe.utils.Input;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class PhaseUI {
     ManagementPoE fsm;
@@ -34,30 +32,26 @@ public class PhaseUI {
     public void firstPhaseUI() {
         System.out.print("\n1st Phase");
         if(fsm.isPhaseClosed())
-            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Save the sate","Next phase","Quit")){
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Save the sate","Next phase", "Undo","Redo","Quit")){
                 case 1 -> fsm.changeToStudent();
                 case 2 -> fsm.changeToTeacher();
                 case 3 -> fsm.changeToProposals();
                 case 4 -> fsm.serialization(Input.readString("Filename ",false));
                 case 5 -> fsm.nextPhase();
                 case 6 -> {
-                    if (fsm.hasUndo()) {
-                        fsm.undo();
-                    } else {
-                        System.out.println("No undo available at the moment");
-                    }
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
                 }
                 case 7 -> {
-                    if (fsm.hasRedo()) {
+                    if (fsm.hasRedo())
                         fsm.redo();
-                    } else {
+                    else
                         System.out.println("No redo available at the moment");
-                    }
                 }
                 default -> finish = true;
             }
         else
-            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Close phase","Next phase","Save the state","Quit")){
+            switch (Input.chooseOption("Choose the option:","Student management","Teacher management", "Management proposals for internships or projects","Close phase","Next phase","Save the state","Undo","Redo","Quit")){
                 case 1 -> fsm.changeToStudent();
                 case 2 -> fsm.changeToTeacher();
                 case 3 -> fsm.changeToProposals();
@@ -65,18 +59,14 @@ public class PhaseUI {
                 case 5 -> fsm.nextPhase();
                 case 6 -> fsm.serialization(Input.readString("Filename ",false));
                 case 7 -> {
-                    if (fsm.hasUndo()) {
-                        fsm.undo();
-                    } else {
-                        System.out.println("No undo available at the moment");
-                    }
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
                 }
                 case 8 -> {
-                    if (fsm.hasRedo()) {
+                    if (fsm.hasRedo())
                         fsm.redo();
-                    } else {
+                    else
                         System.out.println("No redo available at the moment");
-                    }
                 }
                 default -> finish = true;
             }
@@ -86,9 +76,19 @@ public class PhaseUI {
         System.out.print("\nManagement Student");
         long studentNumber;
         if(fsm.isPhaseClosed())
-            switch (Input.chooseOption("Choose the option:","Show student", "Export student","Quit")){
+            switch (Input.chooseOption("Choose the option:","Show student", "Export student","Undo","Redo","Quit")){
                 case 1 -> fsm.showStudents().forEach(System.out::println);
                 case 2 -> fsm.exportStudents(Input.readString("Filename ",false));
+                case 3 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 4 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> fsm.nextPhase();
             }
         else
@@ -113,18 +113,14 @@ public class PhaseUI {
                 case 4 -> System.out.println(fsm.deleteStudents((long) Input.readNumber("Enter student number ")));
                 case 5 -> fsm.exportStudents(Input.readString("Filename ",false));
                 case 6 -> {
-                    if (fsm.hasUndo()) {
-                        fsm.undo();
-                    } else {
-                        System.out.println("No undo available at the moment");
-                    }
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
                 }
                 case 7 -> {
-                    if (fsm.hasRedo()) {
+                    if (fsm.hasRedo())
                         fsm.redo();
-                    } else {
+                    else
                         System.out.println("No redo available at the moment");
-                    }
                 }
                 default -> fsm.nextPhase();
             }
@@ -133,13 +129,23 @@ public class PhaseUI {
     public void teacherUI() throws IOException {
         System.out.print("\nManagement Teachers");
         if(fsm.isPhaseClosed())
-            switch (Input.chooseOption("Choose the option:","Show teachers","Export teachers","Quit")){
+            switch (Input.chooseOption("Choose the option:","Show teachers","Export teachers","Undo","Redo","Quit")){
                 case 1 -> fsm.showTeachers().forEach(System.out::println);
                 case 2 -> fsm.exportTeachers(Input.readString("Filename ",false));
+                case 3 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 4 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> fsm.nextPhase();
             }
         else
-            switch (Input.chooseOption("Choose the option:","Insert teachers","Show teachers", "Edit teacher","Delete teacher","Export teachers","Quit")){
+            switch (Input.chooseOption("Choose the option:","Insert teachers","Show teachers", "Edit teacher","Delete teacher","Export teachers","Undo","Redo","Quit")){
                 case 1 -> System.out.println(fsm.addTeachers(Input.readString("Filename ",false)));
                 case 2 ->  fsm.showTeachers().forEach(System.out::println);
                 case 3 -> {
@@ -153,6 +159,16 @@ public class PhaseUI {
                 }
                 case 4 -> System.out.println(fsm.deleteTeachers(Input.readString("Enter teacher email ",false)));
                 case 5 -> fsm.exportTeachers(Input.readString("Filename ",false));
+                case 6 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 7 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> fsm.nextPhase();
             }
     }
@@ -160,18 +176,38 @@ public class PhaseUI {
     public void proposalUI() throws IOException {
         System.out.print("\n\tManagement Proposals");
         if(fsm.isPhaseClosed())
-            switch (Input.chooseOption("Choose the option:","Show proposals","Export proposals","Quit")){
+            switch (Input.chooseOption("Choose the option:","Show proposals","Export proposals","Undo","Redo","Quit")){
                 case 1 -> fsm.showProposals().forEach(System.out::println);
                 case 2 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 3 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 4 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> fsm.nextPhase();
             }
         else
-            switch (Input.chooseOption("Choose the option:","Insert proposals","Show proposals","Edit proposal","Delete proposal","Export proposals","Quit")){
+            switch (Input.chooseOption("Choose the option:","Insert proposals","Show proposals","Edit proposal","Delete proposal","Export proposals","Undo","Redo","Quit")){
                 case 1 -> System.out.println(fsm.addProposals(Input.readString("Filename ",false)));
                 case 2 -> fsm.showProposals().forEach(System.out::println);
                 case 3 -> System.out.println("To implement");
                 case 4 -> System.out.println(fsm.deleteProposals(Input.readString("Enter proposal id ",false)));
                 case 5 -> fsm.exportProposals(Input.readString("Filename ",false));
+                case 6 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 7 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> fsm.nextPhase();
             }
     }
@@ -181,7 +217,7 @@ public class PhaseUI {
         if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:","Consult applications", "Export applications",
                     "Get the list of students","Get lists of project/internship proposals",
-                    "Return to previous phase","Next phase","Save the sate","Quit")){
+                    "Return to previous phase","Next phase","Save the sate","Undo","Redo","Quit")){
                 case 1 -> fsm.showApplications().forEach(System.out::println);
                 case 2 -> fsm.exportApplications(Input.readString("Filename ",false));
                 case 3 -> {
@@ -212,12 +248,22 @@ public class PhaseUI {
                 case 5 -> fsm.previousPhase();
                 case 6 -> fsm.nextPhase();
                 case 7 -> fsm.serialization(Input.readString("Filename ",false));
+                case 8 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 9 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
         else
             switch (Input.chooseOption("Choose the option:","Insert applications", "Consult applications",
                     "Edit applications", "Delete applications", "Export applications", "Get the list of students","Get lists of project/internship proposals",
-                    "Close phase","Return to previous phase","Next phase","Save the sate","Quit")){
+                    "Close phase","Return to previous phase","Next phase","Save the sate","Undo","Redo","Quit")){
                 case 1 -> System.out.println(fsm.addApplications(Input.readString("Filename ",false)));
                 case 2 -> fsm.showApplications().forEach(System.out::println);
                 case 3 -> {
@@ -263,6 +309,16 @@ public class PhaseUI {
                 case 9 -> fsm.previousPhase();
                 case 10 -> fsm.nextPhase();
                 case 11 -> fsm.serialization(Input.readString("Filename ",false));
+                case 12 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 13 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
     }
@@ -271,7 +327,7 @@ public class PhaseUI {
         System.out.print("\n3rd Phase");
         if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:",
-                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Return to previous phase","Next phase","Quit")){
+                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Return to previous phase","Next phase","Undo","Redo","Quit")){
                 case 1 -> {
                     boolean allChosen=false;
                     while(!allChosen)
@@ -302,12 +358,22 @@ public class PhaseUI {
                 case 4 -> fsm.exportProposals(Input.readString("Filename ",false));
                 case 5 -> fsm.previousPhase();
                 case 6 -> fsm.nextPhase();
+                case 7 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 8 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
         else
             switch (Input.chooseOption("Choose the option:","Automatically assign self-proposals or proposals from teachers with an associated student",
                     "Automatically assign a proposal without assignments","Manual assignment of proposals","Manually removing an assignment",
-                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Close phase","Return to previous phase","Next phase","Quit")){
+                    "Get student lists","Get lists of internship project proposals","Save the state","Export data","Close phase","Return to previous phase","Next phase","Undo","Redo","Quit")){
                 case 1 -> System.out.println(); //It is already done in the way the project was structured
                 case 2 -> System.out.println(fsm.assignAProposalWithoutAssignments());
                 case 3 -> System.out.println(fsm.associateProposalToStudents(Input.readString("Proposal id: ",true),(long) Input.readNumber("Enter student number ")));
@@ -343,6 +409,16 @@ public class PhaseUI {
                 case 9 -> System.out.println(fsm.closePhase());
                 case 10 -> fsm.previousPhase();
                 case 11 -> fsm.nextPhase();
+                case 12 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 13 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
     }
@@ -351,7 +427,7 @@ public class PhaseUI {
         System.out.print("\n4th Phase");
         if(fsm.isPhaseClosed())
             switch (Input.chooseOption("Choose the option:", "Consult advisor","See some data about the advisors assignments",
-                    "Save the state", "Export the data", "Next phase","Return to previous phase","Quit")){
+                    "Save the state", "Export the data", "Next phase","Return to previous phase","Undo","Redo","Quit")){
                 case 1 -> System.out.println(fsm.consultAdvisor(Input.readString("Teacher id: ",true)));
                 case 2 -> {
                     boolean allChosen=false;
@@ -369,12 +445,22 @@ public class PhaseUI {
                 case 4 -> fsm.exportProposals(Input.readString("Filename ",false));
                 case 5 -> fsm.nextPhase();
                 case 6 -> fsm.previousPhase();
+                case 7 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 8 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
         else
             switch (Input.chooseOption("Choose the option:","Automatically associate teachers","Assign advisor",
                     "Consult advisor","Change advisor","Delete advisor","See some data about the advisors assignments","Save the state",
-                    "Export the data","Close phase","Return to previous phase","Next phase","Quit")){
+                    "Export the data","Close phase","Return to previous phase","Next phase","Undo","Redo","Quit")){
                 case 1 -> System.out.println(); //Done
                 case 2 -> System.out.println(fsm.assignAdvisor(Input.readString("Proposal id: ",true), Input.readString("Teacher id: ",true)));
                 case 3 -> System.out.println(fsm.consultAdvisor(Input.readString("Teacher id: ",true)));
@@ -397,6 +483,16 @@ public class PhaseUI {
                 case 9 -> fsm.closePhase();
                 case 10 -> fsm.previousPhase();
                 case 11 -> fsm.nextPhase();
+                case 12 -> {
+                    if (fsm.hasUndo()) fsm.undo();
+                    else System.out.println("No undo available at the moment");
+                }
+                case 13 -> {
+                    if (fsm.hasRedo())
+                        fsm.redo();
+                    else
+                        System.out.println("No redo available at the moment");
+                }
                 default -> finish=true;
             }
     }
@@ -404,13 +500,23 @@ public class PhaseUI {
     public void fifthPhaseUI() throws IOException {
         System.out.print("\n5th Phase");
         switch (Input.chooseOption("Choose the option:","Get list of students with proposals","Get list of students without proposals",
-                "Get list of assigned proposals","Get list of available proposals","Number of projects and internships per professor","Export the data","Quit")){
+                "Get list of assigned proposals","Get list of available proposals","Number of projects and internships per professor","Export the data","Undo","Redo","Quit")){
             case 1 -> System.out.println(fsm.listPhase5(true,false,false,false,false));
             case 2 -> System.out.println(fsm.listPhase5(false,true,false,false,false));
             case 3 -> System.out.println(fsm.listPhase5(false,false,true,false,false));
             case 4 -> System.out.println(fsm.listPhase5(false,false,false,true,false));
             case 5 -> System.out.println(fsm.listPhase5(false,false,false,false,true));
             case 6 -> fsm.exportProposals(Input.readString("Filename ",false));
+            case 7 -> {
+                if (fsm.hasUndo()) fsm.undo();
+                else System.out.println("No undo available at the moment");
+            }
+            case 8 -> {
+                if (fsm.hasRedo())
+                    fsm.redo();
+                else
+                    System.out.println("No redo available at the moment");
+            }
             default -> finish=true;
         }
     }

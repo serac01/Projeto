@@ -1,5 +1,7 @@
 package pt.isec.pa.apoio_poe.model.memento;
 
+import pt.isec.pa.apoio_poe.model.ManagementPoE;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;

@@ -13,15 +13,22 @@
 #normal-button {
     -fx-border-color: #d72323;
     -fx-border-radius: 20;
+    -fx-background-radius: 20;
     -fx-border-width: 3;
     -fx-background-color: transparent;
-    -fx-color-label-visible: white;
     -fx-padding: 5 30;
     -fx-text-alignment: center;
     -fx-font-size: 16;
     -fx-cursor: pointer;
     -fx-text-fill: #d72323;
     -fx-font-weight: bold;
+    -fx-background-insets: 10 10 10 10;
+    -fx-border-insets: 10 10 10 10;
+}
+
+#normal-button:hover {
+    -fx-background-color: #d72323;
+    -fx-text-fill: #ffffff;
 }
 
 #card-button {
@@ -74,4 +81,12 @@
 #button-toolbar-img {
     -fx-background-color: #afacac;
     -fx-cursor: pointer;
+}
+
+.list-view{
+    -fx-pref-width: 850;
+}
+
+.list-cell{
+    -fx-font-family: "monospace";
 }

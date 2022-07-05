@@ -29,6 +29,7 @@ public class MainJFX extends Application {
         scene.setUserData(model);
         stage.setScene(scene);
         stage.setTitle("PoE");
+        stage.setResizable(false);
         stage.show();
     }
 }
